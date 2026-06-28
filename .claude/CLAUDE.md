@@ -14,8 +14,8 @@ avoid (researched):
 
 - **Fonts:** never Inter / Roboto / Geist as the workhorse, and never the
   giveaway combo Space Grotesk + Instrument Serif + Geist. This site uses
-  Bricolage Grotesque (headings), Hanken Grotesk (body), IBM Plex Mono (code).
-  Do not introduce other families casually.
+  Mona Sans (headings), Hanken Grotesk (body), IBM Plex Mono (code). Do not
+  introduce other families casually.
 - **Color:** no purple / lavender, no purple-to-blue gradients, no gradients at
   all. One accent only: sage green (`--color-accent`). Everything else is warm
   neutrals.
@@ -68,6 +68,36 @@ type, layout, and real content.
   via Fontsource.
 - npm. Dev `npm run dev`, build `npm run build`, deploy `npm run deploy`.
 - Path alias `~/*` -> `src/*`.
+
+## Commands & local dev
+
+| Command | Action |
+| :-- | :-- |
+| `npm run dev` | Dev server at `localhost:4321` (run in a real terminal, see gotcha) |
+| `npm run check` | Type + content check (keep at 0/0/0) |
+| `npm run build` | Build to `./dist/` |
+| `npm run deploy` | Build, then `wrangler deploy --config dist/client/wrangler.json` |
+
+**Dev-server gotcha:** running `npm run dev` headless / non-TTY triggers an
+upstream Astro bug (its JSON logger calls `process`, absent in the Cloudflare
+workerd dev runtime), so every route 500s with "process is not defined". It
+works in a normal interactive terminal. To preview a build without the dev
+runtime: `npm run build`, then serve `dist/client` with any static server.
+
+## Where the content lives (edit these)
+
+- **Resume / About / skills / experience:** `src/data/resume.ts`. Bilingual:
+  `contact` is language-neutral, the rest is `resume[lang]` (en/ja side by side).
+  Phone number is deliberately omitted from the public site.
+- **UI strings (chrome):** `src/i18n/ui.ts` (`ui[lang]`). Author-written JA.
+- **Project case studies:** `src/content/projects/*.md`. Frontmatter feeds the
+  homepage cards (incl. `nameJa` / `taglineJa` / `cardImage`) and the
+  `/projects/[id]` page; the body is the write-up. Drafts need Cristian's review.
+- **Blog posts:** `src/content/blog/*.md` (set `draft: true` to hide). RSS at
+  `/rss.xml`. Posts + full case-study bodies are English-only for now.
+- **Design tokens / global CSS:** `src/styles/global.css` (never hardcode color).
+- **Homepage:** `src/components/Home.astro` (split-sidebar, rendered by
+  `src/pages/index.astro` en + `src/pages/ja/index.astro` ja).
 
 ## Tokens - single source of truth
 
@@ -127,8 +157,46 @@ description per page. `site` must stay set in `astro.config.mjs`. The sitemap is
 auto-generated; dev/preview pages go in `NOINDEX_ROUTES` (astro.config) AND get
 a noindex meta AND go in `public/robots.txt`.
 
+## Status
+
+- **Built:** scaffold + build config; tokens + dark mode (ThemeScript);
+  self-hosted fonts; Icon / Seo / Nav / Footer; projects collection + 2 case
+  studies; blog (index, post, RSS); robots.txt, 404, sitemap, CV favicon,
+  JSON-LD. `astro check` is 0/0/0.
+- **Homepage redesign (split sidebar):** two-column layout - sticky left
+  sidebar (CV monogram, name, role, tagline, scroll-spy TOC, socials) and a
+  scrolling right column (About, Projects with screenshots, smaller projects,
+  Experience, Skills, Education). Writing link + language/theme toggles sit in a
+  top-right bar in the content column. Inspired by brittanychiang.com, our own
+  type/color/light-default. Positioning broadened to "IT & Web Development".
+- **EN/JA i18n:** Astro i18n (`/` = en, `/ja` = ja, default not prefixed).
+  `BaseLayout` takes `lang` + `bare` (homepage supplies its own `<main>`, skips
+  the top Nav/Footer). JA scoped to homepage + chrome; inner pages stay English.
+- **Repo:** https://github.com/cvaldezcomputerer/personal-website (public,
+  `main`). Deploy via Cloudflare Workers Builds.
+
+## TODO
+
+- [ ] **Fill in real content** - resume tweaks, the two case studies, real blog
+  posts. Replace the placeholder `welcome` post.
+- [ ] **OG share image** - branded 1200x630 `public/og/default.png` via sharp;
+  `Seo.astro` already emits image tags when an `image` is passed. Wire a default.
+- [ ] **Accessibility sweep + Lighthouse** - landmarks, heading order, contrast,
+  focus, labels. Full Lighthouse run against the deployed site.
+- [ ] **Headshot in dark mode** - the studio-white background reads as a light
+  block on dark; replace or remove the background (`src/assets/images/cristian.png`).
+- [ ] **Print styles for the new homepage** - the split-sidebar home dropped
+  `.site-header`/`.site-footer`; review the one-page resume PDF against it.
+- [ ] **More personal feel** - especially the blog. Bring 2-3 directions first.
+- [ ] **JA for inner pages** - blog + full case studies are English-only; the
+  `/ja` home links to the EN versions. Translate per-post with a flag if wanted.
+- [ ] **Deploy** - repo pushed; nameservers pointed at Cloudflare; finish Workers
+  Builds + attach `cristianvaldez.jp` as the Worker custom domain once Active.
+- [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
+
 ## Workflow
 
 - **Never commit for the owner.** He writes his own commit messages and runs git
-  himself. A brief note that it is a good time to commit is fine.
+  himself. A brief note that it is a good time to commit is fine. (Exception this
+  setup phase: he asked me to create + push the repo.)
 - **Never take screenshots without asking first.**

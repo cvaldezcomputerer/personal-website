@@ -21,7 +21,30 @@
       "PowerShell(npm run check)",
       "Bash(python -m http.server 4321 --bind 127.0.0.1)",
       "Bash(curl -s -o /dev/null -w \"EN / -> %{http_code}\\\\n\" http://127.0.0.1:4321/)",
-      "Bash(curl -s -o /dev/null -w \"JA /ja/ -> %{http_code}\\\\n\" http://127.0.0.1:4321/ja/)"
+      "Bash(curl -s -o /dev/null -w \"JA /ja/ -> %{http_code}\\\\n\" http://127.0.0.1:4321/ja/)",
+      "PowerShell(git -C $proj config user.name \"Cristian Valdez\")",
+      "PowerShell(git -C $proj config user.email \"cvaldezana@gmail.com\")",
+      "PowerShell(git -C $proj log --oneline -1)",
+      "PowerShell(git -C $proj log -1 --format=\"author: %an <%ae>\")",
+      "PowerShell($proj = \"C:\\\\Users\\\\babyo\\\\OneDrive\\\\Desktop\\\\projects\\\\personal-website\")",
+      "PowerShell(git -C $proj commit -q -F $msg)",
+      "PowerShell(git -C $proj rev-parse --abbrev-ref HEAD)",
+      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg.txt\")",
+      "PowerShell(winget install --id GitHub.cli -e --silent --accept-source-agreements --accept-package-agreements 2>&1)",
+      "mcp__claude_ai_Cloudflare_Developer_Platform__kv_namespaces_list",
+      "mcp__claude_ai_Cloudflare_Developer_Platform__workers_list",
+      "mcp__claude_ai_Cloudflare_Developer_Platform__search_cloudflare_documentation",
+      "Bash(node -e \"const {builtinDrivers}=require\\('unstorage'\\); console.log\\('memory' in builtinDrivers ? 'memory OK -> '+builtinDrivers.memory : 'memory MISSING'\\); console.log\\(Object.keys\\(builtinDrivers\\).slice\\(0,12\\).join\\(', '\\)\\)\")",
+      "Bash(node -e \"import\\('astro/config'\\).then\\(m=>console.log\\('sessionDrivers keys:', Object.keys\\(m.sessionDrivers||{}\\)\\)\\)\")",
+      "Bash(find dist *)",
+      "Bash(ls dist/server)",
+      "PowerShell(git -C \"C:\\\\Users\\\\babyo\\\\OneDrive\\\\Desktop\\\\projects\\\\personal-website\" status -sb)",
+      "PowerShell(try { Resolve-DnsName -Name cristianvaldez.jp -Type NS -Server 1.1.1.1 -ErrorAction Stop | Select-Object Name,Type,NameHost } catch { \"NS not resolving yet via 1.1.1.1 \\(propagation still in progress\\) - $\\($_.Exception.Message\\)\" })",
+      "PowerShell(git -C $proj add astro.config.mjs package.json README.md .claude/CLAUDE.md)",
+      "PowerShell(git -C $proj push -q origin main)",
+      "PowerShell(git -C $proj log --oneline -2)",
+      "PowerShell(git -C $proj status -sb)",
+      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg2.txt\")"
     ]
   }
 }
