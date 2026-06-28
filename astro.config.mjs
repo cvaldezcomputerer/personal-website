@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, sessionDrivers } from 'astro/config';
 import { fileURLToPath } from 'node:url';
 
 import cloudflare from '@astrojs/cloudflare';
@@ -20,6 +20,12 @@ export default defineConfig({
     defaultLocale: 'en',
     routing: { prefixDefaultLocale: false },
   },
+  // This is a static resume + blog: nothing uses Astro.session. The Cloudflare
+  // adapter otherwise auto-enables KV-backed sessions and would require a
+  // `SESSION` KV namespace binding at deploy. The null driver (pure JS, fine on
+  // workerd) disables session storage and drops that binding, so no KV
+  // namespace is needed. Swap in a real driver here if sessions are ever used.
+  session: { driver: sessionDrivers.null() },
   adapter: cloudflare({
     // Optimize images at build time with sharp; serve any on-demand images
     // as-is so we don't need the paid Cloudflare Images binding. Matches the

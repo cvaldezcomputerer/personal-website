@@ -15,7 +15,7 @@ Astro 7 (static) - `@astrojs/cloudflare` v14 (deploy as a Cloudflare **Worker**)
 | `npm run dev` | Dev server at `localhost:4321` (run in a real terminal, see gotcha below) |
 | `npm run check` | Type + content check (keep this at 0/0/0) |
 | `npm run build` | Build to `./dist/` |
-| `npm run deploy` | Build, then `wrangler deploy --config dist/server/wrangler.json` |
+| `npm run deploy` | Build, then `wrangler deploy --config dist/client/wrangler.json` |
 
 **Dev-server gotcha:** running `npm run dev` headless / non-TTY triggers an upstream Astro bug (its JSON logger calls `process`, which does not exist in the Cloudflare workerd dev runtime), so every route 500s with "process is not defined". It works in a normal interactive terminal. To preview a build without the dev runtime: `npm run build` then serve `dist/client` with any static server.
 
@@ -42,9 +42,10 @@ Astro 7 (static) - `@astrojs/cloudflare` v14 (deploy as a Cloudflare **Worker**)
 - [ ] **Headshot in dark mode** - the studio-white background reads as a light block on dark; replace or remove the background (`src/assets/images/cristian.png`).
 - [ ] **More personal feel** - especially the blog (per feedback; the resume page can stay restrained). Bring 2-3 directions before building.
 - [ ] **Deploy** (needs Cloudflare account):
-  - [ ] `git init` + push to a GitHub repo (Cristian does his own git/commits).
+  - [x] `git init` + push to GitHub: https://github.com/cvaldezcomputerer/personal-website (public, `main`).
   - [ ] Add `cristianvaldez.jp` to Cloudflare; change nameservers at star-domain.jp to Cloudflare's; attach as a Workers custom domain.
-  - [ ] Connect the repo in Cloudflare **Workers Builds** (build `npm run build`, deploy `wrangler deploy --config dist/server/wrangler.json`).
+  - [ ] Connect the repo in Cloudflare **Workers Builds** (build `npm run build`, deploy `wrangler deploy --config dist/client/wrangler.json`). Note: a fully-static build emits the generated config under `dist/client/`, not `dist/server/`.
+  - [x] **`SESSION` KV binding** - not needed; sessions are disabled via the null driver in `astro.config.mjs` (static site uses no `Astro.session`).
   - [ ] Sort the `SESSION` KV binding the adapter wants (create a KV namespace bound as `SESSION`, or disable sessions).
 - [ ] **Print styles for the new homepage** - the split-sidebar home no longer has `.site-header`/`.site-footer`; print currently hides `.no-print` chrome and the TOC, but the one-page resume PDF should be reviewed against the new layout.
 - [ ] **JA for inner pages** - blog posts + full case-study bodies are still English-only; the `/ja` home links to the EN versions. Translate per-post with a flag when wanted.

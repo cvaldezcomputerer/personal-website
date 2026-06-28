@@ -9,8 +9,8 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
-    "preview": "wrangler dev --config dist/server/wrangler.json",
-    "deploy": "npm run build && wrangler deploy --config dist/server/wrangler.json",
+    "preview": "wrangler dev --config dist/client/wrangler.json",
+    "deploy": "npm run build && wrangler deploy --config dist/client/wrangler.json",
     "astro": "astro"
   },
   "dependencies": {
