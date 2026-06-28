@@ -27,6 +27,8 @@ export interface AboutContent {
   location: string;
   /** The About section, one string per paragraph. */
   paragraphs: string[];
+  /** Alt text for the About photo (matches the page language). */
+  imageAlt: string;
   /** Plain-text summary for meta/SEO (no markup). */
   summary: string;
 }
@@ -80,6 +82,7 @@ export const resume: Record<Lang, ResumeContent> = {
       role: 'IT & Web Development',
       tagline: 'I build and support things across the stack, from infrastructure to the web.',
       location: 'Aomori, Japan',
+      imageAlt: 'Cristian planting rice with local students at a community rice-planting class in Aomori',
       summary:
         'Cristian Valdez is an American IT professional based in Aomori, Japan, working across infrastructure, support, and web development. Business-level Japanese (JLPT N2).',
       paragraphs: [
@@ -183,6 +186,7 @@ export const resume: Record<Lang, ResumeContent> = {
       role: 'IT・Web開発',
       tagline: 'インフラからウェブまで、幅広くつくり、支えています。',
       location: '青森県、日本',
+      imageAlt: '青森の地域の田植え教室で、地元の生徒たちと田植えをするクリスチャン',
       summary:
         'Cristian Valdez（クリスチャン・バルデス）は、青森県を拠点に、インフラ・サポート・ウェブ開発まで幅広く手がけるアメリカ出身のITエンジニアです。ビジネスレベルの日本語（JLPT N2）。',
       paragraphs: [

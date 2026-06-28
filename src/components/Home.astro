@@ -9,7 +9,7 @@
  */
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import headshot from '~/assets/images/cristian.png';
+import headshot from '~/assets/images/cristian-rice-planting.jpg';
 
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Icon from '~/components/Icon.astro';
@@ -111,7 +111,7 @@ const personLd = {
             {c.about.paragraphs.map((para) => <p>{para}</p>)}
           </div>
           <div class="headshot-frame">
-            <Image src={headshot} alt={`Portrait of ${contact.name}`} width={320} densities={[1, 2]} class="headshot" />
+            <Image src={headshot} alt={c.about.imageAlt} width={320} densities={[1, 2]} class="headshot" />
           </div>
         </div>
       </section>
@@ -420,9 +420,7 @@ const personLd = {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 16%;
-    transform: scale(1.12);
-    transform-origin: 50% 16%;
+    object-position: 50% 35%;
   }
 
   /* --- Shared bullets --- */
