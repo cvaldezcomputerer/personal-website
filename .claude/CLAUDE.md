@@ -134,9 +134,11 @@ always this.
   (`npm run deploy` does both). The site is fully static, so the adapter emits
   the generated wrangler config under `dist/client/`, not `dist/server/` (which
   is empty); a future SSR route would move it to `dist/server/`.
-- **Sessions are disabled** (`session: { driver: sessionDrivers.null() }` in
-  `astro.config.mjs`). The static site uses no `Astro.session`, so we avoid the
-  `SESSION` KV namespace the adapter would otherwise require at deploy.
+- **Sessions are inert** (`session: { driver: sessionDrivers.lruCache() }` in
+  `astro.config.mjs`). The static site uses no `Astro.session`, so this avoids
+  the `SESSION` KV namespace the adapter would otherwise require at deploy. Use
+  `lruCache` specifically: the simpler `memory` / `null` drivers exist at runtime
+  but are absent from the `sessionDrivers` TS types, so they fail `astro check`.
 - **Never add `nodejs_compat`** to `wrangler.jsonc` compatibility_flags. With
   adapter v14 + Astro 7 it breaks the build-time SSG render and every page
   builds as the literal string "[object Object]". unenv inlines Node polyfills

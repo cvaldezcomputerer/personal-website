@@ -1,7 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": "@astrojs/cloudflare/entrypoints/server",
-  "name": "cristianvaldez",
+  // Must match the Worker name Cloudflare Workers Builds deploys to (it names
+  // the Worker after the repo). Keep this in sync to avoid the dashboard's
+  // "settings inconsistent" warning and a duplicate Worker on deploy.
+  "name": "personal-website",
   "compatibility_date": "2026-02-08",
   // Do NOT add "nodejs_compat". With @astrojs/cloudflare v14 + Astro 7 the
   // adapter runs the build-time SSG render through workerd using these flags,

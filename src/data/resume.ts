@@ -162,10 +162,10 @@ export const resume: Record<Lang, ResumeContent> = {
     ],
     otherProjects: [
       {
-        name: 'Mercari Pay-on-Delivery Warning',
+        name: 'Mercari Payment Warning',
         description:
-          'A Chrome extension that flags Mercari listings set to pay-on-delivery, so the surcharge never catches you at checkout. Built it for myself, and I still use it daily.',
-        url: 'https://github.com/cvaldezcomputerer/mercari-pay-on-delivery-warning-extension',
+          'A published Chrome extension that flags Mercari listings set to pay-on-delivery, so the surcharge never catches you at checkout. Built it for myself, and I still use it daily.',
+        url: 'https://chromewebstore.google.com/detail/mercari-payment-warning/nafajmljhjdebkknmfbdccakdfhdcbhd',
         stack: ['Chrome Extension', 'JavaScript'],
       },
       {
@@ -267,8 +267,8 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         name: 'Mercari 着払い警告 拡張機能',
         description:
-          'メルカリで「着払い」に設定された商品を、購入前に知らせてくれるChrome拡張機能です。手数料に不意打ちされないよう自分用に作り、今も毎日使っています。',
-        url: 'https://github.com/cvaldezcomputerer/mercari-pay-on-delivery-warning-extension',
+          'メルカリで「着払い」に設定された商品を、購入前に知らせてくれる、公開済みのChrome拡張機能です。手数料に不意打ちされないよう自分用に作り、今も毎日使っています。',
+        url: 'https://chromewebstore.google.com/detail/mercari-payment-warning/nafajmljhjdebkknmfbdccakdfhdcbhd',
         stack: ['Chrome拡張機能', 'JavaScript'],
       },
       {

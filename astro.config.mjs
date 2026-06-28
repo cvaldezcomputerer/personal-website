@@ -22,10 +22,12 @@ export default defineConfig({
   },
   // This is a static resume + blog: nothing uses Astro.session. The Cloudflare
   // adapter otherwise auto-enables KV-backed sessions and would require a
-  // `SESSION` KV namespace binding at deploy. The null driver (pure JS, fine on
-  // workerd) disables session storage and drops that binding, so no KV
-  // namespace is needed. Swap in a real driver here if sessions are ever used.
-  session: { driver: sessionDrivers.null() },
+  // `SESSION` KV namespace binding at deploy. The in-memory LRU driver (pure JS,
+  // ephemeral, never actually exercised) makes sessions inert and drops that
+  // binding, so no KV namespace is needed. Swap in a real driver if ever used.
+  // (The simpler memory/null drivers exist at runtime but are absent from the
+  // sessionDrivers TS types, so they fail `astro check`; lruCache is typed.)
+  session: { driver: sessionDrivers.lruCache() },
   adapter: cloudflare({
     // Optimize images at build time with sharp; serve any on-demand images
     // as-is so we don't need the paid Cloudflare Images binding. Matches the
