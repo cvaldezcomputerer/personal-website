@@ -175,26 +175,43 @@ a noindex meta AND go in `public/robots.txt`.
   `BaseLayout` takes `lang` + `bare` (homepage supplies its own `<main>`, skips
   the top Nav/Footer). JA scoped to homepage + chrome; inner pages stay English.
 - **Repo:** https://github.com/cvaldezcomputerer/personal-website (public,
-  `main`). Deploy via Cloudflare Workers Builds.
+  `main`). Auto-deploy on push via Cloudflare Workers Builds (worker named
+  `personal-website`).
+- **LIVE** at https://cristianvaldez.jp (and `/ja/`), HTTPS, both locales 200,
+  served from Cloudflare's Tokyo edge. Custom domain attached.
+- **About photo** is the rice-planting candid (`cristian-rice-planting.jpg`),
+  zoomed 1.35x on Cristian; its green background also resolved the old
+  dark-mode headshot issue.
+- **Smaller projects** section added (Mercari Chrome extension -> published Web
+  Store listing; ZMK Totem config). Spanish (conversational) added to languages.
 
 ## TODO
 
 - [ ] **Fill in real content** - resume tweaks, the two case studies, real blog
-  posts. Replace the placeholder `welcome` post.
+  posts. Replace the placeholder `welcome` post. (Biggest remaining item.)
 - [ ] **OG share image** - branded 1200x630 `public/og/default.png` via sharp;
   `Seo.astro` already emits image tags when an `image` is passed. Wire a default.
 - [ ] **Accessibility sweep + Lighthouse** - landmarks, heading order, contrast,
   focus, labels. Full Lighthouse run against the deployed site.
-- [ ] **Headshot in dark mode** - the studio-white background reads as a light
-  block on dark; replace or remove the background (`src/assets/images/cristian.png`).
 - [ ] **Print styles for the new homepage** - the split-sidebar home dropped
   `.site-header`/`.site-footer`; review the one-page resume PDF against it.
 - [ ] **More personal feel** - especially the blog. Bring 2-3 directions first.
 - [ ] **JA for inner pages** - blog + full case studies are English-only; the
   `/ja` home links to the EN versions. Translate per-post with a flag if wanted.
-- [ ] **Deploy** - repo pushed; nameservers pointed at Cloudflare; finish Workers
-  Builds + attach `cristianvaldez.jp` as the Worker custom domain once Active.
+- [ ] **`www` subdomain** (optional) - add `www.cristianvaldez.jp` as a second
+  Worker custom domain (or a redirect) if wanted; apex works now.
 - [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
+- [ ] **Uncommitted:** `.claude/settings.json` (harness permission state) is
+  modified but intentionally left out of commits - decide commit vs gitignore.
+
+### Done this session (2026-06-28)
+
+Homepage split-sidebar redesign + EN/JA i18n; broadened positioning; smaller
+projects + Spanish; relocated chrome controls; git repo created + pushed;
+deployed to Cloudflare Workers + custom domain live; sessions made inert
+(lruCache, no SESSION KV); fixed `npm ci` lockfile (@emnapi devDeps), deploy
+config path (`dist/client/wrangler.json`), worker-name consistency; swapped +
+zoomed the About photo; slimmed the public README (ops moved here).
 
 ## Workflow
 

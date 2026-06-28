@@ -44,7 +44,25 @@
       "PowerShell(git -C $proj push -q origin main)",
       "PowerShell(git -C $proj log --oneline -2)",
       "PowerShell(git -C $proj status -sb)",
-      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg2.txt\")"
+      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg2.txt\")",
+      "PowerShell(git -C $proj add package.json package-lock.json README.md .claude/CLAUDE.md)",
+      "PowerShell(git -C $proj log --oneline -3)",
+      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg3.txt\")",
+      "PowerShell(git -C $proj add astro.config.mjs wrangler.jsonc src/data/resume.ts .claude/CLAUDE.md)",
+      "PowerShell($msg = \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\bcb0cabb-49cd-4924-a4e7-1d41eb49370a\\\\scratchpad\\\\commitmsg4.txt\")",
+      "Bash(curl -sS -o /dev/null -w \"status=%{http_code} final=%{url_effective}\\\\n\" -L https://cristianvaldez.jp/)",
+      "Bash(curl -sS -o /dev/null -w \"status=%{http_code}\\\\n\" -L https://cristianvaldez.jp/ja/)",
+      "Bash(curl -sS -L https://cristianvaldez.jp/)",
+      "Bash(curl -sS -o /dev/null -D - https://cristianvaldez.jp/)",
+      "Bash(node -e \"const s=require\\('sharp'\\); s\\('C:/Users/babyo/Downloads/rice-planter.HEIC'\\).metadata\\(\\).then\\(m=>console.log\\('sharp HEIC OK:', m.format, m.width+'x'+m.height\\)\\).catch\\(e=>console.log\\('sharp HEIC FAIL:', e.message\\)\\)\")",
+      "Bash(command -v ffmpeg)",
+      "Bash(command -v magick)",
+      "Bash(magick -version)",
+      "Bash(command -v heif-convert)",
+      "Bash(command -v sips)",
+      "Bash(magick \"C:/Users/babyo/Downloads/rice-planter.HEIC\" -auto-orient -resize 1200x1200 -quality 88 \"src/assets/images/cristian-rice-planting.jpg\")",
+      "Bash(magick src/assets/images/cristian-rice-planting.jpg -crop 666x832+117+122 +repage -resize 320x400 __TRACKED_VAR__/crop-preview.jpg)",
+      "PowerShell(git -C $proj status -s)"
     ]
   }
 }
