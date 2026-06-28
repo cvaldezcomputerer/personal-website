@@ -1,0 +1,96 @@
+---
+/**
+ * SectionNav - the vertical table-of-contents in the homepage sidebar. Each
+ * item links to an on-page section; a small IntersectionObserver highlights the
+ * one currently in view (its indicator line grows and turns sage). Restrained,
+ * purposeful motion. Hidden on narrow screens (the sidebar collapses there).
+ */
+interface Props {
+  items: { id: string; label: string }[];
+  ariaLabel?: string;
+}
+const { items, ariaLabel = 'Sections' } = Astro.props;
+---
+
+<nav class="toc" aria-label={ariaLabel}>
+  <ul role="list">
+    {
+      items.map((it) => (
+        <li>
+          <a href={`#${it.id}`} data-toc={it.id}>
+            <span class="toc-line" aria-hidden="true" />
+            <span class="toc-label">{it.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc]'));
+  if (links.length) {
+    const byId = new Map(links.map((a) => [a.dataset.toc, a]));
+    const sections = links
+      .map((a) => document.getElementById(a.dataset.toc ?? ''))
+      .filter((el): el is HTMLElement => el !== null);
+
+    let current: string | null = null;
+    const setActive = (id: string | null) => {
+      if (id === current) return;
+      current = id;
+      links.forEach((a) => a.classList.toggle('is-active', a.dataset.toc === id));
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // The active section is the one whose heading sits highest within the
+        // detection band near the top of the viewport.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActive(visible[0].target.id);
+      },
+      { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    void byId;
+  }
+</script>
+
+<style>
+  .toc ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .toc a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-1) 0;
+    color: var(--color-text-faint);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .toc-line {
+    width: 1.5rem;
+    height: 1px;
+    flex: none;
+    background: var(--color-border-strong);
+    transition: width var(--transition) var(--ease-out), background-color var(--transition) ease;
+  }
+  .toc a:hover { color: var(--color-text-muted); }
+  .toc a:hover .toc-line {
+    width: 2.5rem;
+    background: var(--color-text-muted);
+  }
+  .toc a.is-active { color: var(--color-text); }
+  .toc a.is-active .toc-line {
+    width: 3.25rem;
+    background: var(--color-accent);
+  }
+</style>

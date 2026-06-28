@@ -1,0 +1,71 @@
+---
+/**
+ * Nav - sitewide header for inner pages (blog, case studies): brand monogram,
+ * primary links, and the dark-mode toggle. The homepage does NOT use this; its
+ * sticky sidebar is the nav. Inner pages are English-only for now, so there is
+ * no language toggle here.
+ */
+import Monogram from '~/components/Monogram.astro';
+import ThemeToggle from '~/components/ThemeToggle.astro';
+
+const links = [
+  { href: '/#projects', label: 'Projects' },
+  { href: '/blog', label: 'Writing' },
+];
+---
+
+<header class="site-header">
+  <div class="container--page bar">
+    <a href="/" class="brand">
+      <Monogram href="/" />
+      <span>Cristian Valdez</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 4rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .brand:hover { color: var(--color-accent); }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .nav a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+  .nav a:hover { color: var(--color-text); }
+
+  @media (max-width: 30rem) {
+    .nav { gap: var(--space-4); }
+  }
+</style>

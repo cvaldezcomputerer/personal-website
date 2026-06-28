@@ -1,0 +1,652 @@
+---
+/**
+ * Home - the split-sidebar homepage, rendered for both locales. The left column
+ * (name, role, tagline, scroll-spy TOC, socials + toggles) is sticky on desktop
+ * and acts as the navigation; the right column scrolls through the resume.
+ * Reads localized copy from resume[lang] + ui[lang]; project card text falls
+ * back to English when a JA variant is absent. Inner pages (case studies, blog)
+ * stay English for now, so those links are not localized.
+ */
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import headshot from '~/assets/images/cristian.png';
+
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
+import Monogram from '~/components/Monogram.astro';
+import ThemeToggle from '~/components/ThemeToggle.astro';
+import LanguageToggle from '~/components/LanguageToggle.astro';
+import SectionNav from '~/components/SectionNav.astro';
+
+import { contact, resume } from '~/data/resume';
+import { ui, type Lang } from '~/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const c = resume[lang];
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const navItems = [
+  { id: 'about', label: t.nav.about },
+  { id: 'projects', label: t.nav.projects },
+  { id: 'experience', label: t.nav.experience },
+  { id: 'skills', label: t.nav.skills },
+  { id: 'credentials', label: t.nav.credentials },
+];
+
+const homeHref = lang === 'en' ? '/' : '/ja';
+const year = new Date().getFullYear();
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: contact.name,
+  jobTitle: c.about.role,
+  email: `mailto:${contact.email}`,
+  url: `https://cristianvaldez.jp${lang === 'en' ? '' : '/ja'}`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Aomori', addressCountry: 'JP' },
+  sameAs: [contact.github, contact.linkedin],
+};
+---
+
+<BaseLayout
+  lang={lang}
+  bare
+  title={contact.name}
+  description={c.about.summary}
+  jsonLd={personLd}
+  hreflang={{ en: 'https://cristianvaldez.jp/', ja: 'https://cristianvaldez.jp/ja' }}
+>
+  <div class="layout container--page">
+    <header class="sidebar">
+      <div class="sidebar-inner">
+        <div class="intro">
+          <Monogram href={homeHref} />
+          <p class="role">{c.about.role}</p>
+          <h1 class="name">{contact.name}</h1>
+          <p class="tagline">{c.about.tagline}</p>
+          <p class="loc"><Icon name="map-pin" /> {c.about.location}</p>
+        </div>
+
+        <div class="sidebar-nav">
+          <SectionNav items={navItems} ariaLabel={t.nav.about} />
+        </div>
+
+        <ul class="socials sidebar-foot no-print" role="list">
+          <li>
+            <a href={contact.github} aria-label="GitHub" target="_blank" rel="me noopener">
+              <Icon name="github" />
+            </a>
+          </li>
+          <li>
+            <a href={contact.linkedin} aria-label="LinkedIn" target="_blank" rel="me noopener">
+              <Icon name="linkedin" />
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${contact.email}`} aria-label="Email"><Icon name="mail" /></a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <main id="main" class="content">
+      <div class="topbar no-print">
+        <a class="writing-link" href="/blog">{t.nav.writing} <Icon name="arrow-up-right" /></a>
+        <div class="toggles">
+          <LanguageToggle lang={lang} enHref="/" jaHref="/ja" label={t.toggleLang} />
+          <ThemeToggle label={t.toggleTheme} />
+        </div>
+      </div>
+      <section id="about" class="section" aria-labelledby="about-title">
+        <h2 id="about-title" class="section-title">{t.sections.about}</h2>
+        <div class="about-grid">
+          <div class="about-text">
+            {c.about.paragraphs.map((para) => <p>{para}</p>)}
+          </div>
+          <div class="headshot-frame">
+            <Image src={headshot} alt={`Portrait of ${contact.name}`} width={320} densities={[1, 2]} class="headshot" />
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section" aria-labelledby="projects-title">
+        <h2 id="projects-title" class="section-title">{t.sections.projects}</h2>
+        <ul class="projects" role="list">
+          {
+            projects.map((p) => {
+              const name = lang === 'ja' && p.data.nameJa ? p.data.nameJa : p.data.name;
+              const tagline = lang === 'ja' && p.data.taglineJa ? p.data.taglineJa : p.data.tagline;
+              return (
+                <li>
+                  <a class="project-card" href={`/projects/${p.id}`}>
+                    {p.data.cardImage && (
+                      <div class="project-thumb">
+                        <Image src={p.data.cardImage} alt={`Screenshot of ${name}`} width={520} />
+                      </div>
+                    )}
+                    <div class="project-body">
+                      <h3 class="project-name">{name} <Icon name="arrow-up-right" /></h3>
+                      <p class="project-tagline">{tagline}</p>
+                      <ul class="chips" role="list">
+                        {p.data.stack.map((s) => (
+                          <li class="chip">{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        {
+          c.otherProjects.length > 0 && (
+            <>
+              <h3 class="subsection-title">{t.smallerProjects}</h3>
+              <ul class="small-projects" role="list">
+                {c.otherProjects.map((op) => (
+                  <li class="small-project">
+                    <a class="small-project-link" href={op.url} target="_blank" rel="noopener">
+                      {op.name} <Icon name="arrow-up-right" />
+                    </a>
+                    <p class="small-project-desc">{op.description}</p>
+                    <ul class="chips" role="list">
+                      {op.stack.map((s) => (
+                        <li class="chip">{s}</li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </section>
+
+      <section id="experience" class="section" aria-labelledby="experience-title">
+        <h2 id="experience-title" class="section-title">{t.sections.experience}</h2>
+        <div class="entries">
+          {
+            c.experience.map((job) => (
+              <article class="entry">
+                <div class="entry-head">
+                  <div>
+                    <h3 class="entry-role">{job.role}</h3>
+                    <p class="entry-org">{job.org}</p>
+                  </div>
+                  <p class="entry-dates">
+                    {job.start} - {job.end}
+                  </p>
+                </div>
+                <ul class="bullets" role="list">
+                  {job.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="skills" class="section" aria-labelledby="skills-title">
+        <h2 id="skills-title" class="section-title">{t.sections.skills}</h2>
+        <dl class="skills">
+          {
+            c.skills.map((g) => (
+              <div class="skill-row">
+                <dt>{g.label}</dt>
+                <dd>
+                  <ul class="chips" role="list">
+                    {g.items.map((it) => (
+                      <li class="chip">{it}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section id="credentials" class="section" aria-labelledby="credentials-title">
+        <h2 id="credentials-title" class="section-title">{t.sections.credentials}</h2>
+        <ul class="creds" role="list">
+          {
+            c.credentials.map((cred) => (
+              <li class="cred">
+                <span class="cred-title">{cred.title}</span>
+                <span class="cred-org">{cred.org}</span>
+                <span class="cred-date">
+                  {cred.inProgress && <span class="badge">{t.inProgress}</span>}
+                  {cred.date}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <footer class="content-foot">
+        <p>&copy; {year} {contact.name}</p>
+      </footer>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  /* --- Split layout --- */
+  .layout {
+    padding-block: var(--space-6);
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      display: grid;
+      grid-template-columns: 21rem minmax(0, 1fr);
+      gap: var(--space-8);
+      align-items: start;
+      padding-block: 0;
+    }
+  }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    padding-block: var(--space-6);
+  }
+  @media (min-width: 64rem) {
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      padding-block: var(--space-8);
+    }
+    .sidebar-inner {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .intro .role {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    letter-spacing: 0.02em;
+    margin-top: var(--space-5);
+  }
+  .name {
+    font-size: var(--text-3xl);
+    margin-top: var(--space-1);
+  }
+  .tagline {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    line-height: var(--leading-snug);
+    margin-top: var(--space-3);
+    max-width: 32ch;
+  }
+  .loc {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-top: var(--space-4);
+  }
+  .loc :global(svg) { color: var(--color-accent); }
+
+  .sidebar-nav {
+    display: none;
+    margin-top: var(--space-7);
+  }
+  @media (min-width: 64rem) {
+    .sidebar-nav { display: block; }
+  }
+
+  .sidebar-foot {
+    margin-top: var(--space-6);
+  }
+  @media (min-width: 64rem) {
+    .sidebar-foot { margin-top: auto; }
+  }
+
+  .socials {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast) ease, border-color var(--transition-fast) ease;
+  }
+  .socials a:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  .writing-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .writing-link:hover { color: var(--color-accent); }
+  .writing-link :global(svg) { font-size: 0.9em; }
+  .toggles {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* --- Content column --- */
+  .content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-block: var(--space-6);
+  }
+  @media (min-width: 64rem) {
+    .content { padding-block: var(--space-8); }
+  }
+
+  /* Page controls (Writing + language + theme), top-right of the content. */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: calc(var(--space-8) * -1 + var(--space-5));
+  }
+  @media (min-width: 64rem) {
+    .topbar { justify-content: flex-end; gap: var(--space-5); }
+  }
+  .section { scroll-margin-top: var(--space-5); }
+  .section-title {
+    font-size: var(--text-2xl);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* --- About --- */
+  .about-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 32rem) {
+    .about-grid {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+  }
+  .about-text > * + * { margin-top: var(--space-4); }
+  .about-text p { color: var(--color-text-muted); }
+  .headshot-frame {
+    flex: none;
+    width: 150px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+    background: var(--color-surface);
+    order: -1;
+  }
+  @media (min-width: 32rem) {
+    .headshot-frame { order: 0; width: 160px; }
+  }
+  .headshot {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 16%;
+    transform: scale(1.12);
+    transform-origin: 50% 16%;
+  }
+
+  /* --- Shared bullets --- */
+  .bullets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .bullets li {
+    position: relative;
+    padding-left: var(--space-4);
+    color: var(--color-text-muted);
+  }
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-round);
+    background: var(--color-accent);
+  }
+
+  /* --- Chips --- */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* --- Projects --- */
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .project-card {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: var(--space-5);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--transition-fast) ease, box-shadow var(--transition-fast) ease,
+      transform var(--transition-fast) var(--ease-out);
+  }
+  .project-card:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .project-thumb {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    aspect-ratio: 16 / 10;
+  }
+  .project-thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .project-name {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    transition: color var(--transition-fast) ease;
+  }
+  .project-name :global(svg) {
+    font-size: 0.85em;
+    transition: transform var(--transition-fast) var(--ease-out);
+  }
+  .project-card:hover .project-name { color: var(--color-accent); }
+  .project-card:hover .project-name :global(svg) { transform: translate(2px, -2px); }
+  .project-tagline {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+  }
+  .project-body .chips { margin-top: var(--space-3); }
+  @media (max-width: 40rem) {
+    .project-card { grid-template-columns: 1fr; gap: var(--space-3); }
+  }
+
+  /* --- Smaller projects (external links, no case study) --- */
+  .subsection-title {
+    font-size: var(--text-lg);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+  .small-projects {
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 34rem) {
+    .small-projects { grid-template-columns: 1fr 1fr; }
+  }
+  .small-project {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+  .small-project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .small-project-link :global(svg) {
+    font-size: 0.8em;
+    color: var(--color-text-faint);
+    transition: transform var(--transition-fast) var(--ease-out), color var(--transition-fast) ease;
+  }
+  .small-project:hover .small-project-link { color: var(--color-accent); }
+  .small-project:hover .small-project-link :global(svg) {
+    transform: translate(2px, -2px);
+    color: var(--color-accent);
+  }
+  .small-project-desc {
+    flex: 1 1 auto;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* --- Experience --- */
+  .entries { display: flex; flex-direction: column; }
+  .entry {
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .entry:first-child { border-top: none; padding-top: 0; }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .entry-role { font-size: var(--text-lg); }
+  .entry-org { color: var(--color-accent); font-weight: 500; }
+  .entry-dates {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    white-space: nowrap;
+  }
+
+  /* --- Skills --- */
+  .skills { display: flex; flex-direction: column; gap: var(--space-4); }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+  .skill-row dt { font-weight: 600; color: var(--color-text); }
+  @media (max-width: 40rem) {
+    .skill-row { grid-template-columns: 1fr; gap: var(--space-2); }
+  }
+
+  /* --- Credentials --- */
+  .creds { display: flex; flex-direction: column; }
+  .cred {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+  .cred:first-child { border-top: none; }
+  .cred-title { font-weight: 600; }
+  .cred-org { color: var(--color-text-muted); font-size: var(--text-sm); }
+  .cred-date {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    white-space: nowrap;
+  }
+  .badge {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+    border-radius: var(--radius-pill);
+    padding: 0.1rem 0.5rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+  }
+
+  /* --- Content footer --- */
+  .content-foot {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-faint);
+    font-size: var(--text-sm);
+  }
+</style>

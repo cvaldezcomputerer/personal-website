@@ -1,0 +1,42 @@
+---
+/**
+ * Monogram - the "CV" brand mark (sage tile, matches public/favicon.svg). Used
+ * as the home link in the homepage sidebar and the inner-page Nav. Letters are
+ * set in the heading font for brand continuity.
+ */
+interface Props {
+  href?: string;
+  label?: string;
+  class?: string;
+}
+const { href = '/', label = 'Cristian Valdez - home', class: className } = Astro.props;
+---
+
+<a href={href} class:list={['monogram', className]} aria-label={label}>
+  <span aria-hidden="true">CV</span>
+</a>
+
+<style>
+  .monogram {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    transition: background-color var(--transition-fast) ease, transform var(--transition-fast) var(--ease-out);
+  }
+  .monogram:hover {
+    background: var(--color-accent-strong);
+    transform: translateY(-1px);
+  }
+  .monogram span { line-height: 1; }
+</style>

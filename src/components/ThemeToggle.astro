@@ -1,0 +1,56 @@
+---
+/**
+ * ThemeToggle - the dark-mode button. Flips html[data-theme] and persists the
+ * choice; ThemeScript sets the initial value before paint. The sun/moon swap is
+ * CSS-only and lives in global.css (the svgs are a child component, so a scoped
+ * rule here would not match them). Used in both Nav and the homepage sidebar.
+ */
+import Icon from '~/components/Icon.astro';
+
+interface Props {
+  label?: string;
+}
+const { label = 'Toggle dark mode' } = Astro.props;
+---
+
+<button id="theme-toggle" class="theme-toggle no-print" type="button" aria-label={label} title={label}>
+  <Icon name="moon" class="icon-moon" />
+  <Icon name="sun" class="icon-sun" />
+</button>
+
+<script is:inline>
+  (function () {
+    var b = document.getElementById('theme-toggle');
+    if (!b) return;
+    b.addEventListener('click', function () {
+      var r = document.documentElement;
+      var next = r.dataset.theme === 'dark' ? 'light' : 'dark';
+      r.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {}
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color var(--transition-fast) ease, border-color var(--transition-fast) ease;
+  }
+  .theme-toggle:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+</style>

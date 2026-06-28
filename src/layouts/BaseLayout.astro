@@ -1,0 +1,91 @@
+---
+/**
+ * BaseLayout - the document shell every page renders through. Fonts + tokens +
+ * pre-paint theme, then Seo, Nav, the page <main>, and Footer. Pages render
+ * their content into the default slot (they do NOT add their own <main>).
+ */
+import '@fontsource-variable/hanken-grotesk/index.css';
+import '@fontsource-variable/mona-sans/index.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '~/styles/global.css';
+
+import ThemeScript from '~/components/ThemeScript.astro';
+import Seo from '~/components/Seo.astro';
+import Nav from '~/components/Nav.astro';
+import Footer from '~/components/Footer.astro';
+import { ui, type Lang } from '~/i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  jsonLd?: object;
+  /** Document language; drives <html lang> and the skip-link copy. */
+  lang?: Lang;
+  /** Bare = no top Nav / Footer / <main> wrapper; the page supplies its own
+   *  structure (used by the split-sidebar homepage, where the sidebar IS the
+   *  nav). The page must include an element with id="main" for the skip link. */
+  bare?: boolean;
+  /** Emit hreflang alternates (homepage only). */
+  hreflang?: { en: string; ja: string };
+}
+
+const {
+  title = 'Cristian Valdez',
+  description = 'Cristian Valdez - IT and web development, based in Aomori, Japan.',
+  image,
+  noindex = false,
+  type = 'website',
+  jsonLd,
+  lang = 'en',
+  bare = false,
+  hreflang,
+} = Astro.props;
+
+// Home keeps the bare name; inner pages get "Page - Cristian Valdez".
+const fullTitle = title === 'Cristian Valdez' ? title : `${title} - Cristian Valdez`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeScript />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <Seo title={fullTitle} description={description} image={image} noindex={noindex} type={type} jsonLd={jsonLd} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Cristian Valdez - Writing" href="/rss.xml" />
+    {
+      hreflang && (
+        <>
+          <link rel="alternate" hreflang="en" href={hreflang.en} />
+          <link rel="alternate" hreflang="ja" href={hreflang.ja} />
+          <link rel="alternate" hreflang="x-default" href={hreflang.en} />
+        </>
+      )
+    }
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">{ui[lang].skipToContent}</a>
+    {
+      bare ? (
+        <slot />
+      ) : (
+        <>
+          <Nav />
+          <main id="main">
+            <slot />
+          </main>
+          <Footer />
+        </>
+      )
+    }
+  </body>
+</html>

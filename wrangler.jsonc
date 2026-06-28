@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "name": "cristianvaldez",
+  "compatibility_date": "2026-02-08",
+  // Do NOT add "nodejs_compat". With @astrojs/cloudflare v14 + Astro 7 the
+  // adapter runs the build-time SSG render through workerd using these flags,
+  // and nodejs_compat breaks that render so every page builds as the literal
+  // string "[object Object]". unenv inlines the Node polyfills into the worker
+  // bundle when the flag is absent, so runtime does not need it. (Carried over
+  // from the takkotaco/dog_SITE Astro 7 upgrade incident.)
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

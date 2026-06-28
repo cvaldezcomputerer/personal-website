@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /specimen
+
+Sitemap: https://cristianvaldez.jp/sitemap-index.xml

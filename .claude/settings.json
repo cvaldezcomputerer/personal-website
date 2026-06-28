@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -iE \"\\\\.\\(pdf|docx|doc|txt|md\\)$\")",
+      "Bash(unzip -p \"Resume-reworked.docx\" word/document.xml)",
+      "WebFetch(domain:www.developersdigest.tech)",
+      "WebFetch(domain:www.925studios.co)",
+      "Bash(npm -v)",
+      "Bash(git --version)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/specimen)",
+      "Bash(python -m http.server 4321 --directory dist/client)",
+      "Bash(py -m http.server 4321 --directory dist/client)",
+      "Bash(npm uninstall *)",
+      "Bash(grep -vE \"node_modules|^\\\\[|Generated|Getting|Completed|optimiz|bundling|^>|^$\")",
+      "WebFetch(domain:brittanychiang.com)",
+      "WebFetch(domain:hirok.io)",
+      "WebFetch(domain:rython.dev)",
+      "PowerShell($paths = @\\(\"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\",\"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\",\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"C:\\\\Program Files \\(x86\\)\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"\\); foreach \\($p in $paths\\) { if \\(Test-Path $p\\) { Write-Output \"FOUND: $p\" } })",
+      "PowerShell(npm run check)",
+      "Bash(python -m http.server 4321 --bind 127.0.0.1)",
+      "Bash(curl -s -o /dev/null -w \"EN / -> %{http_code}\\\\n\" http://127.0.0.1:4321/)",
+      "Bash(curl -s -o /dev/null -w \"JA /ja/ -> %{http_code}\\\\n\" http://127.0.0.1:4321/ja/)"
+    ]
+  }
+}
