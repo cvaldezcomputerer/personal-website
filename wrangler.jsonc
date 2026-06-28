@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": "@astrojs/cloudflare/entrypoints/server",
-  "name": "cristianvaldez",
+  "name": "personal-website",
   "compatibility_date": "2026-02-08",
   // Do NOT add "nodejs_compat". With @astrojs/cloudflare v14 + Astro 7 the
   // adapter runs the build-time SSG render through workerd using these flags,
