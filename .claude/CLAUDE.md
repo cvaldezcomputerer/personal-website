@@ -18,7 +18,9 @@ avoid (researched):
   introduce other families casually.
 - **Color:** no purple / lavender, no purple-to-blue gradients, no gradients at
   all. One accent only: sage green (`--color-accent`). Everything else is warm
-  neutrals.
+  neutrals. The brand mark is the クリス name-seal (hanko), rendered in that same
+  sage - not a second hue. (A red+indigo two-hue scheme was tried during the 2026
+  hanko rebrand and rejected: the owner prefers the single sage accent.)
 - **Dark mode:** ship light + dark, system-aware, with a toggle. Light is the
   default. Never a permanent dark theme (the single most common AI tell). Keep
   text high-contrast in both themes.
@@ -51,8 +53,9 @@ Other firm rules:
 
 ## Visual identity
 
-"Warm modern, grown up." Warm off-white ground, one sage-green accent, soft
-contained cards, line icons. Restrained and professional. This is brand
+"Warm modern, grown up." Warm off-white ground, one sage-green accent (also the
+color of the クリス name-seal / hanko brand mark), soft contained cards, line
+icons. Restrained and professional. This is brand
 continuity with the owner's other sites (takkotaco.com, bloggydoggy.com) but
 calmer and more grown-up. Note: warm cream backgrounds are themselves an
 AI-default, so ours is a deliberate continuity choice, kept distinctive through
@@ -163,10 +166,10 @@ a noindex meta AND go in `public/robots.txt`.
 
 - **Built:** scaffold + build config; tokens + dark mode (ThemeScript);
   self-hosted fonts; Icon / Seo / Nav / Footer; projects collection + 2 case
-  studies; blog (index, post, RSS); robots.txt, 404, sitemap, CV favicon,
+  studies; blog (index, post, RSS); robots.txt, 404, sitemap, hanko favicon,
   JSON-LD. `astro check` is 0/0/0.
 - **Homepage redesign (split sidebar):** two-column layout - sticky left
-  sidebar (CV monogram, name, role, tagline, scroll-spy TOC, socials) and a
+  sidebar (クリス hanko monogram, name, role, tagline, scroll-spy TOC, socials) and a
   scrolling right column (About, Projects with screenshots, smaller projects,
   Experience, Skills, Education). Writing link + language/theme toggles sit in a
   top-right bar in the content column. Inspired by brittanychiang.com, our own
@@ -189,6 +192,10 @@ a noindex meta AND go in `public/robots.txt`.
 
 - [ ] **Fill in real content** - resume tweaks, the two case studies, real blog
   posts. Replace the placeholder `welcome` post. (Biggest remaining item.)
+- [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
+  hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
+  still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
+  ImageMagick) so old browsers match.
 - [ ] **OG share image** - branded 1200x630 `public/og/default.png` via sharp;
   `Seo.astro` already emits image tags when an `image` is passed. Wire a default.
 - [ ] **Accessibility sweep + Lighthouse** - landmarks, heading order, contrast,

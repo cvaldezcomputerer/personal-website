@@ -62,7 +62,8 @@
       "Bash(command -v sips)",
       "Bash(magick \"C:/Users/babyo/Downloads/rice-planter.HEIC\" -auto-orient -resize 1200x1200 -quality 88 \"src/assets/images/cristian-rice-planting.jpg\")",
       "Bash(magick src/assets/images/cristian-rice-planting.jpg -crop 666x832+117+122 +repage -resize 320x400 __TRACKED_VAR__/crop-preview.jpg)",
-      "PowerShell(git -C $proj status -s)"
+      "PowerShell(git -C $proj status -s)",
+      "Bash(start \"\" \"C:\\\\Users\\\\babyo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-babyo-OneDrive-Desktop-projects-personal-website\\\\e274095b-eb82-49bb-8752-39359dd54286\\\\scratchpad\\\\hanko-preview.html\")"
     ]
   }
 }

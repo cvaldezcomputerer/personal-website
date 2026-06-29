@@ -1,13 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#3f7a52" />
-  <text
-    x="16"
-    y="21.5"
-    text-anchor="middle"
-    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
-    font-size="15"
-    font-weight="700"
-    letter-spacing="-0.5"
-    fill="#ffffff"
-  >CV</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- CV name-seal favicon: the romaji sibling of the クリス hanko in the site
+       chrome (Monogram.astro). CV reads cleanly at 16px where the kana muddies.
+       Letters are Noto Sans JP 900 converted to outline paths (no webfont).
+       Sage to match the site accent (--color-accent); the dark variant uses the
+       lightened dark-mode sage. Note: .ring sets fill:none separately - a CSS
+       `fill` would override the fill="none" attribute and fill the ring solid. -->
+  <style>
+    .ring { fill: none; stroke: #3f7a52; }
+    .glyph { fill: #3f7a52; }
+    @media (prefers-color-scheme: dark) {
+      .ring { stroke: #84bd97; }
+      .glyph { fill: #84bd97; }
+    }
+  </style>
+  <circle class="ring" cx="60" cy="60" r="51" stroke-width="5" />
+  <g class="glyph">
+    <path d="M47.44 80.39Q43.69 80.39 40.36 79.12Q37.03 77.86 34.47 75.29Q31.91 72.73 30.45 68.95Q29.0 65.18 29.0 60.21Q29.0 55.3 30.51 51.47Q32.01 47.64 34.63 45.0Q37.24 42.36 40.62 40.98Q44.0 39.61 47.75 39.61Q51.61 39.61 54.65 41.14Q57.69 42.67 59.69 44.73L54.78 50.76Q53.3 49.38 51.66 48.54Q50.03 47.69 47.91 47.69Q45.38 47.69 43.26 49.14Q41.15 50.6 39.91 53.32Q38.67 56.04 38.67 59.89Q38.67 63.8 39.8 66.58Q40.94 69.35 43.0 70.8Q45.06 72.26 47.81 72.26Q50.18 72.26 52.06 71.2Q53.93 70.14 55.31 68.66L60.27 74.58Q57.79 77.49 54.54 78.94Q51.29 80.39 47.44 80.39Z" />
+    <path d="M67.86 79.65 56.08 40.3H66.07L70.56 58.26Q71.45 61.43 72.11 64.49Q72.77 67.55 73.62 70.83H73.88Q74.78 67.55 75.44 64.49Q76.1 61.43 76.95 58.26L81.39 40.3H91.0L79.22 79.65Z" />
+  </g>
 </svg>

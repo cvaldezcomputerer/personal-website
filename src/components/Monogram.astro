@@ -1,8 +1,11 @@
 ---
 /**
- * Monogram - the "CV" brand mark (sage tile, matches public/favicon.svg). Used
- * as the home link in the homepage sidebar and the inner-page Nav. Letters are
- * set in the heading font for brand continuity.
+ * Monogram - the クリス (Kurisu) name-seal, our hanko brand mark. A sage stamp:
+ * a thin ring with クリス stacked vertically. The kana are Noto Sans JP
+ * 900 converted to outline paths, so the mark needs no webfont and renders
+ * identically everywhere. Its romaji sibling, a CV seal, is the favicon
+ * (public/favicon.svg) - CV reads at 16px where the kana muddies. Used as the
+ * home link in the homepage sidebar and the inner-page Nav.
  */
 interface Props {
   href?: string;
@@ -13,30 +16,32 @@ const { href = '/', label = 'Cristian Valdez - home', class: className } = Astro
 ---
 
 <a href={href} class:list={['monogram', className]} aria-label={label}>
-  <span aria-hidden="true">CV</span>
+  <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+    <circle cx="60" cy="60" r="51" fill="none" stroke="currentColor" stroke-width="4.5" />
+    <g fill="currentColor">
+      <path d="M73.361 25.591Q73.051 26.087 72.726 26.754Q72.4 27.42 72.152 28.133Q71.749 29.404 71.036 31.109Q70.323 32.814 69.269 34.674Q68.215 36.534 66.789 38.301Q64.526 41.06 61.55 43.246Q58.574 45.431 54.203 47.229L49.739 43.261Q53.087 42.238 55.397 41.029Q57.706 39.82 59.349 38.472Q60.992 37.123 62.294 35.635Q63.286 34.55 64.139 33.124Q64.991 31.698 65.596 30.288Q66.2 28.877 66.386 27.885H56.528L58.202 23.638Q58.636 23.638 59.504 23.638Q60.372 23.638 61.442 23.638Q62.511 23.638 63.549 23.638Q64.588 23.638 65.379 23.638Q66.169 23.638 66.479 23.638Q67.254 23.638 68.107 23.53Q68.959 23.421 69.548 23.235ZM63.41 20.569Q62.759 21.499 62.139 22.553Q61.519 23.607 61.209 24.134Q60.093 26.087 58.466 28.118Q56.838 30.148 54.885 31.993Q52.932 33.837 50.855 35.294L46.639 32.163Q48.685 30.892 50.235 29.59Q51.785 28.288 52.901 27.017Q54.017 25.746 54.839 24.584Q55.66 23.421 56.28 22.46Q56.714 21.809 57.195 20.74Q57.675 19.67 57.923 18.771Z" />
+      <path d="M69.905 46.81Q69.874 47.492 69.827 48.313Q69.781 49.135 69.781 50.158Q69.781 51.057 69.781 52.312Q69.781 53.567 69.781 54.808Q69.781 56.048 69.781 56.916Q69.781 59.241 69.517 61.039Q69.254 62.837 68.758 64.232Q68.262 65.627 67.564 66.712Q66.867 67.797 65.968 68.727Q64.945 69.812 63.596 70.695Q62.248 71.579 60.884 72.199Q59.52 72.819 58.373 73.191L54.436 69.037Q56.854 68.51 58.698 67.595Q60.543 66.681 61.938 65.255Q62.713 64.418 63.209 63.565Q63.705 62.713 63.968 61.705Q64.232 60.698 64.34 59.442Q64.449 58.186 64.449 56.575Q64.449 55.676 64.449 54.467Q64.449 53.258 64.449 52.08Q64.449 50.902 64.449 50.158Q64.449 49.135 64.387 48.313Q64.325 47.492 64.232 46.81ZM55.552 47.088Q55.521 47.677 55.474 48.189Q55.428 48.701 55.428 49.538Q55.428 49.941 55.428 50.731Q55.428 51.522 55.428 52.545Q55.428 53.567 55.428 54.668Q55.428 55.769 55.428 56.823Q55.428 57.877 55.428 58.729Q55.428 59.582 55.428 60.078Q55.428 60.667 55.474 61.504Q55.521 62.341 55.552 62.961H50.096Q50.127 62.496 50.189 61.628Q50.251 60.76 50.251 60.047Q50.251 59.551 50.251 58.698Q50.251 57.846 50.251 56.792Q50.251 55.738 50.251 54.637Q50.251 53.537 50.251 52.529Q50.251 51.522 50.251 50.731Q50.251 49.941 50.251 49.538Q50.251 49.104 50.22 48.391Q50.189 47.677 50.127 47.088Z" />
+      <path d="M71.021 76.708Q70.804 77.018 70.401 77.7Q69.998 78.382 69.75 78.971Q69.099 80.397 68.153 82.18Q67.208 83.962 66.014 85.791Q64.821 87.62 63.457 89.232Q61.721 91.247 59.597 93.185Q57.474 95.122 55.133 96.75Q52.793 98.377 50.406 99.524L46.5 95.463Q49.011 94.533 51.398 93.076Q53.785 91.619 55.8 89.945Q57.815 88.271 59.179 86.752Q60.202 85.605 61.054 84.365Q61.907 83.125 62.558 81.932Q63.209 80.738 63.519 79.746Q63.178 79.746 62.434 79.746Q61.69 79.746 60.729 79.746Q59.768 79.746 58.729 79.746Q57.691 79.746 56.73 79.746Q55.769 79.746 55.009 79.746Q54.25 79.746 53.878 79.746Q53.196 79.746 52.436 79.792Q51.677 79.839 51.01 79.901Q50.344 79.963 49.91 79.994V74.662Q50.468 74.724 51.227 74.786Q51.987 74.848 52.715 74.879Q53.444 74.91 53.878 74.91Q54.343 74.91 55.18 74.91Q56.017 74.91 57.055 74.91Q58.094 74.91 59.194 74.91Q60.295 74.91 61.302 74.91Q62.31 74.91 63.085 74.91Q63.86 74.91 64.232 74.91Q65.41 74.91 66.417 74.771Q67.425 74.631 67.952 74.445ZM63.86 86.132Q65.038 87.062 66.402 88.333Q67.766 89.604 69.114 90.983Q70.463 92.363 71.61 93.634Q72.757 94.905 73.501 95.804L69.192 99.555Q68.045 97.881 66.603 96.191Q65.162 94.502 63.565 92.828Q61.969 91.154 60.295 89.635Z" />
+    </g>
+  </svg>
 </a>
 
 <style>
   .monogram {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
     flex: none;
-    background: var(--color-accent);
-    color: var(--color-accent-contrast);
-    border-radius: var(--radius-md);
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: -0.03em;
-    text-decoration: none;
-    transition: background-color var(--transition-fast) ease, transform var(--transition-fast) var(--ease-out);
+    color: var(--color-accent);
+    transition: color var(--transition-fast) ease, transform var(--transition-fast) var(--ease-out);
   }
   .monogram:hover {
-    background: var(--color-accent-strong);
+    color: var(--color-accent-strong);
     transform: translateY(-1px);
   }
-  .monogram span { line-height: 1; }
+  .monogram svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 </style>
