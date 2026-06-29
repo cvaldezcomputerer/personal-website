@@ -21,8 +21,9 @@ pnpm-debug.log*
 # cloudflare dev vars / secrets
 .dev.vars
 .dev.vars.*
-# local-only claude settings
+# local-only claude settings (harness permission/UI state, not project config)
 .claude/settings.local.json
+.claude/settings.json
 
 # macOS-specific files
 .DS_Store
