@@ -108,7 +108,7 @@ const personLd = {
         <h2 id="about-title" class="section-title">{t.sections.about}</h2>
         <div class="about-grid">
           <div class="about-text">
-            {c.about.paragraphs.map((para) => <p>{para}</p>)}
+            {c.about.paragraphs.map((para) => <p set:html={para} />)}
           </div>
           <div class="headshot-frame">
             <Image src={headshot} alt={c.about.imageAlt} width={320} densities={[1, 2]} class="headshot" />
