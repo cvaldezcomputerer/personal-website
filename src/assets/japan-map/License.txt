@@ -1,0 +1,24 @@
+Japan prefecture SVG maps
+==========================
+
+Source:  Geolonia "japanese-prefectures"
+         https://github.com/geolonia/japanese-prefectures
+Author:  Geolonia (https://geolonia.com/)
+License: GNU Free Documentation License (GFDL)
+
+The SVG data is based on Wikipedia's 日本地図.svg
+(https://ja.wikipedia.org/wiki/ファイル:日本地図.svg) and is distributed under
+the GFDL. This is NOT a CC0/public-domain asset like the Kenney packs in this
+library: keep this notice with the file and attribute Geolonia wherever the map
+is shipped.
+
+Files:
+  map-full.svg     geographic outline (desktop) — the one in use
+  map-mobile.svg   geographic outline, compacted for narrow screens (kept for a
+                   future responsive swap; not currently shipped)
+
+(The simplified polygon/circle variants were evaluated and removed.)
+
+Each prefecture is a <g class="<romaji> <region> prefecture" data-code="NN">
+with a bilingual <title>JA / EN</title>. data-code is the JIS X 0401 prefecture
+code (01-47), which maps directly to src/data/prefectures.ts (same JIS order).

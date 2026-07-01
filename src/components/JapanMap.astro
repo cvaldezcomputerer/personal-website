@@ -1,0 +1,63 @@
+---
+/**
+ * JapanMap (display) - the interactive prefecture map from takkotaco.com,
+ * ported here display-only for the Takko case study. Hover or tap a prefecture
+ * to highlight it. No API calls, no origin counts: this is a live SVG showcase,
+ * not the running feature.
+ *
+ * Source SVG: Geolonia "japanese-prefectures", licensed GNU Free Documentation
+ * License (GFDL). See src/assets/japan-map/License.txt. This is NOT a
+ * public-domain asset: keep the attribution with the file wherever it ships.
+ *
+ * The raw SVG is inlined at build time via Vite's ?raw so it works inside the
+ * bundled Cloudflare worker (reading from disk at runtime does not). Each
+ * prefecture is a <g class="... prefecture"> carrying an inline fill attribute;
+ * a CSS `fill` on the group overrides it, which is how the theming below works.
+ */
+import mapSvg from '~/assets/japan-map/map-full.svg?raw';
+---
+
+<figure class="japan-map">
+  <div class="japan-map__stage" set:html={mapSvg}></div>
+  <figcaption>
+    Live SVG, not a screenshot. Hover a prefecture. Map data:
+    <a href="https://github.com/geolonia/japanese-prefectures" target="_blank" rel="noopener">Geolonia</a> (GFDL).
+  </figcaption>
+</figure>
+
+<style>
+  .japan-map { margin: 0; }
+  .japan-map__stage {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+  }
+  .japan-map__stage :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* Override the inline fill="#EEEEEE" on each prefecture group. */
+  .japan-map__stage :global(.prefecture) {
+    fill: var(--color-surface-2);
+    stroke: var(--color-border-strong);
+    stroke-width: 0.75;
+    transition: fill var(--transition-base);
+    cursor: pointer;
+  }
+  .japan-map__stage :global(.prefecture:hover) {
+    fill: var(--color-accent);
+  }
+  .japan-map figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+  }
+  .japan-map figcaption a { color: var(--color-accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .japan-map__stage :global(.prefecture) { transition: none; }
+  }
+</style>

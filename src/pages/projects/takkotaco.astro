@@ -1,0 +1,406 @@
+---
+/**
+ * Takko Town case study - a bespoke individual page (not the shared [slug]
+ * template). Card metadata (name, tagline, stack, url) still comes from the
+ * projects content collection so the homepage stays in sync; the prose and the
+ * feature showcase live here so this page can carry its own additions (the
+ * at-a-glance panel and the live SVG map).
+ *
+ * Feature layout: major features get the editorial treatment (big media,
+ * one per row); minor features follow as compact alternating rows.
+ * Screenshots are placeholders for now; the map is the real, live SVG.
+ */
+import { getEntry } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
+import JapanMap from '~/components/JapanMap.astro';
+
+const entry = await getEntry('projects', 'takkotaco');
+if (!entry) throw new Error('Missing projects/takkotaco content entry');
+const d = entry.data;
+const meta = [d.role, d.timeframe].filter(Boolean).join('  ·  ');
+
+// Skimmable summary: the five things a visitor reads before deciding to scroll.
+const glance = [
+  {
+    label: 'Problem',
+    value:
+      'My town had almost no real English online, just a page that read like it went through Google Translate once. My classes also needed tools built for slow school Chromebooks and unreliable wifi.',
+  },
+  { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
+  { label: 'Status', value: 'Live', href: d.url },
+  {
+    label: 'Impact',
+    value:
+      'Around twenty classroom games and tools, used by real students, running at no cost on Cloudflare’s free tier.',
+  },
+];
+
+// Major features: editorial, big media. The map is live; others are placeholders.
+const majorFeatures = [
+  {
+    title: '"Where are you from?" map',
+    body: 'An interactive SVG map of Japan that visitors tap to pin their home prefecture. It is backed by a Worker and D1, but never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class, and it is the kind of thing I would have reached for an image or a heavy library for before I learned how far SVG goes.',
+    media: 'map' as const,
+  },
+  {
+    title: 'A growing toolkit',
+    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to multiplayer word races and drawing games. I do not build to a roadmap: a tool gets added when I hit a need in class or a student suggests something, so the collection keeps growing wherever it turns out to be useful.',
+    media: 'placeholder' as const,
+    label: 'classroom games screenshot',
+  },
+  {
+    title: 'Vocab sheet maker, and the workflow behind it',
+    body: 'Adding a word is a single step: I drop it into the central database, and from there I can generate a printable sheet and it is instantly live in every game and tool that uses vocab. Quick enough that I add words on a whim, which is exactly what I wanted.',
+    media: 'placeholder' as const,
+    label: 'vocab sheet maker screenshot',
+  },
+];
+
+// Minor features: compact alternating rows.
+const minorFeatures = [
+  {
+    title: 'A real English guide, not a Google-translated mess',
+    body: 'The original reason for all of this. The town guide is written in actual English by someone who lives here, covering what the place is genuinely like instead of a machine-translated page nobody maintained.',
+  },
+  {
+    title: 'Train timer',
+    body: 'Train timers already exist, but I built mine to behave exactly how I want it for class. The small details are the whole point when you use something every lesson.',
+  },
+  {
+    title: 'SVG letter system',
+    body: 'A custom system for the stylized letters used across the games. I learned far more about building with SVG than I expected to.',
+  },
+  {
+    title: 'Takko-ben page',
+    body: 'A daily word from the local dialect. Takko-ben is fading with the older generation, and I wanted a record of it written by someone living here rather than scraped from a database.',
+  },
+  {
+    title: 'Feedback to Discord',
+    body: 'A widget on the games that posts student messages straight into a Discord channel. I added it as an experiment; it is now the fastest feedback loop I have for what works.',
+  },
+];
+---
+
+<BaseLayout title={d.name} description={d.tagline} type="article">
+  <article class="container--prose case">
+    <a class="back" href="/#projects">Back to projects</a>
+
+    <header class="case-head">
+      {meta && <p class="eyebrow">{meta}</p>}
+      <h1>{d.name}</h1>
+      <p class="tagline">{d.tagline}</p>
+
+      <div class="actions">
+        {
+          d.url && (
+            <a class="visit-link" href={d.url} target="_blank" rel="noopener">
+              <Icon name="external-link" /> Visit site
+            </a>
+          )
+        }
+        {
+          d.repo && (
+            <a class="btn btn--secondary" href={d.repo} target="_blank" rel="noopener">
+              <Icon name="github" /> Code
+            </a>
+          )
+        }
+      </div>
+    </header>
+
+    <!-- At a glance -->
+    <dl class="glance">
+      {
+        glance.map((g) => (
+          <div class="glance-row">
+            <dt>{g.label}</dt>
+            <dd>
+              {g.href ? (
+                <a href={g.href} target="_blank" rel="noopener">
+                  {g.value}
+                </a>
+              ) : (
+                g.value
+              )}
+            </dd>
+          </div>
+        ))
+      }
+      <div class="glance-row">
+        <dt>Stack</dt>
+        <dd class="glance-stack">
+          {d.stack.map((s) => <span class="chip">{s}</span>)}
+        </dd>
+      </div>
+    </dl>
+
+    <div class="prose">
+      <h2>Overview</h2>
+      <p>
+        I build things that are useful to me, and as an English teacher the most
+        useful thing I could build was a tool I could actually use in the
+        classroom. So this became two things at once: a real English guide to
+        where I live, and a classroom platform my students use day-to-day. It
+        has grown into a bilingual town guide, classroom games and tools, a page
+        preserving the local dialect (Takko-ben), and a shared vocabulary
+        database that ties it all together.
+      </p>
+
+      <h2>Architecture</h2>
+      <p>
+        Two priorities drove every decision: it had to stay light enough for
+        school Chromebooks on slow rural wifi, and cheap enough to run forever
+        without paying for a server. The whole thing is Astro deployed as a
+        Cloudflare Worker, leaning on Cloudflare's stack to stay on the free
+        tier.
+      </p>
+      <p>
+        <strong>Astro, static-first.</strong> Most pages ship as plain HTML, so
+        there is almost nothing to download and they hold up on bad wifi and old
+        hardware. The tradeoff: anything interactive needs its own plan, since
+        there is no always-on server behind the site.
+      </p>
+      <p>
+        <strong>Durable Objects for the game rooms.</strong> Each real-time game
+        room is a single Durable Object that holds the game state and
+        coordinates players over WebSockets. The benefit is consistent turn
+        order and scoring with no server to run or pay for. The limit is that it
+        is a different mental model than a normal backend: one object per room,
+        designed around its single point of coordination.
+      </p>
+      <p>
+        <strong>Workers for the API.</strong> A Worker handles live weather,
+        leaderboards, the "where are you from?" map, and the feedback widget that
+        posts straight to Discord. Anything that touches a visitor's IP stores
+        only a salted SHA-256 hash of it, never the raw address. The benefit is
+        that it scales to zero and costs nothing at this scale. The limit is that
+        everything has to be request-shaped: short execution windows, no
+        long-running processes.
+      </p>
+      <p>
+        <strong>D1 and KV for storage.</strong> D1 (SQLite at the edge) backs
+        the leaderboards and feedback; KV handles sessions. The benefit is a real
+        database on the free tier, close to the users. The limit is that D1 is
+        young and not meant for heavy write traffic, but a few classrooms are
+        nowhere near that ceiling.
+      </p>
+      <p>
+        <strong>One central vocabulary database.</strong> Every game and tool
+        that touches vocab reads from the same source. The benefit is huge: add a
+        word once and it appears everywhere automatically. The limit is that
+        schema changes ripple across the whole site, so the structure was worth
+        getting right early. I have never paid for any of it.
+      </p>
+    </div>
+
+    <!-- Features: editorial majors -->
+    <section class="features" aria-label="Favorite parts">
+      <h2>Favorite parts</h2>
+
+      <div class="major-list">
+        {
+          majorFeatures.map((f) => (
+            <article class="major">
+              <div class="major-text">
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </div>
+              {f.media === 'map' ? (
+                <JapanMap />
+              ) : (
+                <div class="ph ph--wide" aria-label={f.label}>
+                  {f.label} coming soon
+                </div>
+              )}
+            </article>
+          ))
+        }
+      </div>
+
+      <h3 class="minor-head">More tools</h3>
+      <div class="minor-list">
+        {
+          minorFeatures.map((f) => (
+            <article class="minor">
+              <div class="minor-text">
+                <h4>{f.title}</h4>
+                <p>{f.body}</p>
+              </div>
+              <div class="ph ph--small" aria-hidden="true">
+                screenshot
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <div class="prose">
+      <h2>What I took away</h2>
+      <p>
+        Designing games that are fun and actually usable in a real classroom is
+        harder than it sounds. Students are on slow Chromebooks, the wifi is
+        unreliable, and you get about three minutes to explain the rules before
+        the lesson moves on. Simpler almost always wins, and you find out fast
+        what holds up in the room.
+      </p>
+      <p>
+        Feedback is worth building for directly. The Discord widget turned vague
+        guesses about what students liked into a steady stream of real reactions,
+        and the games got better because of it.
+      </p>
+      <p>
+        The free tier covers everything here. Workers, Durable Objects, D1, KV:
+        none of it costs anything at this scale. I came in assuming I would
+        eventually need to pay for a real server, and I still have not.
+        Serverless genuinely covers a project like this.
+      </p>
+      <p>
+        SVG and SVG animation are more capable than I gave them credit for. I
+        used them for game pieces, UI, and things I would have reached for images
+        or canvas for before, and they scale perfectly on a classroom projector.
+      </p>
+      <p>
+        There is a surprising amount of powerful, free tooling out there.
+        Google's text-to-speech gave the games real voice reading, and the Web
+        Audio API let me generate tones and sound effects from scratch, including
+        a few that ended up sounding more like Mii voices than I intended.
+      </p>
+      <p>
+        The central vocabulary database was the best structural decision I made,
+        and optimizing for slow computers and slow internet, a constraint I would
+        not have chosen, made the whole site better. Performance stopped being an
+        afterthought and became something I design around.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .case { padding-block: var(--space-7) var(--space-9); }
+
+  .back {
+    display: inline-block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: var(--space-5);
+  }
+  .back:hover { color: var(--color-accent); }
+  .back::before { content: '\2190'; margin-right: 0.4em; }
+
+  .case-head { margin-bottom: var(--space-6); }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    margin-bottom: var(--space-2);
+  }
+  .case-head h1 { font-size: var(--text-3xl); margin-bottom: var(--space-3); }
+  .tagline { color: var(--color-text-muted); font-size: var(--text-lg); }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-top: var(--space-5); }
+  .visit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1px;
+    transition: color var(--transition-base), border-color var(--transition-base);
+  }
+  .visit-link svg { width: 0.9em; height: 0.9em; flex: none; }
+  .visit-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+  /* At a glance */
+  .glance {
+    margin: var(--space-6) 0 var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .glance-row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .glance-row:first-child { border-top: 0; }
+  .glance dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    padding-top: 0.15em;
+  }
+  .glance dd { margin: 0; color: var(--color-text); }
+  .glance dd a { color: var(--color-accent); }
+  .glance-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Placeholders */
+  .ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+  .ph--wide { aspect-ratio: 16 / 10; width: 100%; }
+  .ph--small { aspect-ratio: 4 / 3; }
+
+  /* Features */
+  .features { margin: var(--space-8) 0; }
+  .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
+
+  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
+
+  .minor-head {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: var(--space-8) 0 var(--space-5);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .minor-list { display: flex; flex-direction: column; gap: var(--space-6); }
+  .minor {
+    display: grid;
+    grid-template-columns: 1fr 12rem;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .minor:nth-child(even) .minor-text { order: 2; }
+  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
+
+  @media (max-width: 640px) {
+    .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
+    .minor { grid-template-columns: 1fr; }
+    .minor:nth-child(even) .minor-text { order: 0; }
+  }
+</style>

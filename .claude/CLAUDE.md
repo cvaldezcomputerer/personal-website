@@ -190,8 +190,17 @@ a noindex meta AND go in `public/robots.txt`.
 
 ## TODO
 
-- [ ] **Fill in real content** - resume tweaks, the two case studies, real blog
-  posts. Replace the placeholder `welcome` post. (Biggest remaining item.)
+- [ ] **Fill in real content** - resume tweaks and real blog posts. Replace the
+  placeholder `welcome` post. (The two case studies are now written; see below.)
+- [ ] **Real project screenshots** - the two case-study pages
+  (`src/pages/projects/{takkotaco,bloggydoggy}.astro`) use placeholder `.ph`
+  tiles where feature screenshots go. Takko needs: games shot + vocab-sheet-maker
+  shot (major), plus 5 minor-row shots. Bloggy needs: language-toggle shot + quiz
+  shot (major), plus 2 minor-row shots. Grab in **light mode** (owner prefers it;
+  the card images were done that way). Source projects live on this machine:
+  `../dog_site/dog_SITE` = takkotaco.com, `../astro/takko blog` = bloggydoggy.com
+  (folder names are inverted; `site:` in astro.config is authoritative). Once a
+  minor tool has no real shot, consider dropping its tile to a text-only card.
 - [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
   hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
   still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
@@ -210,6 +219,33 @@ a noindex meta AND go in `public/robots.txt`.
 - [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
 - [ ] **Uncommitted:** `.claude/settings.json` (harness permission state) is
   modified but intentionally left out of commits - decide commit vs gitignore.
+
+### Done this session (2026-07-01)
+
+Rebuilt the project case studies. Moved off the shared `[slug].astro` template
+(deleted) to two bespoke pages: `src/pages/projects/takkotaco.astro` and
+`bloggydoggy.astro`. Card metadata still comes from the `projects` content
+collection; the `.md` bodies are now trimmed to frontmatter-only (a comment
+points to the `.astro` page). Each page has an "at a glance" panel (Problem / My
+role / Status / Impact / Stack) and a features section using a **major (editorial
++ big media) / minor (compact alternating rows)** split. Feature screenshots are
+placeholder `.ph` tiles for now (see TODO).
+
+Two real artifacts embedded live from the source sites: Takko renders the actual
+Geolonia prefecture SVG map (`src/components/JapanMap.astro`, display-only,
+GFDL - kept `src/assets/japan-map/License.txt`, attribute Geolonia). Bloggy has a
+"Playful details" section with the ported garlic Loader (`src/components/
+bloggydoggy/{Loader,Logo}.astro`, real SVG+JS, remapped `--text`->`--color-text`
+and the dot radius to 50%) plus two animated WebPs (spinning mug, camera sticker)
+served from `public/projects/bloggydoggy/` so sharp does not strip the animation.
+
+Also: swapped the homepage card images for fresh **light-mode** screenshots
+(`src/assets/images/{takkotaco,bloggydoggy}.png`, 1280x800); fixed the JET link
+in `resume.ts` (about) and pointed the games link to `takkotaco.com/game/`;
+dropped Leaflet/shrines from the Takko write-up (map feature is the SVG origin
+map, not Leaflet); restyled the project "Visit site" CTA as a quiet underlined
+link (was a solid button). NOTE: `tsconfig.json` was NOT touched (owner asked;
+confirmed clean via git).
 
 ### Done this session (2026-06-28)
 

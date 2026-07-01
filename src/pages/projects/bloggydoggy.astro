@@ -1,0 +1,427 @@
+---
+/**
+ * Bloggy Doggy case study - bespoke individual page (see takkotaco.astro for the
+ * pattern). Card metadata comes from the projects content collection; the prose,
+ * feature showcase, and the "playful details" style section live here.
+ *
+ * The style section embeds three real artifacts from the blog: the live Loader
+ * (SVG + JS, ported), and two animated WebPs (the spinning mug and the Olympus
+ * camera sticker) served from /public so sharp does not strip their animation.
+ */
+import { getEntry } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
+import Loader from '~/components/bloggydoggy/Loader.astro';
+
+const entry = await getEntry('projects', 'bloggydoggy');
+if (!entry) throw new Error('Missing projects/bloggydoggy content entry');
+const d = entry.data;
+const meta = [d.role, d.timeframe].filter(Boolean).join('  ·  ');
+
+const glance = [
+  {
+    label: 'Problem',
+    value:
+      'I wanted a place to post my photography and write, and a testing ground for interactive features, without a heavy frontend framework or off-the-shelf plugins deciding how any of it behaves.',
+  },
+  { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
+  { label: 'Status', value: 'Live', href: d.url },
+  {
+    label: 'Impact',
+    value:
+      'Reader-controlled trilingual posts, plus quizzes and likes on an API I own, all running at no cost on Cloudflare’s free tier.',
+  },
+];
+
+const majorFeatures = [
+  {
+    title: 'Reader-controlled language modes',
+    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read.',
+    label: 'language toggle screenshot',
+  },
+  {
+    title: 'Quiz component',
+    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. The whole thing runs on the free tier, and because I own the endpoint the quiz behaves exactly how I designed it.',
+    label: 'quiz component screenshot',
+  },
+];
+
+const minorFeatures = [
+  {
+    title: 'Custom gallery components',
+    body: 'Some posts end in a photo gallery. I wanted it to look and behave a specific way and no generic option did it, so I built the component myself.',
+  },
+  {
+    title: 'Likes',
+    body: 'Also my own API rather than a plugin. Nothing complicated, but it behaves exactly how I want and costs nothing to run.',
+  },
+];
+---
+
+<BaseLayout title={d.name} description={d.tagline} type="article">
+  <article class="container--prose case">
+    <a class="back" href="/#projects">Back to projects</a>
+
+    <header class="case-head">
+      {meta && <p class="eyebrow">{meta}</p>}
+      <h1>{d.name}</h1>
+      <p class="tagline">{d.tagline}</p>
+
+      <div class="actions">
+        {
+          d.url && (
+            <a class="visit-link" href={d.url} target="_blank" rel="noopener">
+              <Icon name="external-link" /> Visit site
+            </a>
+          )
+        }
+        {
+          d.repo && (
+            <a class="btn btn--secondary" href={d.repo} target="_blank" rel="noopener">
+              <Icon name="github" /> Code
+            </a>
+          )
+        }
+      </div>
+    </header>
+
+    <dl class="glance">
+      {
+        glance.map((g) => (
+          <div class="glance-row">
+            <dt>{g.label}</dt>
+            <dd>
+              {g.href ? (
+                <a href={g.href} target="_blank" rel="noopener">
+                  {g.value}
+                </a>
+              ) : (
+                g.value
+              )}
+            </dd>
+          </div>
+        ))
+      }
+      <div class="glance-row">
+        <dt>Stack</dt>
+        <dd class="glance-stack">
+          {d.stack.map((s) => <span class="chip">{s}</span>)}
+        </dd>
+      </div>
+    </dl>
+
+    <div class="prose">
+      <h2>Overview</h2>
+      <p>
+        Bloggy Doggy started as a place to express myself: somewhere to post my
+        photography and write about what I'm doing, and it has grown into
+        something I add to steadily. It doubles as a testing ground, a place to
+        build interactive features I have no specific reason to build elsewhere,
+        and to work out what actually makes a reading experience good.
+      </p>
+
+      <h2>Architecture</h2>
+      <p>
+        A custom blog with no frontend framework, built to stay light and free to
+        run.
+      </p>
+      <p>
+        <strong>Astro, deployed as a Cloudflare Worker.</strong> Posts ship as
+        static HTML, so pages stay fast and cheap to serve, the same priority
+        that runs through everything I build.
+      </p>
+      <p>
+        <strong>A REST API I own, on Workers and D1.</strong> I used it for likes
+        and quiz data instead of reaching for plugins. The benefit is that these
+        features behave exactly the way I designed them rather than however a
+        plugin author decided. The limit is that I maintain it myself, which is
+        the price of that control.
+      </p>
+      <p>
+        <strong>Native Web Components, no framework.</strong> Each interactive
+        piece is a custom element. The benefit is a tiny JavaScript footprint and
+        markup that is easy to reason about. The limit is that it is more manual
+        than a framework: I write the wiring a library would otherwise hand me.
+      </p>
+      <p>
+        <strong>A single-source reading-mode system.</strong> The three language
+        modes come from one source file rather than separate pages or routes. The
+        benefit is that there is no duplicated content to keep in sync. The limit
+        is that every post has to be authored in all three modes to feel
+        complete.
+      </p>
+    </div>
+
+    <section class="features" aria-label="Favorite parts">
+      <h2>Favorite parts</h2>
+
+      <div class="major-list">
+        {
+          majorFeatures.map((f) => (
+            <article class="major">
+              <div class="major-text">
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </div>
+              <div class="ph ph--wide" aria-label={f.label}>
+                {f.label} coming soon
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <h3 class="minor-head">More features</h3>
+      <div class="minor-list">
+        {
+          minorFeatures.map((f) => (
+            <article class="minor">
+              <div class="minor-text">
+                <h4>{f.title}</h4>
+                <p>{f.body}</p>
+              </div>
+              <div class="ph ph--small" aria-hidden="true">
+                screenshot
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Playful details / style -->
+    <section class="style" aria-label="Playful details">
+      <h2>Playful details</h2>
+      <p class="style-intro">
+        The small animated touches are half the reason I like building my own
+        blog. A few favorites, live below:
+      </p>
+      <div class="style-grid">
+        <figure class="style-tile">
+          <div class="style-stage style-stage--loader">
+            <Loader size={64} stepMs={620} />
+          </div>
+          <figcaption>
+            <strong>Loading animation.</strong> Real SVG: garlic shapes morph to
+            dots and back around the logo. I built it after getting curious about
+            the scene transitions in a show I like.
+          </figcaption>
+        </figure>
+
+        <figure class="style-tile">
+          <div class="style-stage">
+            <img
+              src="/projects/bloggydoggy/red-cup-spin.webp"
+              alt="A red cup spinning"
+              loading="lazy"
+              decoding="async"
+              width="180"
+              height="180"
+            />
+          </div>
+          <figcaption>
+            <strong>Spinning cup.</strong> An animated WebP from the post about
+            finishing my cup set. Not SVG, just a bit of fun.
+          </figcaption>
+        </figure>
+
+        <figure class="style-tile">
+          <div class="style-stage">
+            <img
+              src="/projects/bloggydoggy/olympus-camera-sticker.webp"
+              alt="Animated Olympus Camedia C-840L camera sticker"
+              loading="lazy"
+              decoding="async"
+              width="128"
+              height="128"
+            />
+          </div>
+          <figcaption>
+            <strong>Camera sticker.</strong> A little animated marker for the
+            vintage Olympus I shot a whole post on.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="prose">
+      <h2>What I took away</h2>
+      <p>
+        SVG animation is worth actually learning. The loading animation above is
+        the payoff: I built it after getting curious about how a show I like
+        handled its scene transitions, and it opened up a whole category of
+        things I used to reach for images or video for. The result is smaller,
+        scales cleanly, and is more fun to look at.
+      </p>
+      <p>
+        Image optimization turned into a recurring lesson. At various points I
+        was double-optimizing images without realizing it, or skipping it
+        entirely and wondering why pages felt slow. Getting the pipeline right is
+        not glamorous, but it genuinely matters, and the animated WebPs above are
+        a reminder that not everything should go through the same pipe.
+      </p>
+      <p>
+        There is a constant tension between adding a feature and overloading the
+        page. I shipped things I thought were fun that just cluttered the reading
+        experience, and I pulled back others that mattered more than I expected.
+        The blog is better for having gone through that cycle a few times.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .case { padding-block: var(--space-7) var(--space-9); }
+
+  .back {
+    display: inline-block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: var(--space-5);
+  }
+  .back:hover { color: var(--color-accent); }
+  .back::before { content: '\2190'; margin-right: 0.4em; }
+
+  .case-head { margin-bottom: var(--space-6); }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+    margin-bottom: var(--space-2);
+  }
+  .case-head h1 { font-size: var(--text-3xl); margin-bottom: var(--space-3); }
+  .tagline { color: var(--color-text-muted); font-size: var(--text-lg); }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-top: var(--space-5); }
+  .visit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1px;
+    transition: color var(--transition-base), border-color var(--transition-base);
+  }
+  .visit-link svg { width: 0.9em; height: 0.9em; flex: none; }
+  .visit-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+  .glance {
+    margin: var(--space-6) 0 var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .glance-row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .glance-row:first-child { border-top: 0; }
+  .glance dt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    padding-top: 0.15em;
+  }
+  .glance dd { margin: 0; color: var(--color-text); }
+  .glance dd a { color: var(--color-accent); }
+  .glance-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.5rem;
+  }
+
+  .ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+  .ph--wide { aspect-ratio: 16 / 10; width: 100%; }
+  .ph--small { aspect-ratio: 4 / 3; }
+
+  .features { margin: var(--space-8) 0; }
+  .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
+
+  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
+
+  .minor-head {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: var(--space-8) 0 var(--space-5);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .minor-list { display: flex; flex-direction: column; gap: var(--space-6); }
+  .minor {
+    display: grid;
+    grid-template-columns: 1fr 12rem;
+    gap: var(--space-5);
+    align-items: center;
+  }
+  .minor:nth-child(even) .minor-text { order: 2; }
+  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
+
+  /* Playful details */
+  .style { margin: var(--space-9) 0 var(--space-8); }
+  .style > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-2); }
+  .style-intro { color: var(--color-text-muted); max-width: 60ch; margin-bottom: var(--space-6); }
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+  .style-tile { margin: 0; }
+  .style-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .style-stage img { max-width: 100%; height: auto; display: block; }
+  .style-tile figcaption {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+  }
+  .style-tile figcaption strong { color: var(--color-text); }
+
+  @media (max-width: 720px) {
+    .style-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
+    .minor { grid-template-columns: 1fr; }
+    .minor:nth-child(even) .minor-text { order: 0; }
+  }
+</style>
