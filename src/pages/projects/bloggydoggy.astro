@@ -11,21 +11,22 @@
 import { getEntry } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Icon from '~/components/Icon.astro';
+import LogoTile from '~/components/LogoTile.astro';
 import Loader from '~/components/bloggydoggy/Loader.astro';
+const bloggydoggyLogo = '/logos/bloggydoggy.svg';
 
 const entry = await getEntry('projects', 'bloggydoggy');
 if (!entry) throw new Error('Missing projects/bloggydoggy content entry');
 const d = entry.data;
 const meta = [d.role, d.timeframe].filter(Boolean).join('  ·  ');
 
-const glance = [
+const glance: { label: string; value: string; href?: string }[] = [
   {
     label: 'Problem',
     value:
       'I wanted a place to post my photography and write, and a testing ground for interactive features, without a heavy frontend framework or off-the-shelf plugins deciding how any of it behaves.',
   },
   { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
-  { label: 'Status', value: 'Live', href: d.url },
   {
     label: 'Impact',
     value:
@@ -63,6 +64,7 @@ const minorFeatures = [
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
+      <LogoTile src={bloggydoggyLogo} alt={`${d.name} logo`} size="md" href={d.url} class="case-logo" />
       {meta && <p class="eyebrow">{meta}</p>}
       <h1>{d.name}</h1>
       <p class="tagline">{d.tagline}</p>
@@ -284,6 +286,7 @@ const minorFeatures = [
   .back::before { content: '\2190'; margin-right: 0.4em; }
 
   .case-head { margin-bottom: var(--space-6); }
+  :global(.case-logo) { margin-bottom: var(--space-4); }
   .eyebrow {
     font-family: var(--font-mono);
     font-size: var(--text-xs);

@@ -13,7 +13,9 @@
 import { getEntry } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Icon from '~/components/Icon.astro';
+import LogoTile from '~/components/LogoTile.astro';
 import JapanMap from '~/components/JapanMap.astro';
+const takkotacoLogo = '/logos/takkotaco.svg';
 
 const entry = await getEntry('projects', 'takkotaco');
 if (!entry) throw new Error('Missing projects/takkotaco content entry');
@@ -21,14 +23,13 @@ const d = entry.data;
 const meta = [d.role, d.timeframe].filter(Boolean).join('  ·  ');
 
 // Skimmable summary: the five things a visitor reads before deciding to scroll.
-const glance = [
+const glance: { label: string; value: string; href?: string }[] = [
   {
     label: 'Problem',
     value:
       'My town had almost no real English online, just a page that read like it went through Google Translate once. My classes also needed tools built for slow school Chromebooks and unreliable wifi.',
   },
   { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
-  { label: 'Status', value: 'Live', href: d.url },
   {
     label: 'Impact',
     value:
@@ -87,6 +88,7 @@ const minorFeatures = [
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
+      <LogoTile src={takkotacoLogo} alt={`${d.name} logo`} size="md" href={d.url} class="case-logo" />
       {meta && <p class="eyebrow">{meta}</p>}
       <h1>{d.name}</h1>
       <p class="tagline">{d.tagline}</p>
@@ -291,6 +293,7 @@ const minorFeatures = [
   .back::before { content: '\2190'; margin-right: 0.4em; }
 
   .case-head { margin-bottom: var(--space-6); }
+  :global(.case-logo) { margin-bottom: var(--space-4); }
   .eyebrow {
     font-family: var(--font-mono);
     font-size: var(--text-xs);

@@ -1,0 +1,75 @@
+---
+/**
+ * LogoTile - a real brand/org logo (JET, AJET, Cisco/CCNA, JLPT, AWS, CSUSB, or
+ * a project mark) held in a small contained chip. The chip keeps a constant
+ * light warm backing in both themes because these are fixed-color artworks
+ * (several are near-black), so they always read.
+ *
+ * Logos live in `public/logos/` and are referenced by plain path, NOT through
+ * astro:assets. The Cloudflare image service cannot process SVG, and routing
+ * imported SVGs through the pipeline rendered them as empty boxes; a static
+ * `<img src="/logos/..">` is bulletproof in both dev and production.
+ *
+ * `size` picks the chip height: sm for inline rows, md for headers.
+ */
+interface Props {
+  /** Path under /logos, e.g. "/logos/jet.jpg". */
+  src: string;
+  alt: string;
+  size?: 'sm' | 'md';
+  class?: string;
+  /** If set, the chip becomes a link to the org's site (opens in a new tab). */
+  href?: string;
+}
+const { src, alt, size = 'sm', class: className, href } = Astro.props;
+
+const Tag = href ? 'a' : 'span';
+const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {};
+---
+
+<Tag
+  class:list={['logo-tile', `logo-tile--${size}`, { 'logo-tile--link': href }, className]}
+  {...linkAttrs}
+>
+  <img src={src} alt={alt} loading="lazy" decoding="async" />
+</Tag>
+
+<style>
+  .logo-tile {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    background: var(--color-logo-surface);
+    border: 1px solid var(--color-logo-border);
+    border-radius: var(--radius-sm);
+  }
+  .logo-tile--link {
+    transition: border-color var(--transition-fast) ease, box-shadow var(--transition-fast) ease;
+  }
+  .logo-tile--link:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+  .logo-tile--sm {
+    height: 2.75rem;
+    padding: 0 0.55rem;
+  }
+  .logo-tile--md {
+    height: 3.5rem;
+    padding: 0 0.75rem;
+    border-radius: var(--radius-md);
+  }
+  .logo-tile :global(img) {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .logo-tile--sm :global(img) {
+    max-height: 1.9rem;
+    max-width: 5.5rem;
+  }
+  .logo-tile--md :global(img) {
+    max-height: 2.4rem;
+    max-width: 8rem;
+  }
+</style>

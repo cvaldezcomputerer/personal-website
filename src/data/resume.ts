@@ -11,6 +11,15 @@
 
 import type { Lang } from '~/i18n/ui';
 
+// Org/issuer logos live in public/logos and are referenced by plain path (see
+// LogoTile.astro for why they bypass astro:assets).
+const jetLogo = '/logos/jet.jpg';
+const ajetLogo = '/logos/ajet.png';
+const ccnaLogo = '/logos/ccna.png';
+const jlptLogo = '/logos/jlpt.svg';
+const awsLogo = '/logos/aws.svg';
+const csusbLogo = '/logos/csusb.svg';
+
 export interface Contact {
   name: string;
   email: string;
@@ -23,7 +32,9 @@ export interface AboutContent {
   role: string;
   /** One-line tagline under the name. */
   tagline: string;
-  /** Display location. */
+  /** Home town (paired with a garlic mark - Takko is Japan's garlic town). */
+  town: string;
+  /** Display location (region), shown after the town. */
   location: string;
   /** The About section, one string per paragraph. */
   paragraphs: string[];
@@ -39,6 +50,10 @@ export interface ExperienceItem {
   start: string;
   end: string;
   bullets: string[];
+  /** Optional org logo path (under /logos), shown as a small chip. */
+  logo?: string;
+  /** Where the logo links to (the org's site). Language-neutral. */
+  orgUrl?: string;
 }
 
 export interface SkillGroup {
@@ -51,6 +66,12 @@ export interface Credential {
   org: string;
   date: string;
   inProgress?: boolean;
+  /** Optional issuer logo path (under /logos), shown as a small chip. */
+  logo?: string;
+  /** Where the logo links to (the issuer's site). Language-neutral. */
+  orgUrl?: string;
+  /** Optional verification link (e.g. a Credly badge). */
+  href?: string;
 }
 
 /** A smaller side project - a single external link, no full case study. */
@@ -81,6 +102,7 @@ export const resume: Record<Lang, ResumeContent> = {
     about: {
       role: 'IT & Web Development',
       tagline: 'I build and support things across the stack, from infrastructure to the web.',
+      town: 'Takko',
       location: 'Aomori, Japan',
       imageAlt: 'Cristian planting rice with local students at a community rice-planting class in Aomori',
       summary:
@@ -97,6 +119,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'JET Programme, Japan',
         start: 'Jan 2023',
         end: 'Present',
+        logo: jetLogo,
+        orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
           'Teach English at public schools in rural Aomori while working daily in a fully Japanese-language environment.',
           'Adapt technical and educational material for non-native speakers across a wide range of proficiency levels, which demands clear written and spoken communication.',
@@ -107,6 +131,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'National AJET, Japan',
         start: 'Apr 2025',
         end: 'Present',
+        logo: ajetLogo,
+        orgUrl: 'https://ajet.net/',
         bullets: [
           'Maintain and administer the National AJET WordPress site for a 5,000+ member organization.',
           'Troubleshoot hosting and reliability issues and coordinate technical changes with the AJET board.',
@@ -117,6 +143,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'California State University, San Bernardino',
         start: 'Jan 2021',
         end: 'Jan 2023',
+        logo: csusbLogo,
+        orgUrl: 'https://www.csusb.edu/',
         bullets: [
           'Managed and deployed macOS endpoints across department computer labs with JAMF: imaging, configuration, software distribution, and lifecycle replacement.',
           'Resolved a wide range of incidents across OS issues, account and permission troubleshooting, peripheral failures, and software installs.',
@@ -155,13 +183,30 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'Amazon Web Services',
         date: 'Target 2026',
         inProgress: true,
+        logo: awsLogo,
+        orgUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
       },
-      { title: 'Cisco Certified Network Associate (CCNA)', org: 'Cisco', date: '2026' },
-      { title: 'JLPT N2', org: 'The Japan Foundation', date: '2026' },
+      {
+        title: 'Cisco Certified Network Associate (CCNA)',
+        org: 'Cisco',
+        date: '2026',
+        logo: ccnaLogo,
+        orgUrl: 'https://www.cisco.com/site/us/en/learn/training-certifications/certifications/associate/ccna.html',
+        href: 'https://www.credly.com/badges/ef082539-aa81-43db-88a6-ec3ceffe4980/public_url',
+      },
+      {
+        title: 'JLPT N2',
+        org: 'The Japan Foundation',
+        date: '2026',
+        logo: jlptLogo,
+        orgUrl: 'https://www.jlpt.jp/e/',
+      },
       {
         title: 'B.A. Computer Information Systems',
         org: 'California State University, San Bernardino',
         date: '2022',
+        logo: csusbLogo,
+        orgUrl: 'https://www.csusb.edu/',
       },
     ],
     otherProjects: [
@@ -186,6 +231,7 @@ export const resume: Record<Lang, ResumeContent> = {
     about: {
       role: 'IT・Web開発',
       tagline: 'インフラからウェブまで、幅広くつくり、支えています。',
+      town: '田子町',
       location: '青森県、日本',
       imageAlt: '青森の地域の田植え教室で、地元の生徒たちと田植えをするクリスチャン',
       summary:
@@ -201,6 +247,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'JETプログラム（日本）',
         start: '2023年1月',
         end: '現在',
+        logo: jetLogo,
+        orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
           '青森県の公立学校で英語を教えながら、日々すべて日本語の環境で勤務しています。',
           '幅広いレベルの非ネイティブ話者向けに技術的・教育的な教材をかみ砕いて伝えており、明確な文章・口頭でのコミュニケーション力が求められます。',
@@ -211,6 +259,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'National AJET（日本）',
         start: '2025年4月',
         end: '現在',
+        logo: ajetLogo,
+        orgUrl: 'https://ajet.net/',
         bullets: [
           '会員5,000名以上の組織であるNational AJETのWordPressサイトを保守・運用しています。',
           'ホスティングや安定性の問題に対応し、技術的な変更をAJET理事会と調整しています。',
@@ -221,6 +271,8 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'カリフォルニア州立大学サンバーナディーノ校',
         start: '2021年1月',
         end: '2023年1月',
+        logo: csusbLogo,
+        orgUrl: 'https://www.csusb.edu/',
         bullets: [
           'JAMFを用いて学内コンピューターラボのmacOS端末を管理・展開しました。イメージング、設定、ソフトウェア配布、機器の更新までを担当しました。',
           'OSの不具合、アカウントや権限のトラブル、周辺機器の故障、ソフトウェアのインストールまで、幅広いインシデントに対応しました。',
@@ -259,13 +311,30 @@ export const resume: Record<Lang, ResumeContent> = {
         org: 'Amazon Web Services',
         date: '2026年取得予定',
         inProgress: true,
+        logo: awsLogo,
+        orgUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
       },
-      { title: 'Cisco Certified Network Associate（CCNA）', org: 'Cisco', date: '2026年' },
-      { title: 'JLPT N2', org: '国際交流基金', date: '2026年' },
+      {
+        title: 'Cisco Certified Network Associate（CCNA）',
+        org: 'Cisco',
+        date: '2026年',
+        logo: ccnaLogo,
+        orgUrl: 'https://www.cisco.com/site/us/en/learn/training-certifications/certifications/associate/ccna.html',
+        href: 'https://www.credly.com/badges/ef082539-aa81-43db-88a6-ec3ceffe4980/public_url',
+      },
+      {
+        title: 'JLPT N2',
+        org: '国際交流基金',
+        date: '2026年',
+        logo: jlptLogo,
+        orgUrl: 'https://www.jlpt.jp/j/',
+      },
       {
         title: 'コンピューター情報システム学士（B.A.）',
         org: 'カリフォルニア州立大学サンバーナディーノ校',
         date: '2022年',
+        logo: csusbLogo,
+        orgUrl: 'https://www.csusb.edu/',
       },
     ],
     otherProjects: [

@@ -35,6 +35,8 @@ const { items, ariaLabel = 'Sections' } = Astro.props;
       .map((a) => document.getElementById(a.dataset.toc ?? ''))
       .filter((el): el is HTMLElement => el !== null);
 
+    const lastId = sections[sections.length - 1]?.id ?? null;
+
     let current: string | null = null;
     const setActive = (id: string | null) => {
       if (id === current) return;
@@ -42,19 +44,38 @@ const { items, ariaLabel = 'Sections' } = Astro.props;
       links.forEach((a) => a.classList.toggle('is-active', a.dataset.toc === id));
     };
 
+    // Track which sections are inside the detection band. A short final section
+    // (Education) can never reach the band because the page bottoms out first,
+    // so once we are at the bottom we activate it directly.
+    const inBand = new Set<string>();
+    const atBottom = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+    const update = () => {
+      if (atBottom() && lastId) {
+        setActive(lastId);
+        return;
+      }
+      // Otherwise the active section is the one highest within the band.
+      const top = sections
+        .filter((s) => inBand.has(s.id))
+        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)[0];
+      if (top) setActive(top.id);
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
-        // The active section is the one whose heading sits highest within the
-        // detection band near the top of the viewport.
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
+        for (const e of entries) {
+          if (e.isIntersecting) inBand.add(e.target.id);
+          else inBand.delete(e.target.id);
+        }
+        update();
       },
       { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
     );
 
     sections.forEach((s) => observer.observe(s));
+    window.addEventListener('scroll', update, { passive: true });
     void byId;
   }
 </script>

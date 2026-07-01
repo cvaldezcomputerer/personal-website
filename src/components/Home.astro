@@ -17,9 +17,16 @@ import Monogram from '~/components/Monogram.astro';
 import ThemeToggle from '~/components/ThemeToggle.astro';
 import LanguageToggle from '~/components/LanguageToggle.astro';
 import SectionNav from '~/components/SectionNav.astro';
+import LogoTile from '~/components/LogoTile.astro';
 
 import { contact, resume } from '~/data/resume';
 import { ui, type Lang } from '~/i18n/ui';
+
+// Project brand marks (in public/logos), keyed by content-collection id.
+const projectLogos: Record<string, string> = {
+  takkotaco: '/logos/takkotaco.svg',
+  bloggydoggy: '/logos/bloggydoggy.svg',
+};
 
 interface Props {
   lang: Lang;
@@ -50,7 +57,12 @@ const personLd = {
   jobTitle: c.about.role,
   email: `mailto:${contact.email}`,
   url: `https://cristianvaldez.jp${lang === 'en' ? '' : '/ja'}`,
-  address: { '@type': 'PostalAddress', addressLocality: 'Aomori', addressCountry: 'JP' },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Takko',
+    addressRegion: 'Aomori',
+    addressCountry: 'JP',
+  },
   sameAs: [contact.github, contact.linkedin],
 };
 ---
@@ -71,7 +83,10 @@ const personLd = {
           <p class="role">{c.about.role}</p>
           <h1 class="name">{contact.name}</h1>
           <p class="tagline">{c.about.tagline}</p>
-          <p class="loc"><Icon name="map-pin" /> {c.about.location}</p>
+          <p class="loc">
+            <Icon name="garlic" class="garlic" />
+            <span class="loc-town">{c.about.town}</span>, {c.about.location}
+          </p>
         </div>
 
         <div class="sidebar-nav">
@@ -132,6 +147,9 @@ const personLd = {
                       </div>
                     )}
                     <div class="project-body">
+                      {projectLogos[p.id] && (
+                        <LogoTile src={projectLogos[p.id]} alt={`${name} logo`} size="sm" class="project-logo" />
+                      )}
                       <h3 class="project-name">{name} <Icon name="arrow-up-right" /></h3>
                       <p class="project-tagline">{tagline}</p>
                       <ul class="chips" role="list">
@@ -177,8 +195,17 @@ const personLd = {
           {
             c.experience.map((job) => (
               <article class="entry">
+                {job.logo && (
+                  <LogoTile
+                    src={job.logo}
+                    alt={`${job.org} logo`}
+                    size="sm"
+                    href={job.orgUrl}
+                    class="entry-logo"
+                  />
+                )}
                 <div class="entry-head">
-                  <div>
+                  <div class="entry-heading">
                     <h3 class="entry-role">{job.role}</h3>
                     <p class="entry-org">{job.org}</p>
                   </div>
@@ -223,8 +250,25 @@ const personLd = {
           {
             c.credentials.map((cred) => (
               <li class="cred">
-                <span class="cred-title">{cred.title}</span>
-                <span class="cred-org">{cred.org}</span>
+                <span class="cred-main">
+                  {cred.logo && (
+                    <LogoTile
+                      src={cred.logo}
+                      alt={`${cred.org} logo`}
+                      size="sm"
+                      href={cred.orgUrl}
+                      class="cred-logo"
+                    />
+                  )}
+                  {cred.href ? (
+                    <a class="cred-title cred-link" href={cred.href} target="_blank" rel="noopener">
+                      {cred.title} <Icon name="arrow-up-right" />
+                    </a>
+                  ) : (
+                    <span class="cred-title">{cred.title}</span>
+                  )}
+                  <span class="cred-org">{cred.org}</span>
+                </span>
                 <span class="cred-date">
                   {cred.inProgress && <span class="badge">{t.inProgress}</span>}
                   {cred.date}
@@ -304,6 +348,12 @@ const personLd = {
     margin-top: var(--space-4);
   }
   .loc :global(svg) { color: var(--color-accent); }
+  .loc-town {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .loc :global(.garlic) { font-size: 1.05em; }
 
   .sidebar-nav {
     display: none;
@@ -501,6 +551,9 @@ const personLd = {
     object-fit: cover;
     object-position: top center;
   }
+  :global(.project-logo) {
+    margin-bottom: var(--space-3);
+  }
   .project-name {
     display: flex;
     align-items: center;
@@ -581,14 +634,16 @@ const personLd = {
     border-top: 1px solid var(--color-border);
   }
   .entry:first-child { border-top: none; padding-top: 0; }
+  :global(.entry-logo) { margin-bottom: var(--space-3); }
   .entry-head {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-4);
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
     margin-bottom: var(--space-3);
     flex-wrap: wrap;
   }
+  .entry-heading { flex: 1 1 auto; }
   .entry-role { font-size: var(--text-lg); }
   .entry-org { color: var(--color-accent); font-weight: 500; }
   .entry-dates {
@@ -615,14 +670,38 @@ const personLd = {
   .creds { display: flex; flex-direction: column; }
   .cred {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     gap: var(--space-3);
     padding: var(--space-3) 0;
     border-top: 1px solid var(--color-border);
     flex-wrap: wrap;
   }
   .cred:first-child { border-top: none; }
+  .cred-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  :global(.cred-logo) { margin-bottom: var(--space-2); }
   .cred-title { font-weight: 600; }
+  .cred-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast) ease;
+  }
+  .cred-link :global(svg) {
+    font-size: 0.8em;
+    color: var(--color-text-faint);
+    transition: transform var(--transition-fast) var(--ease-out), color var(--transition-fast) ease;
+  }
+  .cred-link:hover { color: var(--color-accent); }
+  .cred-link:hover :global(svg) {
+    transform: translate(2px, -2px);
+    color: var(--color-accent);
+  }
   .cred-org { color: var(--color-text-muted); font-size: var(--text-sm); }
   .cred-date {
     margin-left: auto;
