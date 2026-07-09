@@ -7,14 +7,22 @@
  * at-a-glance panel and the live SVG map).
  *
  * Feature layout: major features get the editorial treatment (big media,
- * one per row); minor features follow as compact alternating rows.
- * Screenshots are placeholders for now; the map is the real, live SVG.
+ * one per row); minor features follow as compact alternating rows. Two minors
+ * are live artifacts rather than screenshots: the stroke-letter system
+ * (StrokeWord, drawn on scroll) and the prefecture map (JapanMap, hoverable).
+ * Remaining screenshots are placeholders for now.
  */
 import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Icon from '~/components/Icon.astro';
 import LogoTile from '~/components/LogoTile.astro';
 import JapanMap from '~/components/JapanMap.astro';
+import StrokeWord from '~/components/takkotaco/StrokeWord.astro';
+import gamesShot from '~/assets/images/takkotaco/games.png';
+import worksheetShot from '~/assets/images/takkotaco/worksheet-maker.png';
+import guideShot from '~/assets/images/takkotaco/town-guide.png';
+import feedbackShot from '~/assets/images/takkotaco/feedback-widget.png';
 const takkotacoLogo = '/logos/takkotaco.svg';
 
 const entry = await getEntry('projects', 'takkotaco');
@@ -37,48 +45,59 @@ const glance: { label: string; value: string; href?: string }[] = [
   },
 ];
 
-// Major features: editorial, big media. The map is live; others are placeholders.
+// Major features: editorial, big media.
 const majorFeatures = [
   {
-    title: '"Where are you from?" map',
-    body: 'An interactive SVG map of Japan that visitors tap to pin their home prefecture. It is backed by a Worker and D1, but never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class, and it is the kind of thing I would have reached for an image or a heavy library for before I learned how far SVG goes.',
-    media: 'map' as const,
-  },
-  {
-    title: 'A growing toolkit',
-    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to multiplayer word races and drawing games. I do not build to a roadmap: a tool gets added when I hit a need in class or a student suggests something, so the collection keeps growing wherever it turns out to be useful.',
-    media: 'placeholder' as const,
-    label: 'classroom games screenshot',
+    title: 'A growing classroom toolkit',
+    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class or a student suggests something. The newest experiment is real-time multiplayer, a class-mode race where students join a room from their Chromebooks and a Durable Object referees the whole thing over WebSockets, live leaderboard included. It has only had light testing so far, and that is on purpose: it is my trial run for a bigger real-time project I have planned.',
+    image: gamesShot,
+    alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
   },
   {
     title: 'Vocab sheet maker, and the workflow behind it',
     body: 'Adding a word is a single step: I drop it into the central database, and from there I can generate a printable sheet and it is instantly live in every game and tool that uses vocab. Quick enough that I add words on a whim, which is exactly what I wanted.',
-    media: 'placeholder' as const,
-    label: 'vocab sheet maker screenshot',
+    image: worksheetShot,
+    alt: 'The worksheet maker: word categories and page options on the left, a live preview of a printable vocabulary sheet with illustrated drink words on the right',
   },
 ];
 
-// Minor features: compact alternating rows.
-const minorFeatures = [
+// Minor features: compact alternating rows. Two are live artifacts ported from
+// the real site (letters, map); the rest are screenshots or text-only.
+const minorFeatures: {
+  title: string;
+  body: string;
+  media: 'letters' | 'map' | 'shot' | 'none';
+  image?: ImageMetadata;
+  alt?: string;
+}[] = [
+  {
+    title: 'SVG letter system',
+    body: 'Every stylized letter across the games is a set of pen strokes stored in handwriting order, so anything that uses them can also draw them the way a hand would: tracing practice, name writing, the ABC games. This is the real system running, not a video of it.',
+    media: 'letters',
+  },
+  {
+    title: '"Where are you from?" map',
+    body: 'Visitors tap the prefecture they are from and a pin appears, backed by a Worker and D1. It never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class. This one is the actual SVG from the site; hover it.',
+    media: 'map',
+  },
   {
     title: 'A real English guide, not a Google-translated mess',
     body: 'The original reason for all of this. The town guide is written in actual English by someone who lives here, covering what the place is genuinely like instead of a machine-translated page nobody maintained.',
-  },
-  {
-    title: 'Train timer',
-    body: 'Train timers already exist, but I built mine to behave exactly how I want it for class. The small details are the whole point when you use something every lesson.',
-  },
-  {
-    title: 'SVG letter system',
-    body: 'A custom system for the stylized letters used across the games. I learned far more about building with SVG than I expected to.',
+    media: 'shot',
+    image: guideShot,
+    alt: 'The takkotaco.com homepage: a student-painted mural behind "Welcome to Takko Machi", with links to the English games and the town guide',
   },
   {
     title: 'Takko-ben page',
     body: 'A daily word from the local dialect. Takko-ben is fading with the older generation, and I wanted a record of it written by someone living here rather than scraped from a database.',
+    media: 'none',
   },
   {
     title: 'Feedback to Discord',
     body: 'A widget on the games that posts student messages straight into a Discord channel. I added it as an experiment; it is now the fastest feedback loop I have for what works.',
+    media: 'shot',
+    image: feedbackShot,
+    alt: 'The feedback widget panel: a Japanese postbox illustration above a message box and send button',
   },
 ];
 ---
@@ -208,13 +227,7 @@ const minorFeatures = [
                 <h3>{f.title}</h3>
                 <p>{f.body}</p>
               </div>
-              {f.media === 'map' ? (
-                <JapanMap />
-              ) : (
-                <div class="ph ph--wide" aria-label={f.label}>
-                  {f.label} coming soon
-                </div>
-              )}
+              <Image class="major-shot" src={f.image} alt={f.alt} width={1440} />
             </article>
           ))
         }
@@ -224,18 +237,36 @@ const minorFeatures = [
       <div class="minor-list">
         {
           minorFeatures.map((f) => (
-            <article class="minor">
+            <article
+              class:list={[
+                'minor',
+                { 'minor--live': f.media === 'letters' || f.media === 'map' },
+                { 'minor--text': f.media === 'none' },
+              ]}
+            >
               <div class="minor-text">
                 <h4>{f.title}</h4>
                 <p>{f.body}</p>
               </div>
-              <div class="ph ph--small" aria-hidden="true">
-                screenshot
-              </div>
+              {f.media === 'letters' && <StrokeWord word="Takko" />}
+              {f.media === 'map' && (
+                <div class="minor-map">
+                  <JapanMap />
+                </div>
+              )}
+              {f.media === 'shot' && f.image && (
+                <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
+              )}
             </article>
           ))
         }
       </div>
+
+      <p class="minor-more">
+        There is more in the drawer, like a train timer tuned to exactly how I
+        run class transitions and a name-writing tool built on the letter
+        system above. New tools get added when a lesson needs one.
+      </p>
     </section>
 
     <div class="prose">
@@ -356,21 +387,16 @@ const minorFeatures = [
     padding: 0.2rem 0.5rem;
   }
 
-  /* Placeholders */
-  .ph {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: var(--color-surface-2);
+  /* Feature screenshots. <Image> output carries no parent scope, so :global. */
+  .major :global(.major-shot),
+  .minor :global(.minor-shot) {
+    width: 100%;
+    height: auto;
+    display: block;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    box-shadow: var(--shadow-sm);
   }
-  .ph--wide { aspect-ratio: 16 / 10; width: 100%; }
-  .ph--small { aspect-ratio: 4 / 3; }
 
   /* Features */
   .features { margin: var(--space-8) 0; }
@@ -401,9 +427,24 @@ const minorFeatures = [
   .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
 
+  /* Live artifacts (letters, map) earn a wider media column than screenshots. */
+  .minor--live { grid-template-columns: 1fr 17rem; }
+  .minor--text { grid-template-columns: 1fr; }
+  .minor-map { min-width: 0; }
+
+  .minor-more {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    max-width: 64ch;
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+
   @media (max-width: 640px) {
     .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
-    .minor { grid-template-columns: 1fr; }
+    .minor,
+    .minor--live { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }
   }
 </style>

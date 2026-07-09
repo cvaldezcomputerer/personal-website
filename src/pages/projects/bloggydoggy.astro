@@ -4,15 +4,28 @@
  * pattern). Card metadata comes from the projects content collection; the prose,
  * feature showcase, and the "playful details" style section live here.
  *
- * The style section embeds three real artifacts from the blog: the live Loader
- * (SVG + JS, ported), and two animated WebPs (the spinning mug and the Olympus
- * camera sticker) served from /public so sharp does not strip their animation.
+ * Both major features are live demos rather than screenshots: LangDemo (the
+ * trilingual reading modes on a real post paragraph) and QuizDemo (the quiz
+ * web component on sample data), and the quiz follows the language toggle via
+ * the bd-demo:lang event, same as on the blog. The Explain tooltip is used
+ * inline in the overview prose (the Playful details section points it out).
+ *
+ * The style section embeds real artifacts from the blog: the live Loader
+ * (SVG + JS, ported), the PressToLight pushbutton toy, and two animated WebPs
+ * (the spinning mug and the Olympus camera sticker) served from /public so
+ * sharp does not strip their animation.
  */
 import { getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Icon from '~/components/Icon.astro';
 import LogoTile from '~/components/LogoTile.astro';
 import Loader from '~/components/bloggydoggy/Loader.astro';
+import LangDemo from '~/components/bloggydoggy/LangDemo.astro';
+import QuizDemo from '~/components/bloggydoggy/QuizDemo.astro';
+import Explain from '~/components/bloggydoggy/Explain.astro';
+import PressToLight from '~/components/bloggydoggy/PressToLight.astro';
+import galleryShot from '~/assets/images/bloggydoggy/gallery.png';
 const bloggydoggyLogo = '/logos/bloggydoggy.svg';
 
 const entry = await getEntry('projects', 'bloggydoggy');
@@ -34,27 +47,38 @@ const glance: { label: string; value: string; href?: string }[] = [
   },
 ];
 
+// Both majors are live demos: the real mechanism, not a picture of it.
 const majorFeatures = [
   {
     title: 'Reader-controlled language modes',
-    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read.',
-    label: 'language toggle screenshot',
+    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read. The demo here is the real mechanism running on a paragraph from an actual post; try the toggle.',
+    media: 'lang' as const,
   },
   {
     title: 'Quiz component',
-    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. The whole thing runs on the free tier, and because I own the endpoint the quiz behaves exactly how I designed it.',
-    label: 'quiz component screenshot',
+    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. The whole thing runs on the free tier, and because I own the endpoint the quiz behaves exactly how I designed it. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    media: 'quiz' as const,
   },
 ];
 
-const minorFeatures = [
+const minorFeatures: {
+  title: string;
+  body: string;
+  media: 'shot' | 'none';
+  image?: ImageMetadata;
+  alt?: string;
+}[] = [
   {
     title: 'Custom gallery components',
     body: 'Some posts end in a photo gallery. I wanted it to look and behave a specific way and no generic option did it, so I built the component myself.',
+    media: 'shot',
+    image: galleryShot,
+    alt: 'A post gallery on bloggydoggy.com: photos styled as polaroids with handwritten captions, pinned to a grid-paper scrapbook background',
   },
   {
     title: 'Likes',
     body: 'Also my own API rather than a plugin. Nothing complicated, but it behaves exactly how I want and costs nothing to run.',
+    media: 'none',
   },
 ];
 ---
@@ -117,9 +141,11 @@ const minorFeatures = [
       <p>
         Bloggy Doggy started as a place to express myself: somewhere to post my
         photography and write about what I'm doing, and it has grown into
-        something I add to steadily. It doubles as a testing ground, a place to
-        build interactive features I have no specific reason to build elsewhere,
-        and to work out what actually makes a reading experience good.
+        something I add to steadily. It doubles as a{' '}
+        <Explain meaning="a place to try new ideas">testing ground</Explain>, a
+        place to build interactive features I have no specific reason to build
+        elsewhere, and to work out what actually makes a reading experience
+        good.
       </p>
 
       <h2>Architecture</h2>
@@ -165,9 +191,7 @@ const minorFeatures = [
                 <h3>{f.title}</h3>
                 <p>{f.body}</p>
               </div>
-              <div class="ph ph--wide" aria-label={f.label}>
-                {f.label} coming soon
-              </div>
+              {f.media === 'lang' ? <LangDemo /> : <QuizDemo />}
             </article>
           ))
         }
@@ -177,14 +201,14 @@ const minorFeatures = [
       <div class="minor-list">
         {
           minorFeatures.map((f) => (
-            <article class="minor">
+            <article class:list={['minor', { 'minor--text': f.media === 'none' }]}>
               <div class="minor-text">
                 <h4>{f.title}</h4>
                 <p>{f.body}</p>
               </div>
-              <div class="ph ph--small" aria-hidden="true">
-                screenshot
-              </div>
+              {f.media === 'shot' && f.image && (
+                <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
+              )}
             </article>
           ))
         }
@@ -243,7 +267,24 @@ const minorFeatures = [
             vintage Olympus I shot a whole post on.
           </figcaption>
         </figure>
+
+        <figure class="style-tile">
+          <div class="style-stage style-stage--ptl">
+            <PressToLight />
+          </div>
+          <figcaption>
+            <strong>Press to light.</strong> From the culture-festival post:
+            press the tactile switch and the LED in the photo lights up. Go
+            ahead, press it.
+          </figcaption>
+        </figure>
       </div>
+
+      <p class="style-note">
+        One more is hiding in plain sight: the dotted-underlined phrase up in
+        the overview is the blog's Explain tooltip, a component for quietly
+        defining words a learner might not know, doing its actual job.
+      </p>
     </section>
 
     <div class="prose">
@@ -348,20 +389,15 @@ const minorFeatures = [
     padding: 0.2rem 0.5rem;
   }
 
-  .ph {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: var(--color-surface-2);
+  /* Feature screenshots. <Image> output carries no parent scope, so :global. */
+  .minor :global(.minor-shot) {
+    width: 100%;
+    height: auto;
+    display: block;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    box-shadow: var(--shadow-sm);
   }
-  .ph--wide { aspect-ratio: 16 / 10; width: 100%; }
-  .ph--small { aspect-ratio: 4 / 3; }
 
   .features { margin: var(--space-8) 0; }
   .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
@@ -390,14 +426,16 @@ const minorFeatures = [
   .minor:nth-child(even) .minor-text { order: 2; }
   .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
+  .minor--text { grid-template-columns: 1fr; }
 
   /* Playful details */
   .style { margin: var(--space-9) 0 var(--space-8); }
   .style > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-2); }
   .style-intro { color: var(--color-text-muted); max-width: 60ch; margin-bottom: var(--space-6); }
+  /* Four tiles now, so 2x2 instead of a 3-wide row. */
   .style-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-5);
   }
   .style-tile { margin: 0; }
@@ -411,6 +449,8 @@ const minorFeatures = [
     border-radius: var(--radius-md);
     padding: var(--space-5);
   }
+  /* The pushbutton tile holds a photo + the switch, so it sets its own height. */
+  .style-stage--ptl { aspect-ratio: auto; }
   .style-stage img { max-width: 100%; height: auto; display: block; }
   .style-tile figcaption {
     font-size: var(--text-sm);
@@ -418,6 +458,13 @@ const minorFeatures = [
     margin-top: var(--space-3);
   }
   .style-tile figcaption strong { color: var(--color-text); }
+
+  .style-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    max-width: 60ch;
+    margin-top: var(--space-5);
+  }
 
   @media (max-width: 720px) {
     .style-grid { grid-template-columns: 1fr; }

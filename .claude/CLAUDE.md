@@ -192,15 +192,14 @@ a noindex meta AND go in `public/robots.txt`.
 
 - [ ] **Fill in real content** - resume tweaks and real blog posts. Replace the
   placeholder `welcome` post. (The two case studies are now written; see below.)
-- [ ] **Real project screenshots** - the two case-study pages
-  (`src/pages/projects/{takkotaco,bloggydoggy}.astro`) use placeholder `.ph`
-  tiles where feature screenshots go. Takko needs: games shot + vocab-sheet-maker
-  shot (major), plus 5 minor-row shots. Bloggy needs: language-toggle shot + quiz
-  shot (major), plus 2 minor-row shots. Grab in **light mode** (owner prefers it;
-  the card images were done that way). Source projects live on this machine:
-  `../dog_site/dog_SITE` = takkotaco.com, `../astro/takko blog` = bloggydoggy.com
-  (folder names are inverted; `site:` in astro.config is authoritative). Once a
-  minor tool has no real shot, consider dropping its tile to a text-only card.
+- [ ] **Screenshot upgrades (optional)** - all 5 feature shots are in as of
+  2026-07-07, taken headlessly (Playwright, light mode, 2x DPR) from the live
+  sites at owner's request as drafts; he may want to reshoot or art-direct any
+  of them. Remaining nice-to-have: a short GIF of the multiplayer class race
+  for the Takko games major (needs two devices / two contexts). Source
+  projects live on this machine: `../dog_site/dog_SITE` = takkotaco.com,
+  `../astro/takko blog` = bloggydoggy.com (folder names are inverted; `site:`
+  in astro.config is authoritative).
 - [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
   hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
   still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
@@ -219,6 +218,42 @@ a noindex meta AND go in `public/robots.txt`.
 - [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
 - [ ] **Uncommitted:** `.claude/settings.json` (harness permission state) is
   modified but intentionally left out of commits - decide commit vs gitignore.
+
+### Done this session (2026-07-07)
+
+Filled in the 5 remaining screenshot placeholders on the two case-study pages
+with real, headless-captured shots from the live sites (Playwright, light
+mode, 2x DPR, at owner's request, as drafts he can reshoot/redirect later).
+Takko: games grid (scrolled to the card row) and worksheet maker (with a real
+category selected so the preview sheet shows illustrated words, not an empty
+page) for the majors; homepage hero and the open feedback panel for the
+minors. Bloggy: a populated post gallery (4 polaroid photos) for its one
+remaining minor. All wired through `astro:assets` `<Image>` (not raw `<img>`),
+so they get build-time webp optimization; a `.major-shot`/`.minor-shot`
+`:global()` rule replaced the old `.ph` placeholder styling in both pages.
+Assets live in `src/assets/images/{takkotaco,bloggydoggy}/`. `astro check`
+0/0/0, build clean.
+
+### Done this session (2026-07-06)
+
+Settled the case-study feature hierarchy (owner decisions: map demoted to a
+small live minor; multiplayer race folded into the games major as an honest
+"newest experiment" since it is lightly tested and the planned AWS project will
+be its expansion; inline-Explain trick approved) and replaced showcase
+placeholders with live artifacts. Takko (`takkotaco.astro`): majors are now
+games-toolkit (incl. multiplayer beat) + vocab pipeline; minors lead with the
+SVG letter system drawn live (`src/components/takkotaco/StrokeWord.astro` +
+`src/data/letter-strokes.ts`, both ported from dog_SITE; draws on scroll,
+click to replay) then the map (JapanMap, now small); train timer cut to an
+"and more" line; Takko-ben is text-only. Bloggy (`bloggydoggy.astro`): both
+majors are live demos - `bloggydoggy/LangDemo.astro` (real rice-planting
+paragraph in all 3 modes) and `bloggydoggy/QuizDemo.astro` (real quiz
+component, canned votes, One Piece question; follows the LangDemo toggle via a
+`bd-demo:lang` event, mirroring the blog). Ported `bloggydoggy/Explain.astro`
+(used inline on "testing ground" in the overview, called out in Playful
+details) and `bloggydoggy/PressToLight.astro` (4th Playful tile, photos copied
+to `src/assets/images/bloggydoggy/`, style grid now 2x2). Likes minor is
+text-only. `astro check` 0/0/0, build clean.
 
 ### Done this session (2026-07-01)
 

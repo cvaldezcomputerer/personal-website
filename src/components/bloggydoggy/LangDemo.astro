@@ -1,0 +1,124 @@
+---
+/**
+ * LangDemo - a working miniature of bloggydoggy.com's reader-controlled
+ * language modes, for the case study. Same mechanism as the blog's
+ * LanguageSelector + T pair (every mode in the DOM, stacked in one grid cell,
+ * toggled by class), but self-contained: no localStorage, no site-wide event
+ * bus. It broadcasts `bd-demo:lang` on document so the quiz demo further down
+ * the page can follow it, which is exactly how the real blog behaves.
+ *
+ * The paragraph is a real excerpt from the blog's rice-planting post, all
+ * three modes as published.
+ */
+---
+
+<figure class="lang-demo" data-lang="en">
+  <div class="ld-controls" role="group" aria-label="Reading language">
+    <button type="button" data-ld-btn="en" class="ld-pill is-active" aria-pressed="true">English</button>
+    <button type="button" data-ld-btn="en_simple" class="ld-pill" aria-pressed="false">Ez English</button>
+    <button type="button" data-ld-btn="ja" class="ld-pill" aria-pressed="false">日本語</button>
+  </div>
+
+  <div class="ld-stage">
+    <p class="ld-text" data-ld-text="en" lang="en">
+      Recently I went and planted rice with Japanese 5th graders at the
+      countryside elementary school where I work. It was an amazing experience
+      that I will never forget, and today I would like to share it with you.
+    </p>
+    <p class="ld-text is-hidden" data-ld-text="en_simple" lang="en">
+      I planted rice with Japanese 5th graders! I work at their school. It was
+      so much fun. I want to tell you about it!
+    </p>
+    <p class="ld-text is-hidden" data-ld-text="ja" lang="ja">
+      最近、私は、自分が働いている田舎の小学校で、日本の5年生たちと一緒にお米を植えてきました。それは一生忘れられない素晴らしい経験で、今日はそれを皆さんにお伝えしたいと思います。
+    </p>
+  </div>
+
+  <figcaption>
+    A real paragraph from the blog's rice-planting post, in all three published
+    modes. The quiz further down follows this toggle too, same as on the blog.
+  </figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.lang-demo').forEach((demo) => {
+    const buttons = demo.querySelectorAll<HTMLButtonElement>('[data-ld-btn]');
+    const texts = demo.querySelectorAll<HTMLElement>('[data-ld-text]');
+
+    const setLang = (lang: string) => {
+      demo.dataset.lang = lang;
+      texts.forEach((el) => {
+        el.classList.toggle('is-hidden', el.dataset.ldText !== lang);
+      });
+      buttons.forEach((btn) => {
+        const active = btn.dataset.ldBtn === lang;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+      document.dispatchEvent(new CustomEvent('bd-demo:lang', { detail: { lang } }));
+    };
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => setLang(btn.dataset.ldBtn ?? 'en'));
+    });
+  });
+</script>
+
+<style>
+  .lang-demo { margin: 0; }
+
+  .ld-controls {
+    display: inline-flex;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    margin-bottom: var(--space-3);
+  }
+  .ld-pill {
+    font-family: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    cursor: pointer;
+    transition: background var(--transition-base), color var(--transition-base);
+  }
+  .ld-pill:hover { color: var(--color-text); }
+  .ld-pill.is-active {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+  }
+
+  /* All three modes share one grid cell so the panel keeps the tallest height
+     and nothing below it jumps when the language changes. */
+  .ld-stage {
+    display: grid;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .ld-text {
+    grid-row: 1;
+    grid-column: 1;
+    margin: 0;
+    color: var(--color-text);
+    transition: opacity 0.15s ease-out;
+  }
+  .ld-text.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+  }
+</style>

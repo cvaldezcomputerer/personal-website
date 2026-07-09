@@ -1,0 +1,178 @@
+---
+/**
+ * StrokeWord (live) - the stroke-letter system from takkotaco.com, ported for
+ * the Takko case study. Renders a word in the site's handwriting letterforms
+ * on the 4-line English writing guide, then draws it stroke by stroke in real
+ * handwriting order when scrolled into view. Click replays the drawing.
+ *
+ * Layout math mirrors the source StrokeWord: lowercase lives in a
+ * 10/39/76/96 box (ascender / x-height / baseline / descender); capitals are
+ * authored taller (8 -> 91) so they are scaled + shifted onto the same
+ * baseline. Glyph data: src/data/letter-strokes.ts (copied from the source
+ * site). Without JS the word renders fully drawn, so nothing breaks.
+ */
+import { letterStrokes } from '~/data/letter-strokes';
+
+interface Props {
+  word: string;
+  /** Seconds each pen stroke takes to draw. */
+  strokeSeconds?: number;
+  class?: string;
+}
+const { word, strokeSeconds = 0.5, class: className = '' } = Astro.props;
+
+// Vertical guide system (matches the source component / Name Writer tool).
+const ASC = 10, XH = 39, BASE_Y = 76, DESC = 96, VBH = 100;
+const PAD_X = 8, GAP = 6, SPACE_W = 24, STROKE = 6.5;
+const CAP_SCALE = (BASE_Y - ASC) / (91 - 8);
+const CAP_TY = BASE_Y - 91 * CAP_SCALE;
+const capStrokeW = STROKE / CAP_SCALE;
+
+// Approx ink width of each glyph in its own 100-unit box (from the source).
+const INK: Record<string, number> = {
+  A: 54, B: 41, C: 49, D: 44, E: 45, F: 45, G: 50, H: 48, I: 40, J: 60, K: 48,
+  L: 45, M: 66, N: 48, O: 52, P: 40, Q: 54, R: 42, S: 42, T: 56, U: 44, V: 56,
+  W: 80, X: 42, Y: 46, Z: 46,
+  a: 32, b: 33, c: 33, d: 33, e: 31, f: 24, g: 28, h: 27, i: 9, j: 23, k: 22,
+  l: 9, m: 60, n: 26, o: 34, p: 33, q: 33, r: 21, s: 27, t: 22, u: 26, v: 36,
+  w: 56, x: 34, y: 34, z: 33,
+};
+
+const isCap = (ch: string) => ch >= 'A' && ch <= 'Z';
+
+type Glyph = { strokes: string[]; tx: number; cap: boolean };
+const glyphs: Glyph[] = [];
+let penX = PAD_X;
+for (const ch of word) {
+  if (ch === ' ') { penX += SPACE_W; continue; }
+  const key = letterStrokes[ch] ? ch : ch.toUpperCase();
+  const strokes = letterStrokes[key];
+  if (!strokes) continue;
+  const cap = isCap(key);
+  const w = (INK[key] ?? 30) * (cap ? CAP_SCALE : 1);
+  const cellCenter = penX + w / 2;
+  const tx = cellCenter - 50 * (cap ? CAP_SCALE : 1);
+  glyphs.push({ strokes, tx, cap });
+  penX += w + GAP;
+}
+const W = Math.max(penX - GAP + PAD_X, 60);
+
+// Global stroke order across the whole word drives the draw sequencing.
+let strokeIndex = 0;
+const totalStrokes = glyphs.reduce((n, g) => n + g.strokes.length, 0);
+---
+
+<figure class:list={['stroke-word', className]} style={`--sw-per:${strokeSeconds}s;`}>
+  <button class="sw-stage" type="button" aria-label={`Replay the drawing of "${word}"`}>
+    <svg viewBox={`0 0 ${W} ${VBH}`} role="img" aria-label={word} xmlns="http://www.w3.org/2000/svg">
+      <line class="sw-guide" x1="0" x2={W} y1={ASC} y2={ASC} />
+      <line class="sw-guide sw-guide--dashed" x1="0" x2={W} y1={XH} y2={XH} />
+      <line class="sw-guide sw-guide--base" x1="0" x2={W} y1={BASE_Y} y2={BASE_Y} />
+      <line class="sw-guide" x1="0" x2={W} y1={DESC} y2={DESC} />
+      {glyphs.map((g) => (
+        <g transform={g.cap ? `translate(${g.tx} ${CAP_TY}) scale(${CAP_SCALE})` : `translate(${g.tx} 0)`}>
+          {g.strokes.map((d) => (
+            <path
+              class="sw-stroke"
+              d={d}
+              pathLength="1"
+              style={`--sw-i:${strokeIndex++};`}
+              fill="none"
+              stroke-width={g.cap ? capStrokeW : STROKE}
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          ))}
+        </g>
+      ))}
+    </svg>
+  </button>
+  <figcaption>
+    Live SVG: {totalStrokes} pen strokes drawn in handwriting order. Click to
+    replay.
+  </figcaption>
+</figure>
+
+<script>
+  // Draw when scrolled into view; a click replays from the first stroke.
+  // Before JS runs the word sits fully drawn, so no-JS still shows the art.
+  const init = () => {
+    document.querySelectorAll<HTMLElement>('.stroke-word').forEach((fig) => {
+      fig.classList.add('sw-ready');
+      const stage = fig.querySelector('.sw-stage');
+      if (!stage) return;
+
+      const draw = () => {
+        fig.classList.remove('sw-drawing');
+        void fig.offsetWidth;
+        fig.classList.add('sw-drawing');
+      };
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            draw();
+            io.disconnect();
+          }
+        },
+        { threshold: 0.4 },
+      );
+      io.observe(fig);
+
+      stage.addEventListener('click', draw);
+    });
+  };
+  init();
+</script>
+
+<style>
+  .stroke-word { margin: 0; }
+
+  .sw-stage {
+    display: block;
+    width: 100%;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+  .sw-stage svg { width: 100%; height: auto; display: block; }
+
+  .sw-guide {
+    stroke: var(--color-border-strong);
+    stroke-width: 1.25;
+  }
+  .sw-guide--dashed { stroke-dasharray: 5 6; }
+  .sw-guide--base { stroke-width: 2; }
+
+  .sw-stroke {
+    stroke: var(--color-accent);
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0; /* fully drawn until JS takes over */
+  }
+
+  /* JS present: hide the ink until the draw runs. */
+  .sw-ready .sw-stroke { stroke-dashoffset: 1; }
+
+  .sw-drawing .sw-stroke {
+    animation: sw-draw var(--sw-per) ease-out forwards;
+    animation-delay: calc(var(--sw-i) * var(--sw-per));
+  }
+
+  @keyframes sw-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sw-ready .sw-stroke { stroke-dashoffset: 0; }
+    .sw-drawing .sw-stroke { animation: none; }
+  }
+
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+  }
+</style>

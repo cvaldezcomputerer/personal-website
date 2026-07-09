@@ -1,0 +1,106 @@
+---
+/**
+ * Explain - the inline definition tooltip from bloggydoggy.com, ported for the
+ * case study. On the blog it marks words a learner might not know (dotted
+ * underline; hover or focus pops a short plain-English meaning). Same markup
+ * and behavior as the source, with the colors remapped to this site's tokens
+ * and the blog's site-wide "definition highlights off" setting dropped since
+ * there is no settings cog here.
+ *
+ * Used inline in the Bloggy Doggy case-study prose so the component is
+ * demonstrated by doing its actual job; the Playful details section points it
+ * out.
+ */
+interface Props {
+  meaning: string;
+}
+
+const { meaning } = Astro.props;
+const id = `explain-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<span class="explain-wrapper">
+  <button class="explain-trigger" type="button" aria-describedby={id}>
+    <slot />
+  </button>
+  <span id={id} class="explain-box" role="tooltip">
+    {meaning}
+  </span>
+</span>
+
+<style>
+  .explain-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .explain-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    color: inherit;
+    border-bottom: 2px dotted var(--color-accent);
+    transition: color var(--transition-base), background var(--transition-base);
+  }
+
+  .explain-trigger:hover,
+  .explain-trigger:focus,
+  .explain-wrapper:hover .explain-trigger {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+    border-bottom-style: solid;
+  }
+
+  .explain-box {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: max-content;
+    max-width: 250px;
+    min-width: 150px;
+    padding: 0.6rem 0.9rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+    text-align: center;
+    z-index: 10;
+    transition: opacity var(--transition-base), transform var(--transition-base), visibility var(--transition-base);
+    pointer-events: none;
+  }
+
+  .explain-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: var(--color-accent) transparent transparent transparent;
+  }
+
+  .explain-wrapper:hover .explain-box,
+  .explain-trigger:focus + .explain-box {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  @media (max-width: 480px) {
+    .explain-box {
+      min-width: 200px;
+      white-space: normal;
+    }
+  }
+</style>
