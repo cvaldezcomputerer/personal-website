@@ -2,9 +2,9 @@
   <!-- CV name-seal favicon: the romaji sibling of the クリス hanko in the site
        chrome (Monogram.astro). CV reads cleanly at 16px where the kana muddies.
        Letters are Noto Sans JP 900 converted to outline paths (no webfont).
-       Sage to match the site accent (--color-accent); the dark variant uses the
-       lightened dark-mode sage. Note: .ring sets fill:none separately - a CSS
-       `fill` would override the fill="none" attribute and fill the ring solid. -->
+       Sage to match the site accent (the color-accent token); the dark variant
+       uses the lightened dark-mode sage. Note: .ring sets fill:none separately;
+       a CSS `fill` would override the fill="none" attribute and fill it solid. -->
   <style>
     .ring { fill: none; stroke: #3f7a52; }
     .glyph { fill: #3f7a52; }

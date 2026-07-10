@@ -101,16 +101,16 @@ export const resume: Record<Lang, ResumeContent> = {
   en: {
     about: {
       role: 'IT & Web Development',
-      tagline: 'I build and support things across the stack, from infrastructure to the web.',
+      tagline: 'I build and tinker across tech, from infrastructure to the web.',
       town: 'Takko',
       location: 'Aomori, Japan',
       imageAlt: 'Cristian planting rice with local students at a community rice-planting class in Aomori',
       summary:
         'Cristian Valdez is an American IT professional based in Aomori, Japan, working across infrastructure, support, and web development. Business-level Japanese (JLPT N2).',
       paragraphs: [
-        "I'm an American living in Aomori, Japan. I came over in 2023 to teach on the <a href=\"https://jetprogramme.org\">JET Programme</a>, but I never lost my passion for cool technology. Websites and personal projects have been a constant the whole time, and I've kept myself sharp by studying new topics that interest me or that teach me more about what I'm working on. As my time on JET comes to a close, I'm looking to transition back into tech here in Japan, and I'm open across the board: IT support, infrastructure, and web development.",
-        "When it comes to how I choose what to build or learn, it comes down to things that are useful to me in some way. Whether that's <a href=\"https://takkotaco.com/game/\">tools I can use in the classroom</a>, a place to <a href=\"https://bloggydoggy.com\">express myself</a>, or a simple one-off solution to an annoying problem like a Chrome extension or a split keyboard config. I like being able to customize and tinker, and I'm not satisfied until I get something exactly how I want it.",
-        "Outside of work you'll usually find me lifting or running, taking part in local groups like the badminton team or ceramics club, and helping out at community events like the <a href=\"https://bloggydoggy.com\">culture festival</a>, or even <a href=\"https://bloggydoggy.com\">holding my own</a>.",
+        "I'm an American living in Aomori, Japan. I came over in 2023 to teach on the <a href=\"https://jetprogramme.org\">JET Programme</a>, but I never stopped making things and messing with tech on the side. Personal projects have been a constant the whole time, and I keep learning whatever a project needs or whatever I happen to be curious about. As my time on JET comes to a close, I'm looking to move back into tech here in Japan, whether that's IT support, infrastructure, or web development.",
+        "Mostly I just build things for myself: whatever would actually be useful, or whatever I want to understand better. That might be <a href=\"https://takkotaco.com/game/\">tools for the classroom</a>, a place to <a href=\"https://bloggydoggy.com\">express myself</a>, or a quick fix for something annoying, like a Chrome extension or a custom keyboard. I like being able to customize and tinker, and I'm not satisfied until I get something exactly how I want it.",
+        "Outside of work you'll usually find me lifting or running, taking part in local groups like the badminton team or ceramics club, and helping out at community events like the <a href=\"https://bloggydoggy.com/blog/3d-printing-culture-festival/\">culture festival</a>, or running my own, like <a href=\"https://bloggydoggy.com/blog/pasta-time/\">cooking classes</a> and a hands-on electronics class.",
       ],
     },
     experience: [
@@ -123,7 +123,7 @@ export const resume: Record<Lang, ResumeContent> = {
         orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
           'Teach English at public schools in rural Aomori while working daily in a fully Japanese-language environment.',
-          'Adapt technical and educational material for non-native speakers across a wide range of proficiency levels, which demands clear written and spoken communication.',
+          'Adapt technical and educational material for non-native speakers across a wide range of proficiency levels, which takes clear communication, both written and spoken.',
         ],
       },
       {
@@ -220,7 +220,7 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         name: 'ZMK config - Totem',
         description:
-          'A ZMK firmware config for the Totem split keyboard, with ZMK Studio support added. Picked up by the keyboard community and forked as a base for their own builds.',
+          'A ZMK firmware config for the Totem split keyboard, with ZMK Studio support added. Picked up by the keyboard community and forked as a base for other builds.',
         url: 'https://github.com/cvaldezcomputerer/zmk-config',
         stack: ['ZMK', 'Zephyr', 'Devicetree'],
       },
@@ -230,15 +230,16 @@ export const resume: Record<Lang, ResumeContent> = {
   ja: {
     about: {
       role: 'IT・Web開発',
-      tagline: 'インフラからウェブまで、幅広くつくり、支えています。',
+      tagline: 'インフラからウェブまで、いろいろ作ったり、いじったりしています。',
       town: '田子町',
       location: '青森県、日本',
       imageAlt: '青森の地域の田植え教室で、地元の生徒たちと田植えをするクリスチャン',
       summary:
         'Cristian Valdez（クリスチャン・バルデス）は、青森県を拠点に、インフラ・サポート・ウェブ開発まで幅広く手がけるアメリカ出身のITエンジニアです。ビジネスレベルの日本語（JLPT N2）。',
       paragraphs: [
-        '青森県在住、アメリカ出身のITエンジニアです。2023年にJETプログラムの英語指導助手として来日しましたが、その間もずっと、ものづくりの手を止めることはありませんでした。ウェブサイトや個人プロジェクトは、コンピューターに初めて触れた頃から変わらず続けてきたものです。今、本格的にIT業界へ戻ろうとしているところで、ITサポート、インフラ、ウェブ開発まで、幅広く取り組んでいきたいと考えています。',
-        '日本語で日々生活し働く中で（JLPT N2）、新しいことを素早く吸収し、背景の異なる相手にも分かりやすく説明する力が身につきました。これは仕事の大部分を占めるスキルだと感じています。仕事以外では、筋トレやランニングをしたり、地元のサークル（陶芸・バドミントン・ダンス）に参加したり、趣味のプロジェクトに没頭していることが多いです。自作キーボードづくりや3Dプリント、学んだことをブログにまとめたりしています。',
+        '青森県に住んでいる、アメリカ出身です。2023年に<a href="https://jetprogramme.org">JETプログラム</a>の外国語指導助手として来日しましたが、その後もものづくりや技術いじりの手を止めることはありませんでした。個人プロジェクトはずっと続けてきていて、プロジェクトに必要なことや、その時々で気になったことを学び続けています。JETでの任期が終わりに近づいた今、日本でITの世界へ戻ろうと考えていて、ITサポート、インフラ、ウェブ開発まで幅広く視野に入れています。',
+        '基本的には、自分のために物を作っています。実際に役立つものだったり、もっと深く理解したいと思ったものだったりです。たとえば<a href="https://takkotaco.com/game/">授業で使えるツール</a>だったり、<a href="https://bloggydoggy.com">自分を表現する場所</a>だったり、Chrome拡張機能や自作キーボードのように、ちょっとした面倒を解決するものだったりします。自分好みにカスタマイズしたり、いじったりするのが好きで、思い通りになるまで納得できない性格です。',
+        '仕事以外では、筋トレやランニングをしたり、地元のサークル（バドミントンや陶芸）に参加したりしています。<a href="https://bloggydoggy.com/blog/3d-printing-culture-festival/">文化祭</a>のような地域のイベントを手伝ったり、<a href="https://bloggydoggy.com/blog/pasta-time/">料理教室</a>や電子工作の体験教室のように、自分でイベントを開くこともあります。',
       ],
     },
     experience: [

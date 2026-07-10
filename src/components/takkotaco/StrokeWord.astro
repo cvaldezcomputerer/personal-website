@@ -2,8 +2,8 @@
 /**
  * StrokeWord (live) - the stroke-letter system from takkotaco.com, ported for
  * the Takko case study. Renders a word in the site's handwriting letterforms
- * on the 4-line English writing guide, then draws it stroke by stroke in real
- * handwriting order when scrolled into view. Click replays the drawing.
+ * on the 4-line English writing guide, then continuously draws it stroke by
+ * stroke in real handwriting order and erases it again, looping while in view.
  *
  * Layout math mirrors the source StrokeWord: lowercase lives in a
  * 10/39/76/96 box (ascender / x-height / baseline / descender); capitals are
@@ -15,15 +15,17 @@ import { letterStrokes } from '~/data/letter-strokes';
 
 interface Props {
   word: string;
-  /** Seconds each pen stroke takes to draw. */
+  /** Seconds each pen stroke takes to draw (and to erase). */
   strokeSeconds?: number;
+  /** Seconds to hold on the finished word (and on blank) between passes. */
+  holdSeconds?: number;
   class?: string;
 }
-const { word, strokeSeconds = 0.5, class: className = '' } = Astro.props;
+const { word, strokeSeconds = 0.7, holdSeconds = 1.1, class: className = '' } = Astro.props;
 
 // Vertical guide system (matches the source component / Name Writer tool).
 const ASC = 10, XH = 39, BASE_Y = 76, DESC = 96, VBH = 100;
-const PAD_X = 8, GAP = 6, SPACE_W = 24, STROKE = 6.5;
+const PAD_X = 8, GAP = 11, SPACE_W = 24, STROKE = 6.5;
 const CAP_SCALE = (BASE_Y - ASC) / (91 - 8);
 const CAP_TY = BASE_Y - 91 * CAP_SCALE;
 const capStrokeW = STROKE / CAP_SCALE;
@@ -62,8 +64,13 @@ let strokeIndex = 0;
 const totalStrokes = glyphs.reduce((n, g) => n + g.strokes.length, 0);
 ---
 
-<figure class:list={['stroke-word', className]} style={`--sw-per:${strokeSeconds}s;`}>
-  <button class="sw-stage" type="button" aria-label={`Replay the drawing of "${word}"`}>
+<figure
+  class:list={['stroke-word', className]}
+  style={`--sw-per:${strokeSeconds}s; --sw-total:${totalStrokes};`}
+  data-per={strokeSeconds}
+  data-hold={holdSeconds}
+>
+  <div class="sw-stage">
     <svg viewBox={`0 0 ${W} ${VBH}`} role="img" aria-label={word} xmlns="http://www.w3.org/2000/svg">
       <line class="sw-guide" x1="0" x2={W} y1={ASC} y2={ASC} />
       <line class="sw-guide sw-guide--dashed" x1="0" x2={W} y1={XH} y2={XH} />
@@ -86,40 +93,53 @@ const totalStrokes = glyphs.reduce((n, g) => n + g.strokes.length, 0);
         </g>
       ))}
     </svg>
-  </button>
+  </div>
   <figcaption>
-    Live SVG: {totalStrokes} pen strokes drawn in handwriting order. Click to
-    replay.
+    Live SVG: {totalStrokes} pen strokes, drawn and erased in handwriting order.
   </figcaption>
 </figure>
 
 <script>
-  // Draw when scrolled into view; a click replays from the first stroke.
-  // Before JS runs the word sits fully drawn, so no-JS still shows the art.
+  // Continuously draw the word stroke by stroke, hold, erase it in reverse, and
+  // loop, but only while it is on screen. Before JS runs (and under reduced
+  // motion) the word sits fully drawn, so no-JS still shows the art.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const init = () => {
     document.querySelectorAll<HTMLElement>('.stroke-word').forEach((fig) => {
       fig.classList.add('sw-ready');
-      const stage = fig.querySelector('.sw-stage');
-      if (!stage) return;
+      if (reduce) return;
 
-      const draw = () => {
-        fig.classList.remove('sw-drawing');
-        void fig.offsetWidth;
-        fig.classList.add('sw-drawing');
+      const per = parseFloat(fig.dataset.per || '0.7');
+      const hold = parseFloat(fig.dataset.hold || '1.1') * 1000;
+      const total = Number(fig.style.getPropertyValue('--sw-total')) || 1;
+      // One pass = every stroke drawn (or erased), staggered, then a hold.
+      const passMs = total * per * 1000 + hold;
+
+      let timer = 0;
+      let erasing = true; // first tick flips this to false, so we draw first.
+
+      const tick = () => {
+        erasing = !erasing;
+        fig.classList.toggle('sw-erasing', erasing);
+        fig.classList.toggle('sw-drawing', !erasing);
+        timer = window.setTimeout(tick, passMs);
       };
 
       const io = new IntersectionObserver(
         (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            draw();
-            io.disconnect();
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              if (!timer) tick();
+            } else {
+              window.clearTimeout(timer);
+              timer = 0;
+            }
           }
         },
         { threshold: 0.4 },
       );
       io.observe(fig);
-
-      stage.addEventListener('click', draw);
     });
   };
   init();
@@ -135,7 +155,6 @@ const totalStrokes = glyphs.reduce((n, g) => n + g.strokes.length, 0);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    cursor: pointer;
   }
   .sw-stage svg { width: 100%; height: auto; display: block; }
 
@@ -152,21 +171,39 @@ const totalStrokes = glyphs.reduce((n, g) => n + g.strokes.length, 0);
     stroke-dashoffset: 0; /* fully drawn until JS takes over */
   }
 
-  /* JS present: hide the ink until the draw runs. */
-  .sw-ready .sw-stroke { stroke-dashoffset: 1; }
+  /* JS present: hide the ink, then the loop draws and erases it. Opacity is
+     driven inside the keyframes (not just dashoffset) so a stroke is invisible
+     whenever it is fully retracted: a round line-cap otherwise leaves a dot at
+     the path start during the blank hold and while strokes wait their turn. */
+  .sw-ready .sw-stroke { stroke-dashoffset: 1; opacity: 0; }
 
+  /* `both` fill holds each stroke's start/end state through its stagger delay,
+     so the word never flickers between the draw and erase passes. Erase runs in
+     reverse stroke order, so it lifts off the way a pen would. */
   .sw-drawing .sw-stroke {
-    animation: sw-draw var(--sw-per) ease-out forwards;
+    animation: sw-draw var(--sw-per) ease-out both;
     animation-delay: calc(var(--sw-i) * var(--sw-per));
+  }
+  .sw-erasing .sw-stroke {
+    animation: sw-erase var(--sw-per) ease-in both;
+    animation-delay: calc((var(--sw-total) - 1 - var(--sw-i)) * var(--sw-per));
   }
 
   @keyframes sw-draw {
-    to { stroke-dashoffset: 0; }
+    0% { stroke-dashoffset: 1; opacity: 0; }
+    1% { stroke-dashoffset: 1; opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes sw-erase {
+    0% { stroke-dashoffset: 0; opacity: 1; }
+    99% { stroke-dashoffset: 1; opacity: 1; }
+    100% { stroke-dashoffset: 1; opacity: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sw-ready .sw-stroke { stroke-dashoffset: 0; }
-    .sw-drawing .sw-stroke { animation: none; }
+    .sw-ready .sw-stroke { stroke-dashoffset: 0; opacity: 1; }
+    .sw-drawing .sw-stroke,
+    .sw-erasing .sw-stroke { animation: none; }
   }
 
   figcaption {

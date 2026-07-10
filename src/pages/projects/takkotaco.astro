@@ -45,8 +45,14 @@ const glance: { label: string; value: string; href?: string }[] = [
   },
 ];
 
-// Major features: editorial, big media.
-const majorFeatures = [
+// Major features: editorial, big media. Image is optional: a text-forward major
+// is fine where no single screenshot captures it. Body can be several paragraphs.
+const majorFeatures: {
+  title: string;
+  body: string | string[];
+  image?: ImageMetadata;
+  alt?: string;
+}[] = [
   {
     title: 'A growing classroom toolkit',
     body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class or a student suggests something. The newest experiment is real-time multiplayer, a class-mode race where students join a room from their Chromebooks and a Durable Object referees the whole thing over WebSockets, live leaderboard included. It has only had light testing so far, and that is on purpose: it is my trial run for a bigger real-time project I have planned.',
@@ -54,10 +60,22 @@ const majorFeatures = [
     alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
   },
   {
-    title: 'Vocab sheet maker, and the workflow behind it',
-    body: 'Adding a word is a single step: I drop it into the central database, and from there I can generate a printable sheet and it is instantly live in every game and tool that uses vocab. Quick enough that I add words on a whim, which is exactly what I wanted.',
+    title: 'One vocabulary database, and how a word gets in',
+    body: [
+      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. It is past sixty categories and several hundred words now.',
+      'What I optimized for is how fast a word goes in, because I add them on a whim mid-lesson. A new word starts as one line of text, and that is enough to be useful: every game can already use it, since anything that reads out loud falls back to a browser voice until a real recording exists. Nothing waits on media.',
+      'The picture and the voice get layered on after. Images run through a small pipeline: I pull candidates from free photo APIs (Pexels and Pixabay), pick the best in a local review gallery, and it is optimized to a webp with its credit saved. When a photo will not do, I use a Japanese illustration or drop in my own drawing. The voice is batch-generated with ElevenLabs in a clear teacher voice, and the script skips clips that already exist, so adding ten words and re-running only fills the ten gaps. Both are just paths in the manifest, so when I later record a word in my own voice or swap a stock photo for an illustration, it updates everywhere at once.',
+    ],
     image: worksheetShot,
     alt: 'The worksheet maker: word categories and page options on the left, a live preview of a printable vocabulary sheet with illustrated drink words on the right',
+  },
+  {
+    title: 'A record of the town, not a translation of it',
+    body: [
+      'This did not start with games. It started because the place I live barely existed in English, and the parts that make it specific were not written down anywhere I could point to. Preserving what is actually here is the thread running under the whole site.',
+      'The piece I care most about is the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a real dictionary: a couple hundred entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is slow, and it is the kind of thing nobody profits from doing, which is exactly why I want it to exist.',
+      'From there it widens out. There are bilingual pages for the local shrines, written up with their history and the deity they honor rather than left as a name on a map, and I want to keep going: more shrines, the seasonal festivals, the small attractions a machine-translated tourism page will never bother with. I am an outsider who got let into this place, and writing it down in a language the rest of the world can read is the most useful thing I can leave behind.',
+    ],
   },
 ];
 
@@ -86,11 +104,6 @@ const minorFeatures: {
     media: 'shot',
     image: guideShot,
     alt: 'The takkotaco.com homepage: a student-painted mural behind "Welcome to Takko Machi", with links to the English games and the town guide',
-  },
-  {
-    title: 'Takko-ben page',
-    body: 'A daily word from the local dialect. Takko-ben is fading with the older generation, and I wanted a record of it written by someone living here rather than scraped from a database.',
-    media: 'none',
   },
   {
     title: 'Feedback to Discord',
@@ -225,9 +238,11 @@ const minorFeatures: {
             <article class="major">
               <div class="major-text">
                 <h3>{f.title}</h3>
-                <p>{f.body}</p>
+                {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
+                  <p>{para}</p>
+                ))}
               </div>
-              <Image class="major-shot" src={f.image} alt={f.alt} width={1440} />
+              {f.image && <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />}
             </article>
           ))
         }
