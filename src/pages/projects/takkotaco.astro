@@ -19,6 +19,8 @@ import Icon from '~/components/Icon.astro';
 import LogoTile from '~/components/LogoTile.astro';
 import JapanMap from '~/components/JapanMap.astro';
 import StrokeWord from '~/components/takkotaco/StrokeWord.astro';
+import LangToggle from '~/components/takkotaco/LangToggle.astro';
+import SoundButton from '~/components/takkotaco/SoundButton.astro';
 import gamesShot from '~/assets/images/takkotaco/games.png';
 import worksheetShot from '~/assets/images/takkotaco/worksheet-maker.png';
 import guideShot from '~/assets/images/takkotaco/town-guide.png';
@@ -52,12 +54,33 @@ const majorFeatures: {
   body: string | string[];
   image?: ImageMetadata;
   alt?: string;
+  // Set instead of `image` for a feature whose media is a GIF/clip I still need
+  // to record. Renders a labelled placeholder box; swap for an <img> later.
+  placeholder?: string;
 }[] = [
   {
     title: 'A growing classroom toolkit',
-    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class or a student suggests something. The newest experiment is real-time multiplayer, a class-mode race where students join a room from their Chromebooks and a Durable Object referees the whole thing over WebSockets, live leaderboard included. It has only had light testing so far, and that is on purpose: it is my trial run for a bigger real-time project I have planned.',
+    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class, or a student asks for one. The range is wide on purpose, a quick vocabulary drill and a whole-class drawing game live side by side, because different lessons need different things. A few of them reach for hardware most classroom sites never touch, which is where the next two come in.',
     image: gamesShot,
     alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
+  },
+  {
+    title: 'Games that use the camera and the mic',
+    body: [
+      'Two of the games lean on the Chromebook’s own hardware, in the browser, with nothing to install. Face Catch turns on the webcam and tracks the player’s face, so a student moves their head to catch letters falling across the screen. Letter or Not listens through the microphone: a shape flashes up and the class shouts YES or NO, and speech recognition scores the answer.',
+      'Both run entirely on the device, and both fail softly: if a student will not grant the camera or the mic, the game says so and falls back rather than breaking. These are the games kids ask for by name, and the ones that show how much a plain browser can already do.',
+    ],
+    placeholder:
+      'GIF: Face Catch (webcam face-tracking) and/or Letter or Not (mic). A short muted loop of a face catching letters reads best.',
+  },
+  {
+    title: 'Real-time multiplayer, refereed at the edge',
+    body: [
+      'The newest experiment is a class-mode race. Students join a room from their Chromebooks, and a single Durable Object holds the game state and referees every player over WebSockets, live leaderboard included. There is no server to run or pay for: the room is the object, and it settles turn order and scoring from one place.',
+      'It has only had light testing so far, and that is on purpose. It is my trial run for a bigger real-time project I have planned, a way to find where the edges are on a low-stakes classroom game before I lean on them for something larger.',
+    ],
+    placeholder:
+      'GIF: two Chromebooks joining the same room, then the live leaderboard updating as players answer.',
   },
   {
     title: 'One vocabulary database, and how a word gets in',
@@ -84,9 +107,11 @@ const majorFeatures: {
 const minorFeatures: {
   title: string;
   body: string;
-  media: 'letters' | 'map' | 'shot' | 'none';
+  media: 'letters' | 'map' | 'lang' | 'sound' | 'shot' | 'none';
   image?: ImageMetadata;
   alt?: string;
+  // For a 'shot' whose GIF/clip is still to be recorded: renders a placeholder.
+  placeholder?: string;
 }[] = [
   {
     title: 'SVG letter system',
@@ -94,9 +119,26 @@ const minorFeatures: {
     media: 'letters',
   },
   {
+    title: 'Bilingual, all the way down',
+    body: 'The whole site is English and Japanese at once. Every string is one component with two slots, so a single switch flips the entire page, and my students can drop into their own language the moment a game loses them. Flip the card: it is the real mechanism, not a mockup.',
+    media: 'lang',
+  },
+  {
     title: '"Where are you from?" map',
     body: 'Visitors tap the prefecture they are from and a pin appears, backed by a Worker and D1. It never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class. This one is the actual SVG from the site; hover it.',
     media: 'map',
+  },
+  {
+    title: 'Sounds made from scratch',
+    body: 'Game sounds resolve in tiers: a recorded clip if there is one, then a generated voice, and if neither exists the game synthesizes the tone itself with the Web Audio API. That last tier is what these buttons run, no audio files at all. Press one.',
+    media: 'sound',
+  },
+  {
+    title: 'Train ticket mode',
+    body: 'A toggle in the navbar reskins the site’s cards into JR train tickets, route, fare, and all. It is pure play, and it is the kind of small, unnecessary touch that makes students actually want to poke around. The whole reskin rides on one data attribute flipping the theme.',
+    media: 'shot',
+    placeholder:
+      'GIF: click the navbar Shinkansen toggle, cards flip into train tickets. A short loop toggling it on and off.',
   },
   {
     title: 'A real English guide, not a Google-translated mess',
@@ -242,7 +284,14 @@ const minorFeatures: {
                   <p>{para}</p>
                 ))}
               </div>
-              {f.image && <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />}
+              {f.image ? (
+                <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />
+              ) : f.placeholder ? (
+                <div class="media-placeholder media-placeholder--major">
+                  <span class="media-placeholder__tag">GIF</span>
+                  <p>{f.placeholder}</p>
+                </div>
+              ) : null}
             </article>
           ))
         }
@@ -255,7 +304,7 @@ const minorFeatures: {
             <article
               class:list={[
                 'minor',
-                { 'minor--live': f.media === 'letters' || f.media === 'map' },
+                { 'minor--live': ['letters', 'map', 'lang', 'sound'].includes(f.media) },
                 { 'minor--text': f.media === 'none' },
               ]}
             >
@@ -264,6 +313,8 @@ const minorFeatures: {
                 <p>{f.body}</p>
               </div>
               {f.media === 'letters' && <StrokeWord word="Takko" />}
+              {f.media === 'lang' && <LangToggle />}
+              {f.media === 'sound' && <SoundButton />}
               {f.media === 'map' && (
                 <div class="minor-map">
                   <JapanMap />
@@ -271,6 +322,12 @@ const minorFeatures: {
               )}
               {f.media === 'shot' && f.image && (
                 <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
+              )}
+              {f.media === 'shot' && !f.image && f.placeholder && (
+                <div class="media-placeholder media-placeholder--minor">
+                  <span class="media-placeholder__tag">GIF</span>
+                  <p>{f.placeholder}</p>
+                </div>
               )}
             </article>
           ))
@@ -411,6 +468,39 @@ const minorFeatures: {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
+  }
+
+  /* Placeholder for a feature whose media (a GIF/clip) is still to be recorded. */
+  .media-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    text-align: center;
+    background: var(--color-surface-2);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    padding: var(--space-6);
+  }
+  .media-placeholder--major { aspect-ratio: 16 / 9; }
+  .media-placeholder--minor { min-height: 9rem; padding: var(--space-4); }
+  .media-placeholder p {
+    margin: 0;
+    max-width: 44ch;
+    font-size: var(--text-sm);
+  }
+  .media-placeholder__tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.5rem;
   }
 
   /* Features */
