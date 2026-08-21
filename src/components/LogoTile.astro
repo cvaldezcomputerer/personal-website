@@ -10,28 +10,60 @@
  * imported SVGs through the pipeline rendered them as empty boxes; a static
  * `<img src="/logos/..">` is bulletproof in both dev and production.
  *
- * `size` picks the chip height: sm for inline rows, md for headers.
+ * EXCEPTION: a `bare` SVG is INLINED (read at build time via a `?raw` glob, not
+ * through astro:assets) so its `currentColor` paths inherit `--color-text` and
+ * flip with the theme. An <img> cannot do this: the SVG is a separate document
+ * and never sees the page's color. Without the chip's fixed light backing, a
+ * near-black mark would vanish in dark mode.
+ *
+ * `size` picks the chip height: sm for inline rows, md for headers, lg for a
+ * case-study hero mark. `bare` drops the chip entirely (no backing, no border)
+ * and renders the mark on its own; use it only for the two project marks, which
+ * are simple line art that reads on the page background. The fixed-color org
+ * logos (CCNA, JLPT, AWS) still need their chip.
  */
 interface Props {
   /** Path under /logos, e.g. "/logos/jet.jpg". */
   src: string;
   alt: string;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
+  /** Render the mark without the chip backing/border. */
+  bare?: boolean;
   class?: string;
   /** If set, the chip becomes a link to the org's site (opens in a new tab). */
   href?: string;
 }
-const { src, alt, size = 'sm', class: className, href } = Astro.props;
+const { src, alt, size = 'sm', bare = false, class: className, href } = Astro.props;
+
+// Raw SVG sources, resolved by Vite at build time (no image pipeline involved).
+const rawLogos = import.meta.glob('/public/logos/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+const inlineSvg = bare && src.endsWith('.svg') ? rawLogos[`/public${src}`] : undefined;
 
 const Tag = href ? 'a' : 'span';
 const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {};
 ---
 
 <Tag
-  class:list={['logo-tile', `logo-tile--${size}`, { 'logo-tile--link': href }, className]}
+  class:list={[
+    'logo-tile',
+    `logo-tile--${size}`,
+    { 'logo-tile--link': href, 'logo-tile--bare': bare },
+    className,
+  ]}
   {...linkAttrs}
 >
-  <img src={src} alt={alt} loading="lazy" decoding="async" />
+  {
+    inlineSvg ? (
+      <span class="logo-tile__svg" role="img" aria-label={alt} set:html={inlineSvg} />
+    ) : (
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+    )
+  }
 </Tag>
 
 <style>
@@ -59,6 +91,27 @@ const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {};
     padding: 0 0.75rem;
     border-radius: var(--radius-md);
   }
+  .logo-tile--lg {
+    height: 5rem;
+    padding: 0 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Bare: the mark alone, no chip. Hover has to come from the mark itself. */
+  .logo-tile--bare {
+    background: none;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+  .logo-tile--bare.logo-tile--link:hover {
+    border-color: transparent;
+    box-shadow: none;
+    opacity: 0.7;
+  }
+  .logo-tile--bare.logo-tile--link {
+    transition: opacity var(--transition-fast) ease;
+  }
   .logo-tile :global(img) {
     width: auto;
     height: auto;
@@ -72,4 +125,30 @@ const linkAttrs = href ? { href, target: '_blank', rel: 'noopener' } : {};
     max-height: 2.4rem;
     max-width: 8rem;
   }
+  .logo-tile--lg :global(img) {
+    max-height: 3.4rem;
+    max-width: 11rem;
+  }
+  .logo-tile--bare.logo-tile--lg :global(img) {
+    max-height: 5rem;
+    max-width: 12rem;
+  }
+
+  /* Inlined mark: `color` drives every currentColor path inside the SVG, so the
+     logo flips with the theme like any other token-driven element. */
+  .logo-tile__svg {
+    display: block;
+    color: var(--color-text);
+  }
+  /* Must land on the <svg> itself: its own `color` presentation attribute (the
+     standalone <img> fallback) beats a colour inherited from the wrapper. */
+  .logo-tile__svg :global(svg) {
+    display: block;
+    width: auto;
+    height: 100%;
+    color: var(--color-text);
+  }
+  .logo-tile--lg .logo-tile__svg { height: 5rem; }
+  .logo-tile--md .logo-tile__svg { height: 3.5rem; }
+  .logo-tile--sm .logo-tile__svg { height: 2.75rem; }
 </style>

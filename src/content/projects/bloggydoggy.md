@@ -6,9 +6,6 @@ taglineJa: フレームワークを使わずに構築した、独自APIと多言
 cardImage: ../../assets/images/bloggydoggy.png
 url: https://bloggydoggy.com
 stack: [Astro, Cloudflare Workers, D1, Web Components, TypeScript]
-highlights:
-  - Custom REST API on Cloudflare Workers and D1 powering likes and quiz features.
-  - Trilingual reading modes (English, Simple English, Japanese) controlled by the reader, not the URL.
 role: Solo designer and developer
 timeframe: 2024 - present
 featured: true

@@ -4,11 +4,14 @@
  * pattern). Card metadata comes from the projects content collection; the prose,
  * feature showcase, and the "playful details" style section live here.
  *
- * Both major features are live demos rather than screenshots: LangDemo (the
- * trilingual reading modes on a real post paragraph) and QuizDemo (the quiz
- * web component on sample data), and the quiz follows the language toggle via
- * the bd-demo:lang event, same as on the blog. The Explain tooltip is used
- * inline in the overview prose (the Playful details section points it out).
+ * Features are grouped into two labelled pillars (what the reader gets, what
+ * keeps it running), the same primitive takkotaco.astro uses. Two features are
+ * live demos rather than screenshots: LangDemo (the trilingual reading modes on
+ * a real post paragraph) and QuizDemo (the quiz web component on sample data),
+ * and the quiz follows the language toggle via the bd-demo:lang event, same as
+ * on the blog. The Explain tooltip is used inline in the overview prose (the
+ * Playful details section points it out). The check:post block is that script's
+ * real output, trimmed, not a mockup.
  *
  * The style section embeds real artifacts from the blog: the live Loader
  * (SVG + JS, ported), the PressToLight pushbutton toy, and two animated WebPs
@@ -26,6 +29,7 @@ import QuizDemo from '~/components/bloggydoggy/QuizDemo.astro';
 import Explain from '~/components/bloggydoggy/Explain.astro';
 import PressToLight from '~/components/bloggydoggy/PressToLight.astro';
 import galleryShot from '~/assets/images/bloggydoggy/gallery.png';
+import editorShot from '~/assets/images/bloggydoggy/dev-editor.png';
 const bloggydoggyLogo = '/logos/bloggydoggy.svg';
 
 const entry = await getEntry('projects', 'bloggydoggy');
@@ -47,28 +51,85 @@ const glance: { label: string; value: string; href?: string }[] = [
   },
 ];
 
-// Both majors are live demos: the real mechanism, not a picture of it.
-const majorFeatures = [
-  {
-    title: 'Reader-controlled language modes',
-    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read. The demo here is the real mechanism running on a paragraph from an actual post; try the toggle.',
-    media: 'lang' as const,
-  },
-  {
-    title: 'Quiz component',
-    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. The whole thing runs on the free tier, and because I own the endpoint the quiz behaves exactly how I designed it. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
-    media: 'quiz' as const,
-  },
-];
+// The two pillars the feature showcase is grouped under, in render order.
+const pillars = [
+  { id: 'reader', label: 'What the reader gets' },
+  { id: 'authoring', label: 'What keeps it running' },
+] as const;
+type Pillar = (typeof pillars)[number]['id'];
 
-const minorFeatures: {
+// Real, trimmed output of `npm run check:post -- --all` in the blog repo.
+const checkPostOutput = `$ npm run check:post -- --all
+
+badminton-tournament  clean
+
+camera-c840  1 note
+  i 6 unreferenced images kept on purpose (.keep-unused)
+      bottom-pic-cam.webp
+      cameras-in-store.webp
+      old-house.webp
+      takko-field.webp
+      takko-garlic-lamp.webp
+      takko-landscape.webp
+
+rice-planting  clean
+
+school-lunch  clean
+
+14 posts checked — no errors, 0 warnings.`;
+
+const majorFeatures: {
+  pillar: Pillar;
   title: string;
-  body: string;
-  media: 'shot' | 'none';
+  body: string | string[];
+  media: 'lang' | 'editor' | 'checkpost';
   image?: ImageMetadata;
   alt?: string;
 }[] = [
   {
+    pillar: 'reader',
+    title: 'Reader-controlled language modes',
+    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read. The demo here is the real mechanism running on a paragraph from an actual post; try the toggle.',
+    media: 'lang',
+  },
+  {
+    pillar: 'authoring',
+    title: 'An editor for the shape a post actually has',
+    body: [
+      'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that reads a post apart into its real structure and gives each slot a field.',
+      'It writes back to the same .mdx file on disk, so the editor is a view over the source rather than a database that owns it. Nothing is locked in: I can close the editor and keep working in the file by hand, which matters because I did not want a tool I would have to keep maintaining to be able to publish.',
+    ],
+    media: 'editor',
+    image: editorShot,
+    alt: 'The dev editor open on a real post: each block labelled by type and id, with separate EN, JA and SIMPLE text fields side by side for a paragraph and a heading',
+  },
+  {
+    pillar: 'authoring',
+    title: 'A validator that gets stricter when you publish',
+    body: [
+      'Before a post goes out, one script checks it: empty translation slots, missing frontmatter, images that are unreferenced or oversized or still carrying GPS coordinates from my phone, mojibake, and placeholder text I left behind.',
+      'The part I like is the severity rule. While a post is still set to draft, incompleteness is a warning, because a draft is supposed to be unfinished and nagging me about it is noise. The moment I remove the draft flag, the same findings become errors and the script exits non-zero. One flag changes what the tool is for: a drafting companion, then a publish gate.',
+    ],
+    media: 'checkpost',
+  },
+];
+
+const minorFeatures: {
+  pillar: Pillar;
+  title: string;
+  body: string;
+  media: 'quiz' | 'shot' | 'none';
+  image?: ImageMetadata;
+  alt?: string;
+}[] = [
+  {
+    pillar: 'reader',
+    title: 'Quiz component',
+    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. Because I own the endpoint, the quiz behaves exactly how I designed it. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    media: 'quiz',
+  },
+  {
+    pillar: 'reader',
     title: 'Custom gallery components',
     body: 'Some posts end in a photo gallery. I wanted it to look and behave a specific way and no generic option did it, so I built the component myself.',
     media: 'shot',
@@ -76,8 +137,27 @@ const minorFeatures: {
     alt: 'A post gallery on bloggydoggy.com: photos styled as polaroids with handwritten captions, pinned to a grid-paper scrapbook background',
   },
   {
+    pillar: 'reader',
+    title: 'Reading settings that stay put',
+    body: 'Text size, a dark theme, and an option to stop highlighting defined words: all stored in localStorage and applied as classes on the root element before first paint, so nothing flashes on load. The definition-highlight switch exists because the feature that helps a learner is clutter to everyone else.',
+    media: 'none',
+  },
+  {
+    pillar: 'reader',
+    title: 'The floating island',
+    body: 'The language selector and settings live in a small floating bar rather than a fixed header, and it can be hidden entirely from the settings panel. Readers who want the controls have them a thumb away; readers who do not can make them go away.',
+    media: 'none',
+  },
+  {
+    pillar: 'reader',
     title: 'Likes',
     body: 'Also my own API rather than a plugin. Nothing complicated, but it behaves exactly how I want and costs nothing to run.',
+    media: 'none',
+  },
+  {
+    pillar: 'authoring',
+    title: 'An image pipeline that takes what my phone gives it',
+    body: 'One script eats whatever I drop in a post folder: it converts iPhone HEIC to JPEG, caps anything over 1600px, and strips the metadata I do not want published. I run it the moment photos land, because I need the filenames before I can write the post around them. Astro handles avif and webp at build time, so the script stops where the build takes over.',
     media: 'none',
   },
 ];
@@ -88,7 +168,7 @@ const minorFeatures: {
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
-      <LogoTile src={bloggydoggyLogo} alt={`${d.name} logo`} size="md" href={d.url} class="case-logo" />
+      <LogoTile src={bloggydoggyLogo} alt={`${d.name} logo`} size="lg" bare href={d.url} class="case-logo" />
       {meta && <p class="eyebrow">{meta}</p>}
       <h1>{d.name}</h1>
       <p class="tagline">{d.tagline}</p>
@@ -183,36 +263,58 @@ const minorFeatures: {
     <section class="features" aria-label="Favorite parts">
       <h2>Favorite parts</h2>
 
-      <div class="major-list">
-        {
-          majorFeatures.map((f) => (
-            <article class="major">
-              <div class="major-text">
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
-              </div>
-              {f.media === 'lang' ? <LangDemo /> : <QuizDemo />}
-            </article>
-          ))
-        }
-      </div>
+      {
+        pillars.map((pillar) => (
+          <div class="pillar">
+            <h3 class="pillar-head">{pillar.label}</h3>
 
-      <h3 class="minor-head">More features</h3>
-      <div class="minor-list">
-        {
-          minorFeatures.map((f) => (
-            <article class:list={['minor', { 'minor--text': f.media === 'none' }]}>
-              <div class="minor-text">
-                <h4>{f.title}</h4>
-                <p>{f.body}</p>
-              </div>
-              {f.media === 'shot' && f.image && (
-                <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
-              )}
-            </article>
-          ))
-        }
-      </div>
+            <div class="major-list">
+              {majorFeatures
+                .filter((f) => f.pillar === pillar.id)
+                .map((f) => (
+                  <article class="major">
+                    <div class="major-text">
+                      <h4>{f.title}</h4>
+                      {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
+                        <p>{para}</p>
+                      ))}
+                    </div>
+                    {f.media === 'lang' && <LangDemo />}
+                    {f.media === 'checkpost' && (
+                      <pre class="terminal"><code>{checkPostOutput}</code></pre>
+                    )}
+                    {f.media === 'editor' && f.image && (
+                      <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />
+                    )}
+                  </article>
+                ))}
+            </div>
+
+            <div class="minor-list">
+              {minorFeatures
+                .filter((f) => f.pillar === pillar.id)
+                .map((f) => (
+                  <article
+                    class:list={[
+                      'minor',
+                      { 'minor--stack': f.media === 'quiz' },
+                      { 'minor--text': f.media === 'none' },
+                    ]}
+                  >
+                    <div class="minor-text">
+                      <h5>{f.title}</h5>
+                      <p>{f.body}</p>
+                    </div>
+                    {f.media === 'quiz' && <QuizDemo />}
+                    {f.media === 'shot' && f.image && (
+                      <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
+                    )}
+                  </article>
+                ))}
+            </div>
+          </div>
+        ))
+      }
     </section>
 
     <!-- Playful details / style -->
@@ -327,7 +429,7 @@ const minorFeatures: {
   .back::before { content: '\2190'; margin-right: 0.4em; }
 
   .case-head { margin-bottom: var(--space-6); }
-  :global(.case-logo) { margin-bottom: var(--space-4); }
+  :global(.case-logo) { margin-bottom: var(--space-5); }
   .eyebrow {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
@@ -402,31 +504,64 @@ const minorFeatures: {
   .features { margin: var(--space-8) 0; }
   .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
 
-  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
-
-  .minor-head {
+  /* Pillar: the one grouping primitive both case studies share. */
+  .pillar + .pillar { margin-top: var(--space-9); }
+  .pillar-head {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin: var(--space-8) 0 var(--space-5);
+    margin-bottom: var(--space-6);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
-  .minor-list { display: flex; flex-direction: column; gap: var(--space-6); }
+
+  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .major-text h4 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
+
+  /* Real check:post output. Scrolls on its own so the page never does. */
+  .terminal {
+    margin: 0;
+    padding: var(--space-5);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    tab-size: 2;
+  }
+  .terminal code { font: inherit; color: inherit; background: none; }
+
+  .minor-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-7);
+  }
   .minor {
     display: grid;
     grid-template-columns: 1fr 12rem;
     gap: var(--space-5);
     align-items: center;
   }
-  .minor:nth-child(even) .minor-text { order: 2; }
-  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  /* Alternate which side the media sits on, keeping the column proportions:
+     without swapping the track sizes too, the text lands in the narrow track. */
+  .minor:nth-child(even):not(.minor--stack):not(.minor--text) {
+    grid-template-columns: 12rem 1fr;
+  }
+  .minor:nth-child(even):not(.minor--stack):not(.minor--text) .minor-text { order: 2; }
+  .minor-text h5 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
   .minor--text { grid-template-columns: 1fr; }
+
+  /* A minor whose media is a live demo too wide for the side column. */
+  .minor--stack { grid-template-columns: 1fr; gap: var(--space-4); }
+  .minor--stack .minor-text { order: 0; }
 
   /* Playful details */
   .style { margin: var(--space-9) 0 var(--space-8); }
@@ -473,5 +608,6 @@ const minorFeatures: {
     .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
     .minor { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }
+    .minor:nth-child(even):not(.minor--stack):not(.minor--text) { grid-template-columns: 1fr; }
   }
 </style>

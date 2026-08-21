@@ -6,9 +6,6 @@ taglineJa: 青森のにんにくの町のための、フルスタックの英語
 cardImage: ../../assets/images/takkotaco.png
 url: https://takkotaco.com
 stack: [Astro, Cloudflare Workers, Durable Objects, D1, KV, WebSockets, TypeScript]
-highlights:
-  - Real-time multiplayer games and classroom tools used by real students on slow Chromebooks.
-  - Edge-first stack (Workers, Durable Objects, D1) with stateful WebSocket game rooms, running on the free tier.
 role: Solo designer and developer
 timeframe: 2024 - present
 featured: true

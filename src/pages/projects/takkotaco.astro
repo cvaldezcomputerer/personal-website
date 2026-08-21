@@ -6,11 +6,12 @@
  * feature showcase live here so this page can carry its own additions (the
  * at-a-glance panel and the live SVG map).
  *
- * Feature layout: major features get the editorial treatment (big media,
- * one per row); minor features follow as compact alternating rows. Two minors
- * are live artifacts rather than screenshots: the stroke-letter system
- * (StrokeWord, drawn on scroll) and the prefecture map (JapanMap, hoverable).
- * Remaining screenshots are placeholders for now.
+ * Feature layout: features are grouped into two labelled pillars (the classroom
+ * platform, the town record). Within a pillar, majors get the editorial
+ * treatment (big media, one per row) and minors follow as compact alternating
+ * rows. Four minors are live artifacts rather than screenshots: the
+ * stroke-letter system (StrokeWord, drawn on scroll), the language toggle,
+ * the sound buttons, and the prefecture map (JapanMap, hoverable).
  */
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
@@ -25,6 +26,10 @@ import gamesShot from '~/assets/images/takkotaco/games.png';
 import worksheetShot from '~/assets/images/takkotaco/worksheet-maker.png';
 import guideShot from '~/assets/images/takkotaco/town-guide.png';
 import feedbackShot from '~/assets/images/takkotaco/feedback-widget.png';
+import faceCatchShot from '~/assets/images/takkotaco/face-catch.png';
+import wordSetsShot from '~/assets/images/takkotaco/word-sets.png';
+import trainShot from '~/assets/images/takkotaco/train-mode.png';
+import restaurantsShot from '~/assets/images/takkotaco/restaurants.png';
 const takkotacoLogo = '/logos/takkotaco.svg';
 
 const entry = await getEntry('projects', 'takkotaco');
@@ -47,112 +52,131 @@ const glance: { label: string; value: string; href?: string }[] = [
   },
 ];
 
+// The two pillars the feature showcase is grouped under, in render order.
+const pillars = [
+  { id: 'classroom', label: 'The classroom platform' },
+  { id: 'town', label: 'The town record' },
+] as const;
+type Pillar = (typeof pillars)[number]['id'];
+
 // Major features: editorial, big media. Image is optional: a text-forward major
 // is fine where no single screenshot captures it. Body can be several paragraphs.
 const majorFeatures: {
+  pillar: Pillar;
   title: string;
   body: string | string[];
   image?: ImageMetadata;
   alt?: string;
-  // Set instead of `image` for a feature whose media is a GIF/clip I still need
-  // to record. Renders a labelled placeholder box; swap for an <img> later.
-  placeholder?: string;
 }[] = [
   {
+    pillar: 'classroom',
     title: 'A growing classroom toolkit',
-    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class, or a student asks for one. The range is wide on purpose, a quick vocabulary drill and a whole-class drawing game live side by side, because different lessons need different things. A few of them reach for hardware most classroom sites never touch, which is where the next two come in.',
+    body: 'Around twenty games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. I do not build to a roadmap: a tool gets added when I hit a need in class, or a student asks for one. The range is wide on purpose, a quick vocabulary drill and a whole-class drawing game live side by side, because different lessons need different things.',
     image: gamesShot,
     alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
   },
   {
-    title: 'Games that use the camera and the mic',
-    body: [
-      'Two of the games lean on the Chromebook’s own hardware, in the browser, with nothing to install. Face Catch turns on the webcam and tracks the player’s face, so a student moves their head to catch letters falling across the screen. Letter or Not listens through the microphone: a shape flashes up and the class shouts YES or NO, and speech recognition scores the answer.',
-      'Both run entirely on the device, and both fail softly: if a student will not grant the camera or the mic, the game says so and falls back rather than breaking. These are the games kids ask for by name, and the ones that show how much a plain browser can already do.',
-    ],
-    placeholder:
-      'GIF: Face Catch (webcam face-tracking) and/or Letter or Not (mic). A short muted loop of a face catching letters reads best.',
-  },
-  {
-    title: 'Real-time multiplayer, refereed at the edge',
-    body: [
-      'The newest experiment is a class-mode race. Students join a room from their Chromebooks, and a single Durable Object holds the game state and referees every player over WebSockets, live leaderboard included. There is no server to run or pay for: the room is the object, and it settles turn order and scoring from one place.',
-      'It has only had light testing so far, and that is on purpose. It is my trial run for a bigger real-time project I have planned, a way to find where the edges are on a low-stakes classroom game before I lean on them for something larger.',
-    ],
-    placeholder:
-      'GIF: two Chromebooks joining the same room, then the live leaderboard updating as players answer.',
-  },
-  {
+    pillar: 'classroom',
     title: 'One vocabulary database, and how a word gets in',
     body: [
-      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. It is past sixty categories and several hundred words now.',
+      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. It runs to 51 categories across 12 groups now.',
       'What I optimized for is how fast a word goes in, because I add them on a whim mid-lesson. A new word starts as one line of text, and that is enough to be useful: every game can already use it, since anything that reads out loud falls back to a browser voice until a real recording exists. Nothing waits on media.',
       'The picture and the voice get layered on after. Images run through a small pipeline: I pull candidates from free photo APIs (Pexels and Pixabay), pick the best in a local review gallery, and it is optimized to a webp with its credit saved. When a photo will not do, I use a Japanese illustration or drop in my own drawing. The voice is batch-generated with ElevenLabs in a clear teacher voice, and the script skips clips that already exist, so adding ten words and re-running only fills the ten gaps. Both are just paths in the manifest, so when I later record a word in my own voice or swap a stock photo for an illustration, it updates everywhere at once.',
+      'Grammar sits on top of the same idea, 145 points of it. A point is a template plus typed slot specs, so "I like ___" knows it wants a gerund and not a bare verb, and the sentences it generates come out grammatical instead of merely well-formed. Word classes finer than noun and verb are what make that work, and they are also the part I got wrong first: with only loose types, random fills will happily tell a student they can eat curry in Switzerland.',
     ],
     image: worksheetShot,
     alt: 'The worksheet maker: word categories and page options on the left, a live preview of a printable vocabulary sheet with illustrated drink words on the right',
   },
   {
+    pillar: 'town',
     title: 'A record of the town, not a translation of it',
     body: [
-      'This did not start with games. It started because the place I live barely existed in English, and the parts that make it specific were not written down anywhere I could point to. Preserving what is actually here is the thread running under the whole site.',
-      'The piece I care most about is the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a real dictionary: a couple hundred entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is slow, and it is the kind of thing nobody profits from doing, which is exactly why I want it to exist.',
+      'This did not start with games. It started because the place I live barely existed in English, and the parts that make it specific were not written down anywhere I could point to. The town guide is written in actual English by someone who lives here, covering what the place is genuinely like instead of a machine-translated page nobody maintained.',
+      'The piece I care most about is the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a real dictionary: 438 entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is slow, and nobody profits from doing it, which is most of why I want it to exist.',
       'From there it widens out. There are bilingual pages for the local shrines, written up with their history and the deity they honor rather than left as a name on a map, and I want to keep going: more shrines, the seasonal festivals, the small attractions a machine-translated tourism page will never bother with. I am an outsider who got let into this place, and writing it down in a language the rest of the world can read is the most useful thing I can leave behind.',
     ],
+    image: guideShot,
+    alt: 'The takkotaco.com homepage: a student-painted mural behind "Welcome to Takko Machi", with links to the English games and the town guide',
   },
 ];
 
-// Minor features: compact alternating rows. Two are live artifacts ported from
-// the real site (letters, map); the rest are screenshots or text-only.
+// Minor features: compact alternating rows. Four are live artifacts ported from
+// the real site (letters, lang, sound, map); the rest are screenshots.
 const minorFeatures: {
+  pillar: Pillar;
   title: string;
   body: string;
   media: 'letters' | 'map' | 'lang' | 'sound' | 'shot' | 'none';
   image?: ImageMetadata;
   alt?: string;
-  // For a 'shot' whose GIF/clip is still to be recorded: renders a placeholder.
-  placeholder?: string;
+  // A screenshot too dense to read in the narrow side column: render it
+  // full-width under the text instead.
+  wide?: boolean;
 }[] = [
   {
+    pillar: 'classroom',
+    title: 'Games that use the camera and the mic',
+    body: 'Two games lean on the Chromebook’s own hardware, in the browser, with nothing to install. Face Catch turns on the webcam and tracks the player’s face, so a student moves their head to catch letters falling across the screen. Letter or Not listens through the microphone instead: a shape flashes up, the class shouts YES or NO, and speech recognition scores it. Both fail softly, so a refused camera permission gets an explanation rather than a broken game.',
+    media: 'shot',
+    image: faceCatchShot,
+    alt: 'Face Catch running: a webcam view with a heart marker tracking the player’s face, a letter U falling from the left, and score, best and lives readouts above',
+  },
+  {
+    pillar: 'classroom',
     title: 'SVG letter system',
-    body: 'Every stylized letter across the games is a set of pen strokes stored in handwriting order, so anything that uses them can also draw them the way a hand would: tracing practice, name writing, the ABC games. This is the real system running, not a video of it.',
+    body: 'Every stylized letter across the games is a set of pen strokes stored in handwriting order, so anything that uses them can also draw them the way a hand would: tracing practice, name writing, the ABC games. This is the real system running.',
     media: 'letters',
   },
   {
-    title: 'Bilingual, all the way down',
-    body: 'The whole site is English and Japanese at once. Every string is one component with two slots, so a single switch flips the entire page, and my students can drop into their own language the moment a game loses them. Flip the card: it is the real mechanism, not a mockup.',
-    media: 'lang',
-  },
-  {
-    title: '"Where are you from?" map',
-    body: 'Visitors tap the prefecture they are from and a pin appears, backed by a Worker and D1. It never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class. This one is the actual SVG from the site; hover it.',
-    media: 'map',
-  },
-  {
+    pillar: 'classroom',
     title: 'Sounds made from scratch',
     body: 'Game sounds resolve in tiers: a recorded clip if there is one, then a generated voice, and if neither exists the game synthesizes the tone itself with the Web Audio API. That last tier is what these buttons run, no audio files at all. Press one.',
     media: 'sound',
   },
   {
-    title: 'Train ticket mode',
-    body: 'A toggle in the navbar reskins the site’s cards into JR train tickets, route, fare, and all. It is pure play, and it is the kind of small, unnecessary touch that makes students actually want to poke around. The whole reskin rides on one data attribute flipping the theme.',
+    pillar: 'classroom',
+    title: 'Word sets a teacher can build',
+    body: 'Teachers sign in with Google and build their own word sets, which then feed any tool or game on the site. A set is just a name and a list of words, so a unit’s vocabulary becomes a worksheet, a flashcard round, and a race without retyping it three times. Sign-in is hand-rolled against Google OAuth rather than a library, with the session in KV.',
     media: 'shot',
-    placeholder:
-      'GIF: click the navbar Shinkansen toggle, cards flip into train tickets. A short loop toggling it on and off.',
+    image: wordSetsShot,
+    alt: 'The My Word Sets page: two saved sets, "4th grade" and "Unit 4", each showing its word chips and bilingual edit and delete buttons',
   },
   {
-    title: 'A real English guide, not a Google-translated mess',
-    body: 'The original reason for all of this. The town guide is written in actual English by someone who lives here, covering what the place is genuinely like instead of a machine-translated page nobody maintained.',
-    media: 'shot',
-    image: guideShot,
-    alt: 'The takkotaco.com homepage: a student-painted mural behind "Welcome to Takko Machi", with links to the English games and the town guide',
-  },
-  {
+    pillar: 'classroom',
     title: 'Feedback to Discord',
     body: 'A widget on the games that posts student messages straight into a Discord channel. I added it as an experiment; it is now the fastest feedback loop I have for what works.',
     media: 'shot',
     image: feedbackShot,
     alt: 'The feedback widget panel: a Japanese postbox illustration above a message box and send button',
+  },
+  {
+    pillar: 'town',
+    title: 'Bilingual, all the way down',
+    body: 'The whole site is English and Japanese at once. Every string is one component with two slots, so a single switch flips the entire page, and my students can drop into their own language the moment a game loses them. Flip the card: it is the real mechanism.',
+    media: 'lang',
+  },
+  {
+    pillar: 'town',
+    title: 'Places worth going, written up properly',
+    body: 'Eighteen restaurants and the local shrines, each with its own bilingual page: what to order, what the place is actually like, and for the shrines the history and the deity they honor. The restaurant list opens on a map of the town with every place pinned, filtered by what kind of food it is. This is the part a tourism site would reduce to a name and a pin on a map.',
+    media: 'shot',
+    image: restaurantsShot,
+    alt: 'The Takko restaurants page: a hanging wooden shop sign reading Restaurants, an English introduction to eating in town, and a map of Takko with fourteen numbered pins colour-coded by category',
+  },
+  {
+    pillar: 'town',
+    title: 'Train ticket mode',
+    body: 'A toggle in the navbar turns the site into a train station. The link cards become JR tickets with a route, a fare and a serial number, the section headers become LED departure boards, and the town guide nav becomes a platform direction sign. It is pure play, and the kind of unnecessary touch that makes students want to poke around. The whole reskin rides on one data attribute flipping the theme.',
+    media: 'shot',
+    wide: true,
+    image: trainShot,
+    alt: 'takkotaco.com in train mode: an LED departure board scrolling tool names, two link cards styled as JR tickets marked 乗車券 TICKET and 特急券 EXPRESS, and the town guide links styled as a yellow and blue station direction sign',
+  },
+  {
+    pillar: 'town',
+    title: '"Where are you from?" map',
+    body: 'Visitors tap the prefecture they are from and a pin appears, backed by a Worker and D1. It never stores a raw IP: each visitor is a salted hash, so a pin moves rather than piles up. I use it as an icebreaker at the start of class. This one is the actual SVG from the site; hover it.',
+    media: 'map',
   },
 ];
 ---
@@ -162,7 +186,7 @@ const minorFeatures: {
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
-      <LogoTile src={takkotacoLogo} alt={`${d.name} logo`} size="md" href={d.url} class="case-logo" />
+      <LogoTile src={takkotacoLogo} alt={`${d.name} logo`} size="lg" bare href={d.url} class="case-logo" />
       {meta && <p class="eyebrow">{meta}</p>}
       <h1>{d.name}</h1>
       <p class="tagline">{d.tagline}</p>
@@ -238,12 +262,14 @@ const minorFeatures: {
         there is no always-on server behind the site.
       </p>
       <p>
-        <strong>Durable Objects for the game rooms.</strong> Each real-time game
-        room is a single Durable Object that holds the game state and
-        coordinates players over WebSockets. The benefit is consistent turn
-        order and scoring with no server to run or pay for. The limit is that it
-        is a different mental model than a normal backend: one object per room,
-        designed around its single point of coordination.
+        <strong>Durable Objects, stood up but not finished.</strong> There is a
+        separate Worker deployed for real-time rooms, where each room is one
+        Durable Object holding the state and talking to players over WebSockets.
+        Only the ABC race uses it so far and it is rough enough that I do not
+        put it in front of a class yet. I built it mostly to learn the shape:
+        one object per room is a genuinely different model than a normal
+        backend, and I would rather find that out on a classroom game than on
+        the larger real-time project I have planned.
       </p>
       <p>
         <strong>Workers for the API.</strong> A Worker handles live weather,
@@ -268,71 +294,82 @@ const minorFeatures: {
         schema changes ripple across the whole site, so the structure was worth
         getting right early. I have never paid for any of it.
       </p>
+      <p>
+        <strong>Running it taught me more than building it.</strong> The site
+        started on Cloudflare Pages and is Workers-only now, and two things from
+        that move stuck. Build-time variables and runtime secrets live in
+        different dashboard panels, and putting a build-time one in the runtime
+        panel fails silently: the build passes, the deploy passes, and the
+        feature renders its fallback in production while working fine locally.
+        Then an audit this August turned up 31 stray files, 1.4 MB of Vite
+        dev-toolbar bundles, that had been shipping to production from inside
+        <code>public/</code>, invisible to git but not to the build. Retiring the
+        old Pages project was its own small saga: it had 157 deployments, and
+        Pages will not delete a project with more than a hundred, so they had to
+        go through the API one at a time.
+      </p>
     </div>
 
-    <!-- Features: editorial majors -->
+    <!-- Features, grouped into two pillars: majors then minors within each -->
     <section class="features" aria-label="Favorite parts">
       <h2>Favorite parts</h2>
 
-      <div class="major-list">
-        {
-          majorFeatures.map((f) => (
-            <article class="major">
-              <div class="major-text">
-                <h3>{f.title}</h3>
-                {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
-                  <p>{para}</p>
-                ))}
-              </div>
-              {f.image ? (
-                <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />
-              ) : f.placeholder ? (
-                <div class="media-placeholder media-placeholder--major">
-                  <span class="media-placeholder__tag">GIF</span>
-                  <p>{f.placeholder}</p>
-                </div>
-              ) : null}
-            </article>
-          ))
-        }
-      </div>
+      {
+        pillars.map((pillar) => (
+          <div class="pillar">
+            <h3 class="pillar-head">{pillar.label}</h3>
 
-      <h3 class="minor-head">More tools</h3>
-      <div class="minor-list">
-        {
-          minorFeatures.map((f) => (
-            <article
-              class:list={[
-                'minor',
-                { 'minor--live': ['letters', 'map', 'lang', 'sound'].includes(f.media) },
-                { 'minor--text': f.media === 'none' },
-              ]}
-            >
-              <div class="minor-text">
-                <h4>{f.title}</h4>
-                <p>{f.body}</p>
-              </div>
-              {f.media === 'letters' && <StrokeWord word="Takko" />}
-              {f.media === 'lang' && <LangToggle />}
-              {f.media === 'sound' && <SoundButton />}
-              {f.media === 'map' && (
-                <div class="minor-map">
-                  <JapanMap />
-                </div>
-              )}
-              {f.media === 'shot' && f.image && (
-                <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={520} />
-              )}
-              {f.media === 'shot' && !f.image && f.placeholder && (
-                <div class="media-placeholder media-placeholder--minor">
-                  <span class="media-placeholder__tag">GIF</span>
-                  <p>{f.placeholder}</p>
-                </div>
-              )}
-            </article>
-          ))
-        }
-      </div>
+            <div class="major-list">
+              {majorFeatures
+                .filter((f) => f.pillar === pillar.id)
+                .map((f) => (
+                  <article class="major">
+                    <div class="major-text">
+                      <h4>{f.title}</h4>
+                      {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
+                        <p>{para}</p>
+                      ))}
+                    </div>
+                    {f.image && (
+                      <Image class="major-shot" src={f.image} alt={f.alt ?? ''} width={1440} />
+                    )}
+                  </article>
+                ))}
+            </div>
+
+            <div class="minor-list">
+              {minorFeatures
+                .filter((f) => f.pillar === pillar.id)
+                .map((f) => (
+                  <article
+                    class:list={[
+                      'minor',
+                      { 'minor--live': ['letters', 'map', 'lang', 'sound'].includes(f.media) },
+                      { 'minor--text': f.media === 'none' || (f.media === 'shot' && !f.image) },
+                      { 'minor--stack': f.wide === true },
+                    ]}
+                  >
+                    <div class="minor-text">
+                      <h5>{f.title}</h5>
+                      <p>{f.body}</p>
+                    </div>
+                    {f.media === 'letters' && <StrokeWord word="Takko" />}
+                    {f.media === 'lang' && <LangToggle />}
+                    {f.media === 'sound' && <SoundButton />}
+                    {f.media === 'map' && (
+                      <div class="minor-map">
+                        <JapanMap />
+                      </div>
+                    )}
+                    {f.media === 'shot' && f.image && (
+                      <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={f.wide ? 1200 : 520} />
+                    )}
+                  </article>
+                ))}
+            </div>
+          </div>
+        ))
+      }
 
       <p class="minor-more">
         There is more in the drawer, like a train timer tuned to exactly how I
@@ -396,7 +433,7 @@ const minorFeatures: {
   .back::before { content: '\2190'; margin-right: 0.4em; }
 
   .case-head { margin-bottom: var(--space-6); }
-  :global(.case-logo) { margin-bottom: var(--space-4); }
+  :global(.case-logo) { margin-bottom: var(--space-5); }
   .eyebrow {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
@@ -470,71 +507,56 @@ const minorFeatures: {
     box-shadow: var(--shadow-sm);
   }
 
-  /* Placeholder for a feature whose media (a GIF/clip) is still to be recorded. */
-  .media-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    text-align: center;
-    background: var(--color-surface-2);
-    border: 1px dashed var(--color-border-strong);
-    border-radius: var(--radius-md);
-    color: var(--color-text-muted);
-    padding: var(--space-6);
-  }
-  .media-placeholder--major { aspect-ratio: 16 / 9; }
-  .media-placeholder--minor { min-height: 9rem; padding: var(--space-4); }
-  .media-placeholder p {
-    margin: 0;
-    max-width: 44ch;
-    font-size: var(--text-sm);
-  }
-  .media-placeholder__tag {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 0.2rem 0.5rem;
-  }
-
   /* Features */
   .features { margin: var(--space-8) 0; }
   .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
 
-  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
-  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
-
-  .minor-head {
+  /* Pillar: the one grouping primitive both case studies share. */
+  .pillar + .pillar { margin-top: var(--space-9); }
+  .pillar-head {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin: var(--space-8) 0 var(--space-5);
+    margin-bottom: var(--space-6);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
-  .minor-list { display: flex; flex-direction: column; gap: var(--space-6); }
+
+  .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
+  .major-text h4 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
+
+  .minor-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-top: var(--space-7);
+  }
   .minor {
     display: grid;
     grid-template-columns: 1fr 12rem;
     gap: var(--space-5);
     align-items: center;
   }
-  .minor:nth-child(even) .minor-text { order: 2; }
-  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  /* Alternate which side the media sits on, keeping the column proportions:
+     without swapping the track sizes too, the text lands in the narrow track. */
+  .minor:nth-child(even):not(.minor--stack):not(.minor--text) {
+    grid-template-columns: 12rem 1fr;
+  }
+  .minor:nth-child(even):not(.minor--stack):not(.minor--text) .minor-text { order: 2; }
+  .minor-text h5 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
 
   /* Live artifacts (letters, map) earn a wider media column than screenshots. */
   .minor--live { grid-template-columns: 1fr 17rem; }
+  .minor--live:nth-child(even):not(.minor--stack) { grid-template-columns: 17rem 1fr; }
   .minor--text { grid-template-columns: 1fr; }
+
+  /* A screenshot too dense for the side column: full width under the text. */
+  .minor--stack { grid-template-columns: 1fr; gap: var(--space-4); }
+  .minor--stack .minor-text { order: 0; }
   .minor-map { min-width: 0; }
 
   .minor-more {
@@ -551,5 +573,6 @@ const minorFeatures: {
     .minor,
     .minor--live { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }
+    .minor:nth-child(even):not(.minor--stack):not(.minor--text) { grid-template-columns: 1fr; }
   }
 </style>

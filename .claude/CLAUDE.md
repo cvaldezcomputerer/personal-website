@@ -192,14 +192,24 @@ a noindex meta AND go in `public/robots.txt`.
 
 - [ ] **Fill in real content** - resume tweaks and real blog posts. Replace the
   placeholder `welcome` post. (The two case studies are now written; see below.)
-- [ ] **Screenshot upgrades (optional)** - all 5 feature shots are in as of
-  2026-07-07, taken headlessly (Playwright, light mode, 2x DPR) from the live
-  sites at owner's request as drafts; he may want to reshoot or art-direct any
-  of them. Remaining nice-to-have: a short GIF of the multiplayer class race
-  for the Takko games major (needs two devices / two contexts). Source
+- [ ] **Prose voice audit** - the case-study prose reads as AI-written in
+  places. Two tells run through both pages: the "The benefit is X. The limit is
+  Y." template repeated across every Architecture paragraph, and a constant
+  "not X, but Y" antithesis habit. The concrete first-person passages are fine;
+  it is the scaffolding that needs rewriting. There is no prose-writing skill in
+  this repo (`writing-for-agents` governs agent docs only); the blog repo's
+  `writing-fragments` / `writing-shape` / `writing-beats` are drafting
+  processes, not audits.
+- [ ] **Screenshot upgrades (optional)** - all feature shots are real as of
+  2026-08-21, taken headlessly (Playwright, light mode, 2x DPR) from the live
+  sites, except the two the owner shot himself (Face Catch, word sets). He may
+  want to reshoot or art-direct any of them. Note: the Face Catch frames have a
+  coworker visible in the background (back of head, not identifiable). Source
   projects live on this machine: `../dog_site/dog_SITE` = takkotaco.com,
   `../astro/takko blog` = bloggydoggy.com (folder names are inverted; `site:`
-  in astro.config is authoritative).
+  in astro.config is authoritative). Playwright is installed in `dog_SITE` only,
+  and its cached Chromium is older than the bundled version, so drive it with an
+  explicit `executablePath`.
 - [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
   hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
   still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
@@ -218,6 +228,66 @@ a noindex meta AND go in `public/robots.txt`.
 - [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
 - [ ] **Uncommitted:** `.claude/settings.json` (harness permission state) is
   modified but intentionally left out of commits - decide commit vs gitignore.
+
+### Done this session (2026-08-21)
+
+Restructured both case studies around a shared new **pillar** primitive: majors
+and minors are grouped under a labelled mono header (Takko: "The classroom
+platform" / "The town record"; Bloggy: "What the reader gets" / "What keeps it
+running"). Settled in a `grilling` session first.
+
+**Honesty fixes.** Cut the "Real-time multiplayer, refereed at the edge" major
+outright: it claimed a finished feature that does not exist (the ABC race has
+rough multiplayer the owner does not want shown). The Architecture Durable
+Objects paragraph now describes infrastructure stood up to learn the shape, not
+a shipped feature; the DO/WebSockets stack chips stay. Corrected two stale
+numbers against the source repo: Takko-ben is **438** entries (was "a couple
+hundred") and the vocab DB is **51 categories across 12 groups** (was "past
+sixty categories"). Dropped the `highlights` field from `content.config.ts` and
+both project `.md` files: it was required by the schema, rendered by no
+component, and held the false multiplayer claim.
+
+**Every placeholder is gone.** The three dashed GIF tiles are replaced by real
+media, and the `.media-placeholder` CSS is deleted from `takkotaco.astro`. New
+assets: `face-catch.png` + `word-sets.png` (owner-supplied), `train-mode.png` +
+`restaurants.png` (captured from the live site), `dev-editor.png` (captured off
+the blog's local dev server). Bloggy's `check:post` major renders the script's
+real `--all` output in a tokenised `.terminal` block rather than a screenshot,
+so it stays crisp and theme-aware; its one em dash is the script's own wording,
+kept verbatim.
+
+**Content moves.** Takko: camera/mic demoted major -> minor; grammar (145 points,
+template + typed slot specs) folded into the vocab major; the town-guide minor
+merged up into the town major; new minors for teacher word sets and for
+restaurants/shrines; an ops paragraph added to Architecture (Pages -> Workers,
+the build-vs-runtime variable trap, the 1.4 MB stray-Vite-cache audit find, the
+157-deployment cleanup). Bloggy: quiz demoted major -> minor (stays live); two
+new authoring majors (the dev editor, `check:post`); new minors for reading
+settings, the floating island, and the image pipeline. The FloatingIsland port
+was skipped: 371 lines pulling in two child components and the blog's settings
+globals, so it ships text-only.
+
+**Logo swap + hero mark.** `public/logos/takkotaco.svg` and `bloggydoggy.svg`
+held each other's artwork (takkotaco had the dog, bloggydoggy the cat). Fixed by
+swapping the two files' contents, not the references, so the homepage cards and
+both case-study headers corrected at once. Case-study headers now use a new
+`size="lg"` + `bare` LogoTile variant: a 5rem mark, no chip, still left-aligned
+(centering was offered and rejected: it fights the left-aligned layout rule).
+
+**Gotcha worth keeping:** a `bare` mark has no chip backing, so a near-black
+logo vanishes in dark mode. `currentColor` alone does not fix it, because an
+`<img src="*.svg">` is a separate document and never sees the page's colour. The
+fix is to INLINE the SVG (LogoTile reads it via an `import.meta.glob('?raw')`,
+which bypasses astro:assets and so avoids the empty-box bug) and set `color` on
+the `<svg>` element itself. It must target the element, not a wrapper: each file
+carries a `color="#1f2937"` presentation attribute as the standalone-`<img>`
+fallback, and that beats an inherited colour.
+
+**Layout fix.** `.minor:nth-child(even)` reordered the text into the *narrow*
+grid track, squeezing alternating rows into a ribbon. Even rows now swap the
+track sizes too (`12rem 1fr`), with `.minor--stack` / `.minor--text` excluded.
+Added `.minor--stack` for media too dense for the side column (Takko train mode,
+Bloggy quiz). `astro check` 0/0/0, build clean, no horizontal overflow.
 
 ### Done this session (2026-07-07)
 
@@ -262,9 +332,10 @@ Rebuilt the project case studies. Moved off the shared `[slug].astro` template
 `bloggydoggy.astro`. Card metadata still comes from the `projects` content
 collection; the `.md` bodies are now trimmed to frontmatter-only (a comment
 points to the `.astro` page). Each page has an "at a glance" panel (Problem / My
-role / Status / Impact / Stack) and a features section using a **major (editorial
-+ big media) / minor (compact alternating rows)** split. Feature screenshots are
-placeholder `.ph` tiles for now (see TODO).
+role / Impact / Stack) and a features section using a **major (editorial
++ big media) / minor (compact alternating rows)** split. (Superseded 2026-08-21:
+majors and minors are now grouped under two labelled pillars per page, and every
+placeholder tile is gone.)
 
 Two real artifacts embedded live from the source sites: Takko renders the actual
 Geolonia prefecture SVG map (`src/components/JapanMap.astro`, display-only,
@@ -290,6 +361,27 @@ deployed to Cloudflare Workers + custom domain live; sessions made inert
 (lruCache, no SESSION KV); fixed `npm ci` lockfile (@emnapi devDeps), deploy
 config path (`dist/client/wrangler.json`), worker-name consistency; swapped +
 zoomed the About photo; slimmed the public README (ops moved here).
+
+## Skills
+
+All in `.claude/skills/<name>/SKILL.md`. Several are meant to fire on their own;
+load them by name when they do not.
+
+- **`grilling`**: before building any new page, section, or component, interview
+  the owner until every branch of the decision is settled. Run it *before*
+  scaffolding, not after. Its standing questions are this site's recurring ones
+  (who is skimming, which AI-slop tell is this flirting with, does it need JA,
+  where does the content actually live). `/grill-me` invokes it on demand.
+- **`prototype`**: when the answer is "show me a few options", build the variants
+  instead of describing them. The UI branch renders several takes on one route
+  with a switcher; the logic branch is a single clickable HTML file. On a mostly
+  static site the UI branch is nearly always the right one.
+- **`diagnosing-bugs`**: for anything broken, throwing, failing, slow, or
+  silently not applying. Phase 0 is this repo's known silent failure modes (the
+  `nodejs_compat` render bug, the headless dev server, CSS scoping, the session
+  driver), and it refuses to hypothesise before a feedback loop goes red.
+- **`writing-for-agents`**: for editing this file or any `SKILL.md`. It governs
+  documents an agent executes, never site copy.
 
 ## Workflow
 
