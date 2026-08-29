@@ -125,7 +125,7 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Quiz component',
-    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. Because I own the endpoint, the quiz behaves exactly how I designed it. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    body: 'Small quizzes at the end of a post, backed by my own Cloudflare Workers and D1 API rather than a third-party embed. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
     media: 'quiz',
   },
   {
@@ -145,13 +145,13 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'The floating island',
-    body: 'The language selector and settings live in a small floating bar rather than a fixed header, and it can be hidden entirely from the settings panel. Readers who want the controls have them a thumb away; readers who do not can make them go away.',
+    body: 'The language selector and settings live in a small floating bar rather than a fixed header, and it can be hidden entirely from the settings panel. On a phone it sits a thumb away from where you are already holding the screen, and it disappears completely for anyone who would rather just read.',
     media: 'none',
   },
   {
     pillar: 'reader',
     title: 'Likes',
-    body: 'Also my own API rather than a plugin. Nothing complicated, but it behaves exactly how I want and costs nothing to run.',
+    body: 'A like button on the same API. One counter, one endpoint, and no third-party script loading on every post to support it.',
     media: 'none',
   },
   {
@@ -220,8 +220,7 @@ const minorFeatures: {
       <h2>Overview</h2>
       <p>
         Bloggy Doggy started as a place to express myself: somewhere to post my
-        photography and write about what I'm doing, and it has grown into
-        something I add to steadily. It doubles as a{' '}
+        photography and write about what I'm doing. It doubles as a{' '}
         <Explain meaning="a place to try new ideas">testing ground</Explain>, a
         place to build interactive features I have no specific reason to build
         elsewhere, and to work out what actually makes a reading experience
@@ -230,8 +229,8 @@ const minorFeatures: {
 
       <h2>Architecture</h2>
       <p>
-        A custom blog with no frontend framework, built to stay light and free to
-        run.
+        There is no frontend framework anywhere in this blog, and most of what
+        follows is a consequence of keeping it that way.
       </p>
       <p>
         <strong>Astro, deployed as a Cloudflare Worker.</strong> Posts ship as
@@ -239,24 +238,24 @@ const minorFeatures: {
         that runs through everything I build.
       </p>
       <p>
-        <strong>A REST API I own, on Workers and D1.</strong> I used it for likes
-        and quiz data instead of reaching for plugins. The benefit is that these
-        features behave exactly the way I designed them rather than however a
-        plugin author decided. The limit is that I maintain it myself, which is
-        the price of that control.
+        <strong>A REST API I own, on Workers and D1.</strong> Likes and quiz data
+        go through my own endpoints instead of a plugin, which is why the quiz
+        can follow the language toggle and the likes can look like nothing else.
+        The price is that when either one breaks there is nobody else to file the
+        bug with.
       </p>
       <p>
         <strong>Native Web Components, no framework.</strong> Each interactive
-        piece is a custom element. The benefit is a tiny JavaScript footprint and
-        markup that is easy to reason about. The limit is that it is more manual
-        than a framework: I write the wiring a library would otherwise hand me.
+        piece is a custom element, so a post that has no interactive parts ships
+        no JavaScript at all. I write the wiring by hand that a library would
+        otherwise hand me, and so far the trade has been worth it.
       </p>
       <p>
         <strong>A single-source reading-mode system.</strong> The three language
-        modes come from one source file rather than separate pages or routes. The
-        benefit is that there is no duplicated content to keep in sync. The limit
-        is that every post has to be authored in all three modes to feel
-        complete.
+        modes come from one source file rather than separate pages or routes, so
+        there is no second copy of a post drifting out of sync with the first.
+        What it costs is authoring time: a post is not really done until it works
+        in all three.
       </p>
     </div>
 
@@ -401,15 +400,17 @@ const minorFeatures: {
       <p>
         Image optimization turned into a recurring lesson. At various points I
         was double-optimizing images without realizing it, or skipping it
-        entirely and wondering why pages felt slow. Getting the pipeline right is
-        not glamorous, but it genuinely matters, and the animated WebPs above are
-        a reminder that not everything should go through the same pipe.
+        entirely and wondering why pages felt slow. It is dull work, and it is
+        the difference between a photo post that loads on a train and one that
+        does not. The animated WebPs above are the reminder that not everything
+        should go through the same pipe.
       </p>
       <p>
-        There is a constant tension between adding a feature and overloading the
-        page. I shipped things I thought were fun that just cluttered the reading
-        experience, and I pulled back others that mattered more than I expected.
-        The blog is better for having gone through that cycle a few times.
+        Every feature costs the reader something. I shipped things I thought were
+        fun and found they were just noise around the text, and I pulled back
+        others that turned out to be load-bearing. The settings panel exists
+        because I stopped trusting my own guess about which was which and let
+        people switch the difference off themselves.
       </p>
     </div>
   </article>
