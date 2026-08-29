@@ -130,7 +130,7 @@ const minorFeatures: {
   {
     pillar: 'classroom',
     title: 'Sounds made from scratch',
-    body: 'Game sounds resolve in tiers: a recorded clip if there is one, then a generated voice, and if neither exists the game synthesizes the tone itself with the Web Audio API. These buttons run that last tier, with no audio files at all. A few of the tones I generated this way came out closer to Mii voices than I intended. Press one.',
+    body: 'Game sounds resolve in tiers: a recorded clip if there is one, then a generated voice, and if neither exists the games synthesize the tone themselves with the Web Audio API. Apple here is the generated voice clip the games serve. Chicken is your own browser speaking, pitched up into the range a few of my generated words landed in by accident, closer to a Mii than I intended. Press both.',
     media: 'sound',
   },
   {
@@ -151,8 +151,8 @@ const minorFeatures: {
   },
   {
     pillar: 'town',
-    title: 'Bilingual, all the way down',
-    body: 'The interface is English and Japanese at once. Every string is one component with two slots, so a single switch flips the entire page, and my students can drop into their own language the moment a game loses them. The card here uses the same component as the live site.',
+    title: 'The Japanese is written in, not translated',
+    body: 'Every string on the site is authored as an English and Japanese pair. Most games and tools then show both at once, side by side, and a few parts of the site swap between them on a switch. I write the Japanese myself because Google Translate does not hold up on the short instructional phrases a game runs on, and a student who has to leave the page to find out what a rule means has already stopped playing. The card here is the paired-string system on a switch.',
     media: 'lang',
   },
   {
@@ -246,73 +246,14 @@ const minorFeatures: {
         under all of it.
       </p>
 
-      <h2>Architecture</h2>
-      <p>
-        I built the site for school Chromebooks on rural wifi, and for a hosting
-        bill I could keep paying on a teacher's salary. It is Astro deployed as
-        a Cloudflare Worker, and it has never cost me anything.
-      </p>
-      <p>
-        <strong>Astro, static-first.</strong> Most pages ship as plain HTML, so
-        there is almost nothing to download and they hold up on bad wifi and old
-        hardware. There is no always-on server behind any of it.
-      </p>
-      <p>
-        <strong>Durable Objects, stood up but not finished.</strong> There is a
-        separate Worker deployed for real-time rooms, where each room is one
-        Durable Object holding the state and talking to players over WebSockets.
-        Only the ABC race uses it so far and it is rough enough that I do not
-        put it in front of a class yet. I built it to work with
-        one-object-per-room state on something small before I try it on the
-        larger real-time project I have planned.
-      </p>
-      <p>
-        <strong>Workers for the API.</strong> A Worker handles live weather,
-        leaderboards, the "where are you from?" map, and the feedback widget that
-        posts straight to Discord. Anything that touches a visitor's IP stores
-        only a salted SHA-256 hash of it, never the raw address. Between lessons
-        it runs nothing and bills nothing. Every feature has to fit inside a
-        single request: a short execution window, no long-running processes,
-        nothing held in memory between calls.
-      </p>
-      <p>
-        <strong>D1 and KV for storage.</strong> D1 (SQLite at the edge) backs the
-        leaderboards and feedback; KV holds sessions. Both sit close to the
-        people using them and both stay inside the free tier. D1 is young and
-        does not want heavy write traffic, which would matter for a product; at
-        current classroom traffic, a class of thirty submitting scores is nowhere
-        near that ceiling.
-      </p>
-      <p>
-        <strong>One central vocabulary database.</strong> Every game and tool
-        that touches vocab reads from the same source, so a word I add during
-        third period is in the flashcards, the worksheet maker and the dictionary
-        by fourth. The tradeoff is that a schema change touches every game and
-        tool at once, so I spent a long time on the structure up front.
-      </p>
-      <p>
-        <strong>Production issues.</strong> The site started on Cloudflare Pages
-        and is Workers-only now, and two things from that move stuck. Build-time variables and runtime secrets live in
-        different dashboard panels, and putting a build-time one in the runtime
-        panel fails silently: the build passes, the deploy passes, and the
-        feature renders its fallback in production while working fine locally.
-        Then an audit this August turned up 31 stray files, 1.4 MB of Vite
-        dev-toolbar bundles, that had been shipping to production from inside
-        <code>public/</code>, invisible to git but not to the build. Retiring the
-        old Pages project was its own small saga: it had 157 deployments, and
-        Pages will not delete a project with more than a hundred, so they had to
-        go through the API one at a time.
-      </p>
     </div>
 
     <!-- Features, grouped into two pillars: majors then minors within each -->
-    <section class="features" aria-label="Favorite parts">
-      <h2>Favorite parts</h2>
-
+    <section class="features" aria-label="Features">
       {
         pillars.map((pillar) => (
           <div class="pillar">
-            <h3 class="pillar-head">{pillar.label}</h3>
+            <h2 class="pillar-head">{pillar.label}</h2>
 
             <div class="major-list">
               {majorFeatures
@@ -320,7 +261,7 @@ const minorFeatures: {
                 .map((f) => (
                   <article class="major">
                     <div class="major-text">
-                      <h4>{f.title}</h4>
+                      <h3>{f.title}</h3>
                       {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
                         <p>{para}</p>
                       ))}
@@ -345,7 +286,7 @@ const minorFeatures: {
                     ]}
                   >
                     <div class="minor-text">
-                      <h5>{f.title}</h5>
+                      <h4>{f.title}</h4>
                       <p>{f.body}</p>
                     </div>
                     {f.media === 'letters' && <StrokeWord word="Takko" />}
@@ -394,6 +335,105 @@ const minorFeatures: {
         still have not.
       </p>
     </div>
+
+    <!-- Architecture last: one row per piece of the stack -->
+    <section class="arch" aria-label="Architecture">
+      <h2>Architecture</h2>
+      <p class="arch-intro">
+        I built the site for school Chromebooks on rural wifi, and for a hosting
+        bill I could keep paying on a teacher's salary. It is Astro deployed as
+        a Cloudflare Worker, and it has never cost me anything.
+      </p>
+
+      <div class="arch-list">
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="file-code" class="arch-icon" /> Astro, static-first
+          </h3>
+          <p>
+            Most pages ship as plain HTML, so there is almost nothing to
+            download and they hold up on bad wifi and old hardware. There is no
+            always-on server behind any of it.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="box" class="arch-icon" /> Durable Objects, stood up but not finished
+          </h3>
+          <p>
+            There is a separate Worker deployed for real-time rooms, where each
+            room is one Durable Object holding the state and talking to players
+            over WebSockets. Only the ABC race uses it so far and it is rough
+            enough that I do not put it in front of a class yet. I built it to
+            work with one-object-per-room state on something small before I try
+            it on the larger real-time project I have planned.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="zap" class="arch-icon" /> Workers for the API
+          </h3>
+          <p>
+            A Worker handles live weather, leaderboards, the "where are you
+            from?" map, and the feedback widget that posts straight to Discord.
+            Anything that touches a visitor's IP stores only a salted SHA-256
+            hash of it, never the raw address. Between lessons it runs nothing
+            and bills nothing. Every feature has to fit inside a single request:
+            a short execution window, no long-running processes, nothing held in
+            memory between calls.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="database" class="arch-icon" /> D1 and KV for storage
+          </h3>
+          <p>
+            D1 (SQLite at the edge) backs the leaderboards and feedback; KV
+            holds sessions. Both sit close to the people using them and both
+            stay inside the free tier. D1 is young and does not want heavy write
+            traffic, which would matter for a product; at current classroom
+            traffic, a class of thirty submitting scores is nowhere near that
+            ceiling.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="book-open" class="arch-icon" /> One central vocabulary database
+          </h3>
+          <p>
+            Every game and tool that touches vocab reads from the same source,
+            so a word I add during third period is in the flashcards, the
+            worksheet maker and the dictionary by fourth. The tradeoff is that a
+            schema change touches every game and tool at once, so I spent a long
+            time on the structure up front.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="triangle-alert" class="arch-icon" /> Production issues
+          </h3>
+          <p>
+            The site started on Cloudflare Pages and is Workers-only now, and
+            two things from that move stuck. Build-time variables and runtime
+            secrets live in different dashboard panels, and putting a build-time
+            one in the runtime panel fails silently: the build passes, the
+            deploy passes, and the feature renders its fallback in production
+            while working fine locally. Then an audit this August turned up 31
+            stray files, 1.4 MB of Vite dev-toolbar bundles, that had been
+            shipping to production from inside <code>public/</code>, invisible
+            to git but not to the build. Retiring the old Pages project was its
+            own small saga: it had 157 deployments, and Pages will not delete a
+            project with more than a hundred, so they had to go through the API
+            one at a time.
+          </p>
+        </div>
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
@@ -487,7 +527,6 @@ const minorFeatures: {
 
   /* Features */
   .features { margin: var(--space-8) 0; }
-  .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
 
   /* Pillar: the one grouping primitive both case studies share. */
   .pillar + .pillar { margin-top: var(--space-9); }
@@ -497,13 +536,13 @@ const minorFeatures: {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
+    margin: 0 0 var(--space-6);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
   .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .major-text h4 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
 
   .minor-list {
@@ -524,7 +563,7 @@ const minorFeatures: {
     grid-template-columns: 12rem 1fr;
   }
   .minor:nth-child(even):not(.minor--stack):not(.minor--text) .minor-text { order: 2; }
-  .minor-text h5 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
 
   /* Live artifacts (letters, map) earn a wider media column than screenshots. */
@@ -546,8 +585,42 @@ const minorFeatures: {
     border-top: 1px solid var(--color-border);
   }
 
+  /* Architecture: same contained-panel primitive as the glance list up top. */
+  .arch { margin: var(--space-9) 0 0; }
+  .arch > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-3); }
+  .arch-intro {
+    color: var(--color-text-muted);
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+  }
+  .arch-list {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .arch-row {
+    padding: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .arch-row:first-child { border-top: 0; }
+  .arch-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: var(--text-base);
+    margin-bottom: var(--space-2);
+  }
+  /* Icon.astro renders the svg in its own scope, so reach it with :global. */
+  .arch-head :global(.arch-icon) {
+    color: var(--color-accent);
+    font-size: 1.15em;
+  }
+  .arch-row p { color: var(--color-text-muted); max-width: 64ch; }
+
   @media (max-width: 640px) {
     .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
+    .arch-row { padding: var(--space-4); }
     .minor,
     .minor--live { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }

@@ -1,12 +1,21 @@
 ---
 /**
- * SoundButton (live) - a stand-in for the games' procedural sound layer. On the
- * real site a sound resolves in tiers: a recorded Kenney clip first, then an
- * ElevenLabs voice, and if neither exists the game synthesizes the tone itself
- * with the Web Audio API. That last tier is what runs here: these blips are
- * generated in the browser on click, from no audio files at all. The bars are
- * decorative feedback, not a real analyser.
+ * SoundButton (live) - the voice tier of the games' sound layer. On the real
+ * site a sound resolves in tiers: a recorded Kenney clip first, then a voice
+ * generated with ElevenLabs, and if neither exists the games synthesize the
+ * tone themselves with the Web Audio API.
+ *
+ * Apple plays the clip takkotaco.com actually serves, copied from its
+ * audio/vocab folder. Chicken is the browser's own SpeechSynthesis voice with
+ * pitch and rate pushed into Mii range, so the two can be heard back to back;
+ * the site does not do that, it is a demo effect. It falls back to the real
+ * chicken clip where speech synthesis is unavailable. The bars are decorative
+ * feedback, not a real analyser.
  */
+const WORDS = [
+  { label: 'Apple', src: '/projects/takkotaco/audio/apple.mp3', say: '' },
+  { label: 'Chicken', src: '/projects/takkotaco/audio/chicken.mp3', say: 'chicken' },
+];
 ---
 
 <figure class="sfx-demo">
@@ -15,58 +24,84 @@
       <span></span><span></span><span></span><span></span><span></span>
     </div>
     <div class="sfx-demo__btns">
-      <button type="button" class="sfx-btn" data-sound="correct">Correct</button>
-      <button type="button" class="sfx-btn" data-sound="blip">Blip</button>
+      {
+        WORDS.map((w) => (
+          <button type="button" class="sfx-btn" data-src={w.src} data-say={w.say}>
+            {w.label}
+          </button>
+        ))
+      }
     </div>
   </div>
-  <figcaption>Live: generated in the browser with the Web Audio API, no sound files.</figcaption>
+  <figcaption>
+    Live: apple is the clip the games serve, chicken is your browser's own voice
+    pitched into Mii range.
+  </figcaption>
 </figure>
 
 <script>
-  const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let ctx: AudioContext | null = null;
 
-  function tone(freq: number, start: number, dur: number, type: OscillatorType, peak: number) {
-    if (!ctx) return;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    // Short attack, exponential release, so notes have no click at the edges.
-    gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(peak, start + 0.012);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(start);
-    osc.stop(start + dur + 0.02);
-  }
-
-  // Each returns roughly how long it sounds, in ms, to time the bar animation.
-  const sounds: Record<string, () => number> = {
-    correct() {
-      const t = ctx!.currentTime;
-      [523.25, 659.25, 783.99].forEach((f, i) => tone(f, t + i * 0.1, 0.16, 'sine', 0.22));
-      return 420;
-    },
-    blip() {
-      tone(660, ctx!.currentTime, 0.12, 'triangle', 0.28);
-      return 160;
-    },
-  };
+  const speech = 'speechSynthesis' in window ? window.speechSynthesis : null;
 
   document.querySelectorAll<HTMLElement>('.sfx-demo').forEach((demo) => {
-    let off = 0;
+    let current: HTMLAudioElement | null = null;
+    let active: SpeechSynthesisUtterance | null = null;
+    const start = () => {
+      if (!reduce) demo.classList.add('is-playing');
+    };
+    const stop = () => demo.classList.remove('is-playing');
+
     demo.querySelectorAll<HTMLButtonElement>('.sfx-btn').forEach((btn) => {
+      const src = btn.dataset.src;
+      if (!src) return;
+      const say = btn.dataset.say;
+
+      // Nothing is fetched until the first press.
+      const audio = new Audio(src);
+      audio.preload = 'none';
+      audio.addEventListener('ended', stop);
+      audio.addEventListener('error', stop);
+
+      const playClip = () => {
+        current = audio;
+        audio.currentTime = 0;
+        void audio.play().catch(stop);
+        start();
+      };
+
       btn.addEventListener('click', () => {
-        if (!ctx) ctx = new AC();
-        if (ctx.state === 'suspended') void ctx.resume();
-        const play = sounds[btn.dataset.sound || 'blip'];
-        const ms = play ? play() : 160;
-        if (reduce) return;
-        window.clearTimeout(off);
-        demo.classList.add('is-playing');
-        off = window.setTimeout(() => demo.classList.remove('is-playing'), ms);
+        // Pressing the other word cuts whatever is already going.
+        if (current && current !== audio) {
+          current.pause();
+          current.currentTime = 0;
+        }
+        // Cancelling fires the old utterance's `end` late, so retire it first.
+        active = null;
+        speech?.cancel();
+
+        if (!say || !speech) {
+          playClip();
+          return;
+        }
+
+        // Mii range: pitch is capped at 2, and the words land better fast.
+        const line = new SpeechSynthesisUtterance(say);
+        line.lang = 'en-US';
+        line.pitch = 2;
+        line.rate = 1.3;
+        line.addEventListener('start', () => {
+          if (active === line) start();
+        });
+        line.addEventListener('end', () => {
+          if (active === line) stop();
+        });
+        // Some browsers list a voice but never speak; fall back to the clip.
+        line.addEventListener('error', () => {
+          if (active === line) playClip();
+        });
+        active = line;
+        speech.speak(line);
       });
     });
   });

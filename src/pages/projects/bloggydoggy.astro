@@ -226,42 +226,13 @@ const minorFeatures: {
         English, Simple English, or Japanese, and the blog has its own quizzes,
         galleries, reading settings, and animations.
       </p>
-
-      <h2>Architecture</h2>
-      <p>
-        I built the interactive features with native Web Components instead of a
-        frontend framework. There is no framework anywhere in this blog.
-      </p>
-      <p>
-        <strong>Astro, deployed as a Cloudflare Worker.</strong> Posts ship as
-        static HTML, so pages stay fast and cheap to serve.
-      </p>
-      <p>
-        <strong>A REST API built with Cloudflare Workers and D1.</strong> Likes
-        and quiz data go through my own endpoints, so the quiz can follow the
-        language toggle and the likes can look like nothing else. I maintain the
-        API and its data model myself.
-      </p>
-      <p>
-        <strong>Web Components for every interactive piece.</strong> Each one is
-        a custom element, so a post with no interactive parts ships no JavaScript
-        at all.
-      </p>
-      <p>
-        <strong>A single-source reading-mode system.</strong> The three language
-        modes come from one source file, not separate pages or routes, so there
-        is no second copy of a post drifting out of sync. The cost is authoring
-        time. A post is not done until it works in all three.
-      </p>
     </div>
 
-    <section class="features" aria-label="Favorite parts">
-      <h2>Favorite parts</h2>
-
+    <section class="features" aria-label="Features">
       {
         pillars.map((pillar) => (
           <div class="pillar">
-            <h3 class="pillar-head">{pillar.label}</h3>
+            <h2 class="pillar-head">{pillar.label}</h2>
 
             <div class="major-list">
               {majorFeatures
@@ -269,7 +240,7 @@ const minorFeatures: {
                 .map((f) => (
                   <article class="major">
                     <div class="major-text">
-                      <h4>{f.title}</h4>
+                      <h3>{f.title}</h3>
                       {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
                         <p>{para}</p>
                       ))}
@@ -297,7 +268,7 @@ const minorFeatures: {
                     ]}
                   >
                     <div class="minor-text">
-                      <h5>{f.title}</h5>
+                      <h4>{f.title}</h4>
                       <p>{f.body}</p>
                     </div>
                     {f.media === 'quiz' && <QuizDemo />}
@@ -406,6 +377,61 @@ const minorFeatures: {
         still works as a straightforward reading experience.
       </p>
     </div>
+
+    <!-- Architecture last: one row per piece of the stack -->
+    <section class="arch" aria-label="Architecture">
+      <h2>Architecture</h2>
+      <p class="arch-intro">
+        I built the interactive features with native Web Components instead of a
+        frontend framework. There is no framework anywhere in this blog.
+      </p>
+
+      <div class="arch-list">
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="file-code" class="arch-icon" /> Astro, deployed as a
+            Cloudflare Worker
+          </h3>
+          <p>Posts ship as static HTML, so pages stay fast and cheap to serve.</p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="database" class="arch-icon" /> A REST API on Workers and
+            D1
+          </h3>
+          <p>
+            Likes and quiz data go through my own endpoints, so the quiz can
+            follow the language toggle and the likes can look like nothing else.
+            I maintain the API and its data model myself.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="puzzle" class="arch-icon" /> Web Components for every
+            interactive piece
+          </h3>
+          <p>
+            Each one is a custom element, so a post with no interactive parts
+            ships no JavaScript at all.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="languages" class="arch-icon" /> A single-source
+            reading-mode system
+          </h3>
+          <p>
+            The three language modes come from one source file, not separate
+            pages or routes, so there is no second copy of a post drifting out of
+            sync. The cost is authoring time. A post is not done until it works
+            in all three.
+          </p>
+        </div>
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
@@ -496,7 +522,6 @@ const minorFeatures: {
   }
 
   .features { margin: var(--space-8) 0; }
-  .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
 
   /* Pillar: the one grouping primitive both case studies share. */
   .pillar + .pillar { margin-top: var(--space-9); }
@@ -506,13 +531,13 @@ const minorFeatures: {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
+    margin: 0 0 var(--space-6);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
   .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .major-text h4 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
 
   /* Real check:post output. Scrolls on its own so the page never does. */
@@ -549,7 +574,7 @@ const minorFeatures: {
     grid-template-columns: 12rem 1fr;
   }
   .minor:nth-child(even):not(.minor--stack):not(.minor--text) .minor-text { order: 2; }
-  .minor-text h5 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
   .minor--text { grid-template-columns: 1fr; }
 
@@ -595,11 +620,45 @@ const minorFeatures: {
     margin-top: var(--space-5);
   }
 
+  /* Architecture: same contained-panel primitive as the glance list up top. */
+  .arch { margin: var(--space-9) 0 0; }
+  .arch > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-3); }
+  .arch-intro {
+    color: var(--color-text-muted);
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+  }
+  .arch-list {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .arch-row {
+    padding: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .arch-row:first-child { border-top: 0; }
+  .arch-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: var(--text-base);
+    margin-bottom: var(--space-2);
+  }
+  /* Icon.astro renders the svg in its own scope, so reach it with :global. */
+  .arch-head :global(.arch-icon) {
+    color: var(--color-accent);
+    font-size: 1.15em;
+  }
+  .arch-row p { color: var(--color-text-muted); max-width: 64ch; }
+
   @media (max-width: 720px) {
     .style-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
+    .arch-row { padding: var(--space-4); }
     .minor { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }
     .minor:nth-child(even):not(.minor--stack):not(.minor--text) { grid-template-columns: 1fr; }
