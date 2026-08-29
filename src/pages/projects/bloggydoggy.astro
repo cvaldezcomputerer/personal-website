@@ -41,13 +41,13 @@ const glance: { label: string; value: string; href?: string }[] = [
   {
     label: 'Problem',
     value:
-      'I wanted a place to post my photography and write, and a testing ground for interactive features, without a heavy frontend framework or off-the-shelf plugins deciding how any of it behaves.',
+      'I wanted a place to post my photography and write about my life in Japan, with room to experiment on interactive features, and without a frontend framework or off-the-shelf plugins deciding how any of it behaves.',
   },
   { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
   {
     label: 'Impact',
     value:
-      'Reader-controlled trilingual posts, plus quizzes and likes on an API I own, all running at no cost on Cloudflare’s free tier.',
+      'Trilingual posts the reader controls, plus quizzes and likes on my own Workers and D1 API, all running at no cost on Cloudflare’s free tier.',
   },
 ];
 
@@ -89,26 +89,26 @@ const majorFeatures: {
   {
     pillar: 'reader',
     title: 'Reader-controlled language modes',
-    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read. The demo here is the real mechanism running on a paragraph from an actual post; try the toggle.',
+    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. Readers can switch modes without leaving the page, and their selection persists between posts. The blog is read by native English speakers, English learners, and Japanese friends. The demo below uses the production language-switching component on a paragraph from a published post; try the toggle.',
     media: 'lang',
   },
   {
     pillar: 'authoring',
-    title: 'An editor for the shape a post actually has',
+    title: 'A custom editor for trilingual posts',
     body: [
-      'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that reads a post apart into its real structure and gives each slot a field.',
-      'It writes back to the same .mdx file on disk, so the editor is a view over the source rather than a database that owns it. Nothing is locked in: I can close the editor and keep working in the file by hand, which matters because I did not want a tool I would have to keep maintaining to be able to publish.',
+      'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that parses the MDX file and gives each language, caption, and image slot its own field.',
+      'It writes back to the same .mdx file on disk. I can close the editor and keep working in the file by hand, so publishing never depends on the tool staying alive.',
     ],
     media: 'editor',
     image: editorShot,
-    alt: 'The dev editor open on a real post: each block labelled by type and id, with separate EN, JA and SIMPLE text fields side by side for a paragraph and a heading',
+    alt: 'The dev editor open on a post: each block labelled by type and id, with separate EN, JA and SIMPLE text fields side by side for a paragraph and a heading',
   },
   {
     pillar: 'authoring',
     title: 'A validator that gets stricter when you publish',
     body: [
-      'Before a post goes out, one script checks it: empty translation slots, missing frontmatter, images that are unreferenced or oversized or still carrying GPS coordinates from my phone, mojibake, and placeholder text I left behind.',
-      'The part I like is the severity rule. While a post is still set to draft, incompleteness is a warning, because a draft is supposed to be unfinished and nagging me about it is noise. The moment I remove the draft flag, the same findings become errors and the script exits non-zero. One flag changes what the tool is for: a drafting companion, then a publish gate.',
+      'Before publishing, I run a validation script that checks for empty translation slots, missing frontmatter, oversized or unused images, GPS metadata off my phone, mojibake, and leftover placeholder text.',
+      'Draft posts report incomplete content as warnings. Once the draft flag is removed, the same findings become errors and the command exits non-zero. This lets me work on incomplete posts without constant failures while still preventing them from being published accidentally.',
     ],
     media: 'checkpost',
   },
@@ -125,7 +125,7 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Quiz component',
-    body: 'Small quizzes at the end of a post, backed by my own Cloudflare Workers and D1 API rather than a third-party embed. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    body: 'Small quizzes at the end of a post, running on my own Cloudflare Workers and D1 API. The demo below uses the production quiz component with sample data, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
     media: 'quiz',
   },
   {
@@ -139,13 +139,13 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Reading settings that stay put',
-    body: 'Text size, a dark theme, and an option to stop highlighting defined words: all stored in localStorage and applied as classes on the root element before first paint, so nothing flashes on load. The definition-highlight switch exists because the feature that helps a learner is clutter to everyone else.',
+    body: 'Text size, a dark theme, and an option to stop highlighting defined words. All three are stored in localStorage and applied as classes on the root element before first paint, so nothing flashes on load. The highlight switch is there because the underlining that helps a learner is clutter to everyone else.',
     media: 'none',
   },
   {
     pillar: 'reader',
     title: 'The floating island',
-    body: 'The language selector and settings live in a small floating bar rather than a fixed header, and it can be hidden entirely from the settings panel. On a phone it sits a thumb away from where you are already holding the screen, and it disappears completely for anyone who would rather just read.',
+    body: 'The language selector and settings live in a small floating bar that can be hidden entirely from the settings panel. On a phone it sits a thumb away from where you are already holding the screen, and it disappears completely for anyone who just wants to read.',
     media: 'none',
   },
   {
@@ -219,43 +219,39 @@ const minorFeatures: {
     <div class="prose">
       <h2>Overview</h2>
       <p>
-        Bloggy Doggy started as a place to express myself: somewhere to post my
-        photography and write about what I'm doing. It doubles as a{' '}
-        <Explain meaning="a place to try new ideas">testing ground</Explain>, a
-        place to build interactive features I have no specific reason to build
-        elsewhere, and to work out what actually makes a reading experience
-        good.
+        I started Bloggy Doggy to publish my photography and write about my life
+        in Japan. It also became a{' '}
+        <Explain meaning="a place to try new ideas">testing ground</Explain> for
+        reading modes and small interactive features. Posts can be read in
+        English, Simple English, or Japanese, and the blog has its own quizzes,
+        galleries, reading settings, and animations.
       </p>
 
       <h2>Architecture</h2>
       <p>
-        There is no frontend framework anywhere in this blog, and most of what
-        follows is a consequence of keeping it that way.
+        I built the interactive features with native Web Components instead of a
+        frontend framework. There is no framework anywhere in this blog.
       </p>
       <p>
         <strong>Astro, deployed as a Cloudflare Worker.</strong> Posts ship as
-        static HTML, so pages stay fast and cheap to serve, the same priority
-        that runs through everything I build.
+        static HTML, so pages stay fast and cheap to serve.
       </p>
       <p>
-        <strong>A REST API I own, on Workers and D1.</strong> Likes and quiz data
-        go through my own endpoints instead of a plugin, which is why the quiz
-        can follow the language toggle and the likes can look like nothing else.
-        The price is that when either one breaks there is nobody else to file the
-        bug with.
+        <strong>A REST API built with Cloudflare Workers and D1.</strong> Likes
+        and quiz data go through my own endpoints, so the quiz can follow the
+        language toggle and the likes can look like nothing else. I maintain the
+        API and its data model myself.
       </p>
       <p>
-        <strong>Native Web Components, no framework.</strong> Each interactive
-        piece is a custom element, so a post that has no interactive parts ships
-        no JavaScript at all. I write the wiring by hand that a library would
-        otherwise hand me, and so far the trade has been worth it.
+        <strong>Web Components for every interactive piece.</strong> Each one is
+        a custom element, so a post with no interactive parts ships no JavaScript
+        at all.
       </p>
       <p>
         <strong>A single-source reading-mode system.</strong> The three language
-        modes come from one source file rather than separate pages or routes, so
-        there is no second copy of a post drifting out of sync with the first.
-        What it costs is authoring time: a post is not really done until it works
-        in all three.
+        modes come from one source file, not separate pages or routes, so there
+        is no second copy of a post drifting out of sync. The cost is authoring
+        time. A post is not done until it works in all three.
       </p>
     </div>
 
@@ -329,9 +325,9 @@ const minorFeatures: {
             <Loader size={64} stepMs={620} />
           </div>
           <figcaption>
-            <strong>Loading animation.</strong> Real SVG: garlic shapes morph to
-            dots and back around the logo. I built it after getting curious about
-            the scene transitions in a show I like.
+            <strong>Loading animation.</strong> Garlic shapes morph to dots and
+            back around the logo, drawn as SVG. I built it after getting curious
+            about the scene transitions in a show I like.
           </figcaption>
         </figure>
 
@@ -384,33 +380,30 @@ const minorFeatures: {
       <p class="style-note">
         One more is hiding in plain sight: the dotted-underlined phrase up in
         the overview is the blog's Explain tooltip, a component for quietly
-        defining words a learner might not know, doing its actual job.
+        defining words a learner might not know, using the same behavior as on
+        the blog.
       </p>
     </section>
 
     <div class="prose">
       <h2>What I took away</h2>
       <p>
-        SVG animation is worth actually learning. The loading animation above is
-        the payoff: I built it after getting curious about how a show I like
-        handled its scene transitions, and it opened up a whole category of
-        things I used to reach for images or video for. The result is smaller,
-        scales cleanly, and is more fun to look at.
+        Native Web Components have worked well for isolated features like the
+        quizzes, tooltips, galleries and settings panel. Posts without those
+        components do not have to ship their JavaScript, and I have not needed a
+        framework to hold any of it together.
       </p>
       <p>
-        Image optimization turned into a recurring lesson. At various points I
-        was double-optimizing images without realizing it, or skipping it
-        entirely and wondering why pages felt slow. It is dull work, and it is
-        the difference between a photo post that loads on a train and one that
-        does not. The animated WebPs above are the reminder that not everything
-        should go through the same pipe.
+        Image handling needed more automation than I expected. The preprocessing
+        script now converts HEIC files, resizes large photos, and strips metadata
+        before Astro builds the final avif and webp versions. Before that I was
+        double-optimizing some images and skipping others entirely, then
+        wondering why some posts felt slow.
       </p>
       <p>
-        Every feature costs the reader something. I shipped things I thought were
-        fun and found they were just noise around the text, and I pulled back
-        others that turned out to be load-bearing. The settings panel exists
-        because I stopped trusting my own guess about which was which and let
-        people switch the difference off themselves.
+        Some interactive features were more distracting than useful. I removed a
+        few and made others optional through the settings panel, so the blog
+        still works as a straightforward reading experience.
       </p>
     </div>
   </article>
