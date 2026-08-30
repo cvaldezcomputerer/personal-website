@@ -74,6 +74,16 @@ type, layout, and real content.
 
 ## Commands & local dev
 
+Agents must start Astro in background mode:
+
+```sh
+astro dev --background
+```
+
+Manage that server with `astro dev status`, `astro dev logs`, and
+`astro dev stop`. The `npm run dev` command below is for an interactive human
+terminal.
+
 | Command | Action |
 | :-- | :-- |
 | `npm run dev` | Dev server at `localhost:4321` (run in a real terminal, see gotcha) |
@@ -87,15 +97,31 @@ workerd dev runtime), so every route 500s with "process is not defined". It
 works in a normal interactive terminal. To preview a build without the dev
 runtime: `npm run build`, then serve `dist/client` with any static server.
 
+## Astro documentation
+
+Full documentation: https://docs.astro.build
+
+Read the relevant official guide before changing these areas:
+
+- Routing, dynamic routes, or middleware: https://docs.astro.build/en/guides/routing/
+- Astro components: https://docs.astro.build/en/basics/astro-components/
+- Framework components: https://docs.astro.build/en/guides/framework-components/
+- Content collections: https://docs.astro.build/en/guides/content-collections/
+- Styling or Tailwind: https://docs.astro.build/en/guides/styling/
+- Internationalization: https://docs.astro.build/en/guides/internationalization/
+
 ## Where the content lives (edit these)
 
 - **Resume / About / skills / experience:** `src/data/resume.ts`. Bilingual:
   `contact` is language-neutral, the rest is `resume[lang]` (en/ja side by side).
   Phone number is deliberately omitted from the public site.
 - **UI strings (chrome):** `src/i18n/ui.ts` (`ui[lang]`). Author-written JA.
-- **Project case studies:** `src/content/projects/*.md`. Frontmatter feeds the
-  homepage cards (incl. `nameJa` / `taglineJa` / `cardImage`) and the
-  `/projects/[id]` page; the body is the write-up. Drafts need Cristian's review.
+- **Project cards:** `src/content/projects/*.md`. These files contain
+  frontmatter only, including `nameJa`, `taglineJa`, and `cardImage`.
+- **Project case studies:** bespoke pages at
+  `src/pages/projects/{takkotaco,bloggydoggy}.astro`. Their labelled pillar
+  structure is intentional. Keep claims tied to shipped work: Takko's rough ABC
+  race multiplayer is not a portfolio feature.
 - **Blog posts:** `src/content/blog/*.md` (set `draft: true` to hide). RSS at
   `/rss.xml`. Posts + full case-study bodies are English-only for now.
 - **Design tokens / global CSS:** `src/styles/global.css` (never hardcode color).
@@ -162,36 +188,10 @@ description per page. `site` must stay set in `astro.config.mjs`. The sitemap is
 auto-generated; dev/preview pages go in `NOINDEX_ROUTES` (astro.config) AND get
 a noindex meta AND go in `public/robots.txt`.
 
-## Status
-
-- **Built:** scaffold + build config; tokens + dark mode (ThemeScript);
-  self-hosted fonts; Icon / Seo / Nav / Footer; projects collection + 2 case
-  studies; blog (index, post, RSS); robots.txt, 404, sitemap, hanko favicon,
-  JSON-LD. `astro check` is 0/0/0.
-- **Homepage redesign (split sidebar):** two-column layout - sticky left
-  sidebar (クリス hanko monogram, name, role, tagline, scroll-spy TOC, socials) and a
-  scrolling right column (About, Projects with screenshots, smaller projects,
-  Experience, Skills, Education). Writing link + language/theme toggles sit in a
-  top-right bar in the content column. Inspired by brittanychiang.com, our own
-  type/color/light-default. Positioning broadened to "IT & Web Development".
-- **EN/JA i18n:** Astro i18n (`/` = en, `/ja` = ja, default not prefixed).
-  `BaseLayout` takes `lang` + `bare` (homepage supplies its own `<main>`, skips
-  the top Nav/Footer). JA scoped to homepage + chrome; inner pages stay English.
-- **Repo:** https://github.com/cvaldezcomputerer/personal-website (public,
-  `main`). Auto-deploy on push via Cloudflare Workers Builds (worker named
-  `personal-website`).
-- **LIVE** at https://cristianvaldez.jp (and `/ja/`), HTTPS, both locales 200,
-  served from Cloudflare's Tokyo edge. Custom domain attached.
-- **About photo** is the rice-planting candid (`cristian-rice-planting.jpg`),
-  zoomed 1.35x on Cristian; its green background also resolved the old
-  dark-mode headshot issue.
-- **Smaller projects** section added (Mercari Chrome extension -> published Web
-  Store listing; ZMK Totem config). Spanish (conversational) added to languages.
-
 ## TODO
 
 - [ ] **Fill in real content** - resume tweaks and real blog posts. Replace the
-  placeholder `welcome` post. (The two case studies are now written; see below.)
+  placeholder `welcome` post.
 - [ ] **Prose voice audit** - the case-study prose reads as AI-written in
   places. Two tells run through both pages: the "The benefit is X. The limit is
   Y." template repeated across every Architecture paragraph, and a constant
@@ -200,16 +200,9 @@ a noindex meta AND go in `public/robots.txt`.
   this repo (`writing-for-agents` governs agent docs only); the blog repo's
   `writing-fragments` / `writing-shape` / `writing-beats` are drafting
   processes, not audits.
-- [ ] **Screenshot upgrades (optional)** - all feature shots are real as of
-  2026-08-21, taken headlessly (Playwright, light mode, 2x DPR) from the live
-  sites, except the two the owner shot himself (Face Catch, word sets). He may
-  want to reshoot or art-direct any of them. Note: the Face Catch frames have a
-  coworker visible in the background (back of head, not identifiable). Source
-  projects live on this machine: `../dog_site/dog_SITE` = takkotaco.com,
-  `../astro/takko blog` = bloggydoggy.com (folder names are inverted; `site:`
-  in astro.config is authoritative). Playwright is installed in `dog_SITE` only,
-  and its cached Chromium is older than the bundled version, so drive it with an
-  explicit `executablePath`.
+- [ ] **Screenshot upgrades (optional)** - review the current real feature
+  shots and reshoot only with the owner's approval. Face Catch includes the
+  unidentifiable back of a coworker's head.
 - [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
   hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
   still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
@@ -226,141 +219,6 @@ a noindex meta AND go in `public/robots.txt`.
 - [ ] **`www` subdomain** (optional) - add `www.cristianvaldez.jp` as a second
   Worker custom domain (or a redirect) if wanted; apex works now.
 - [ ] **Internal pages** - `/specimen` (style guide) is noindex; keep or delete.
-- [ ] **Uncommitted:** `.claude/settings.json` (harness permission state) is
-  modified but intentionally left out of commits - decide commit vs gitignore.
-
-### Done this session (2026-08-21)
-
-Restructured both case studies around a shared new **pillar** primitive: majors
-and minors are grouped under a labelled mono header (Takko: "The classroom
-platform" / "The town record"; Bloggy: "What the reader gets" / "What keeps it
-running"). Settled in a `grilling` session first.
-
-**Honesty fixes.** Cut the "Real-time multiplayer, refereed at the edge" major
-outright: it claimed a finished feature that does not exist (the ABC race has
-rough multiplayer the owner does not want shown). The Architecture Durable
-Objects paragraph now describes infrastructure stood up to learn the shape, not
-a shipped feature; the DO/WebSockets stack chips stay. Corrected two stale
-numbers against the source repo: Takko-ben is **438** entries (was "a couple
-hundred") and the vocab DB is **51 categories across 12 groups** (was "past
-sixty categories"). Dropped the `highlights` field from `content.config.ts` and
-both project `.md` files: it was required by the schema, rendered by no
-component, and held the false multiplayer claim.
-
-**Every placeholder is gone.** The three dashed GIF tiles are replaced by real
-media, and the `.media-placeholder` CSS is deleted from `takkotaco.astro`. New
-assets: `face-catch.png` + `word-sets.png` (owner-supplied), `train-mode.png` +
-`restaurants.png` (captured from the live site), `dev-editor.png` (captured off
-the blog's local dev server). Bloggy's `check:post` major renders the script's
-real `--all` output in a tokenised `.terminal` block rather than a screenshot,
-so it stays crisp and theme-aware; its one em dash is the script's own wording,
-kept verbatim.
-
-**Content moves.** Takko: camera/mic demoted major -> minor; grammar (145 points,
-template + typed slot specs) folded into the vocab major; the town-guide minor
-merged up into the town major; new minors for teacher word sets and for
-restaurants/shrines; an ops paragraph added to Architecture (Pages -> Workers,
-the build-vs-runtime variable trap, the 1.4 MB stray-Vite-cache audit find, the
-157-deployment cleanup). Bloggy: quiz demoted major -> minor (stays live); two
-new authoring majors (the dev editor, `check:post`); new minors for reading
-settings, the floating island, and the image pipeline. The FloatingIsland port
-was skipped: 371 lines pulling in two child components and the blog's settings
-globals, so it ships text-only.
-
-**Logo swap + hero mark.** `public/logos/takkotaco.svg` and `bloggydoggy.svg`
-held each other's artwork (takkotaco had the dog, bloggydoggy the cat). Fixed by
-swapping the two files' contents, not the references, so the homepage cards and
-both case-study headers corrected at once. Case-study headers now use a new
-`size="lg"` + `bare` LogoTile variant: a 5rem mark, no chip, still left-aligned
-(centering was offered and rejected: it fights the left-aligned layout rule).
-
-**Gotcha worth keeping:** a `bare` mark has no chip backing, so a near-black
-logo vanishes in dark mode. `currentColor` alone does not fix it, because an
-`<img src="*.svg">` is a separate document and never sees the page's colour. The
-fix is to INLINE the SVG (LogoTile reads it via an `import.meta.glob('?raw')`,
-which bypasses astro:assets and so avoids the empty-box bug) and set `color` on
-the `<svg>` element itself. It must target the element, not a wrapper: each file
-carries a `color="#1f2937"` presentation attribute as the standalone-`<img>`
-fallback, and that beats an inherited colour.
-
-**Layout fix.** `.minor:nth-child(even)` reordered the text into the *narrow*
-grid track, squeezing alternating rows into a ribbon. Even rows now swap the
-track sizes too (`12rem 1fr`), with `.minor--stack` / `.minor--text` excluded.
-Added `.minor--stack` for media too dense for the side column (Takko train mode,
-Bloggy quiz). `astro check` 0/0/0, build clean, no horizontal overflow.
-
-### Done this session (2026-07-07)
-
-Filled in the 5 remaining screenshot placeholders on the two case-study pages
-with real, headless-captured shots from the live sites (Playwright, light
-mode, 2x DPR, at owner's request, as drafts he can reshoot/redirect later).
-Takko: games grid (scrolled to the card row) and worksheet maker (with a real
-category selected so the preview sheet shows illustrated words, not an empty
-page) for the majors; homepage hero and the open feedback panel for the
-minors. Bloggy: a populated post gallery (4 polaroid photos) for its one
-remaining minor. All wired through `astro:assets` `<Image>` (not raw `<img>`),
-so they get build-time webp optimization; a `.major-shot`/`.minor-shot`
-`:global()` rule replaced the old `.ph` placeholder styling in both pages.
-Assets live in `src/assets/images/{takkotaco,bloggydoggy}/`. `astro check`
-0/0/0, build clean.
-
-### Done this session (2026-07-06)
-
-Settled the case-study feature hierarchy (owner decisions: map demoted to a
-small live minor; multiplayer race folded into the games major as an honest
-"newest experiment" since it is lightly tested and the planned AWS project will
-be its expansion; inline-Explain trick approved) and replaced showcase
-placeholders with live artifacts. Takko (`takkotaco.astro`): majors are now
-games-toolkit (incl. multiplayer beat) + vocab pipeline; minors lead with the
-SVG letter system drawn live (`src/components/takkotaco/StrokeWord.astro` +
-`src/data/letter-strokes.ts`, both ported from dog_SITE; draws on scroll,
-click to replay) then the map (JapanMap, now small); train timer cut to an
-"and more" line; Takko-ben is text-only. Bloggy (`bloggydoggy.astro`): both
-majors are live demos - `bloggydoggy/LangDemo.astro` (real rice-planting
-paragraph in all 3 modes) and `bloggydoggy/QuizDemo.astro` (real quiz
-component, canned votes, One Piece question; follows the LangDemo toggle via a
-`bd-demo:lang` event, mirroring the blog). Ported `bloggydoggy/Explain.astro`
-(used inline on "testing ground" in the overview, called out in Playful
-details) and `bloggydoggy/PressToLight.astro` (4th Playful tile, photos copied
-to `src/assets/images/bloggydoggy/`, style grid now 2x2). Likes minor is
-text-only. `astro check` 0/0/0, build clean.
-
-### Done this session (2026-07-01)
-
-Rebuilt the project case studies. Moved off the shared `[slug].astro` template
-(deleted) to two bespoke pages: `src/pages/projects/takkotaco.astro` and
-`bloggydoggy.astro`. Card metadata still comes from the `projects` content
-collection; the `.md` bodies are now trimmed to frontmatter-only (a comment
-points to the `.astro` page). Each page has an "at a glance" panel (Problem / My
-role / Impact / Stack) and a features section using a **major (editorial
-+ big media) / minor (compact alternating rows)** split. (Superseded 2026-08-21:
-majors and minors are now grouped under two labelled pillars per page, and every
-placeholder tile is gone.)
-
-Two real artifacts embedded live from the source sites: Takko renders the actual
-Geolonia prefecture SVG map (`src/components/JapanMap.astro`, display-only,
-GFDL - kept `src/assets/japan-map/License.txt`, attribute Geolonia). Bloggy has a
-"Playful details" section with the ported garlic Loader (`src/components/
-bloggydoggy/{Loader,Logo}.astro`, real SVG+JS, remapped `--text`->`--color-text`
-and the dot radius to 50%) plus two animated WebPs (spinning mug, camera sticker)
-served from `public/projects/bloggydoggy/` so sharp does not strip the animation.
-
-Also: swapped the homepage card images for fresh **light-mode** screenshots
-(`src/assets/images/{takkotaco,bloggydoggy}.png`, 1280x800); fixed the JET link
-in `resume.ts` (about) and pointed the games link to `takkotaco.com/game/`;
-dropped Leaflet/shrines from the Takko write-up (map feature is the SVG origin
-map, not Leaflet); restyled the project "Visit site" CTA as a quiet underlined
-link (was a solid button). NOTE: `tsconfig.json` was NOT touched (owner asked;
-confirmed clean via git).
-
-### Done this session (2026-06-28)
-
-Homepage split-sidebar redesign + EN/JA i18n; broadened positioning; smaller
-projects + Spanish; relocated chrome controls; git repo created + pushed;
-deployed to Cloudflare Workers + custom domain live; sessions made inert
-(lruCache, no SESSION KV); fixed `npm ci` lockfile (@emnapi devDeps), deploy
-config path (`dist/client/wrangler.json`), worker-name consistency; swapped +
-zoomed the About photo; slimmed the public README (ops moved here).
 
 ## Skills
 
