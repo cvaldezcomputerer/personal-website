@@ -41,13 +41,13 @@ const glance: { label: string; value: string; href?: string }[] = [
   {
     label: 'Problem',
     value:
-      'I wanted a place to post my photography and write about my life in Japan, with room to experiment on interactive features, and without a frontend framework or off-the-shelf plugins deciding how any of it behaves.',
+      'I wanted a place to post my photography and write about my life in Japan. I also wanted room to try out interactive features without a frontend framework or off-the-shelf plugins deciding how any of it behaves.',
   },
   { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
   {
     label: 'Impact',
     value:
-      'Trilingual posts the reader controls, plus quizzes and likes on my own Workers and D1 API, all running at no cost on Cloudflare’s free tier.',
+      'Three different versions of each post that readers can swap between instantly, plus quizzes and likes on my own Workers and D1 API, all running at no cost on Cloudflare’s free tier.',
   },
 ];
 
@@ -97,7 +97,7 @@ const majorFeatures: {
     title: 'A custom editor for trilingual posts',
     body: [
       'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that parses the MDX file and gives each language, caption, and image slot its own field.',
-      'It writes back to the same .mdx file on disk. I can close the editor and keep working in the file by hand, so publishing never depends on the tool staying alive.',
+      'It writes back to the same .mdx file on disk. If I ever stop using the editor, I can still open the file and keep working on it by hand.',
     ],
     media: 'editor',
     image: editorShot,
@@ -125,13 +125,13 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Quiz component',
-    body: 'Small quizzes at the end of a post, running on my own Cloudflare Workers and D1 API. The demo below uses the production quiz component with sample data, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    body: 'Each post can end with a short quiz, powered by an API I built with Cloudflare Workers and D1. The demo below uses the production quiz component with sample data, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
     media: 'quiz',
   },
   {
     pillar: 'reader',
     title: 'Custom gallery components',
-    body: 'Some posts end in a photo gallery. I wanted it to look and behave a specific way and no generic option did it, so I built the component myself.',
+    body: 'Some posts end in a photo gallery. I could not find one that looked or behaved the way I wanted, so I built the component myself.',
     media: 'shot',
     image: galleryShot,
     alt: 'A post gallery on bloggydoggy.com: photos styled as polaroids with handwritten captions, pinned to a grid-paper scrapbook background',
@@ -144,7 +144,7 @@ const minorFeatures: {
   },
   {
     pillar: 'reader',
-    title: 'The floating island',
+    title: 'Reading controls within reach',
     body: 'The language selector and settings live in a small floating bar that can be hidden entirely from the settings panel. On a phone it sits a thumb away from where you are already holding the screen, and it disappears completely for anyone who just wants to read.',
     media: 'none',
   },
@@ -156,15 +156,15 @@ const minorFeatures: {
   },
   {
     pillar: 'authoring',
-    title: 'An image pipeline that takes what my phone gives it',
-    body: 'One script eats whatever I drop in a post folder: it converts iPhone HEIC to JPEG, caps anything over 1600px, and strips the metadata I do not want published. I run it the moment photos land, because I need the filenames before I can write the post around them. Astro handles avif and webp at build time, so the script stops where the build takes over.',
+    title: 'Preparing photos before the build',
+    body: 'An image preparation script handles the HEIC photos from my phone. It converts them to JPEG, corrects their orientation, and shrinks anything larger than 1600px. It removes the GPS data but keeps the camera, lens, and date, which I use elsewhere on the blog. Files that are already ready are skipped. Astro creates the final AVIF and WebP versions when the site builds.',
     media: 'none',
   },
 ];
 ---
 
 <BaseLayout title={d.name} description={d.tagline} type="article">
-  <article class="container--prose case">
+  <article class="container case">
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
@@ -349,20 +349,21 @@ const minorFeatures: {
       </div>
 
       <p class="style-note">
-        One more is hiding in plain sight: the dotted-underlined phrase up in
-        the overview is the blog's Explain tooltip, a component for quietly
-        defining words a learner might not know, using the same behavior as on
-        the blog.
+        The phrase with the dotted underline in the overview is an Explain
+        tooltip. I use the same component on Bloggy Doggy to define a word
+        without making the reader leave the sentence to open an English
+        dictionary.
       </p>
     </section>
 
     <div class="prose">
       <h2>What I took away</h2>
       <p>
-        Native Web Components have worked well for isolated features like the
-        quizzes, tooltips, galleries and settings panel. Posts without those
-        components do not have to ship their JavaScript, and I have not needed a
-        framework to hold any of it together.
+        Web Components have been a good fit for things that only appear on some
+        posts, like quizzes, tooltips, galleries and the settings panel. A post
+        only downloads the JavaScript for the components it actually uses, and
+        I have been able to avoid loading a whole frontend framework alongside
+        them.
       </p>
       <p>
         Image handling needed more automation than I expected. The preprocessing
@@ -382,8 +383,8 @@ const minorFeatures: {
     <section class="arch" aria-label="Architecture">
       <h2>Architecture</h2>
       <p class="arch-intro">
-        I built the interactive features with native Web Components instead of a
-        frontend framework. There is no framework anywhere in this blog.
+        I built the interactive features with native Web Components, so the
+        blog does not need a frontend framework.
       </p>
 
       <div class="arch-list">
@@ -401,9 +402,9 @@ const minorFeatures: {
             D1
           </h3>
           <p>
-            Likes and quiz data go through my own endpoints, so the quiz can
-            follow the language toggle and the likes can look like nothing else.
-            I maintain the API and its data model myself.
+            Likes and quiz data go through my own endpoints, so quizzes can
+            follow the language toggle and I can design the like button to match
+            the rest of the site. I maintain the API and its data model myself.
           </p>
         </div>
 
@@ -420,14 +421,15 @@ const minorFeatures: {
 
         <div class="arch-row">
           <h3 class="arch-head">
-            <Icon name="languages" class="arch-icon" /> A single-source
-            reading-mode system
+            <Icon name="languages" class="arch-icon" /> A reading mode system
+            with one source
           </h3>
           <p>
-            The three language modes come from one source file, not separate
-            pages or routes, so there is no second copy of a post drifting out of
-            sync. The cost is authoring time. A post is not done until it works
-            in all three.
+            At first I intended to build a translation system to handle the
+            three versions automatically. But the whole point of this feature is
+            to help learners, and I found it too valuable to be lazy about. I
+            write the English, Simple English and Japanese myself, and store all
+            three together in one source file.
           </p>
         </div>
       </div>
@@ -559,7 +561,6 @@ const minorFeatures: {
   .minor-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
     margin-top: var(--space-7);
   }
   .minor {
@@ -567,6 +568,11 @@ const minorFeatures: {
     grid-template-columns: 1fr 12rem;
     gap: var(--space-5);
     align-items: center;
+  }
+  .minor + .minor {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
   }
   /* Alternate which side the media sits on, keeping the column proportions:
      without swapping the track sizes too, the text lands in the narrow track. */

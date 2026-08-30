@@ -71,18 +71,18 @@ const majorFeatures: {
   {
     pillar: 'classroom',
     title: 'A growing classroom toolkit',
-    body: 'Around twenty-five games and classroom tools now, from flashcard and worksheet makers to word races and drawing games, all built to survive slow Chromebooks and a projector. There is no roadmap. A tool gets added when I hit a need in class, or a student asks for one. The range is deliberate. A quick vocabulary drill and a whole-class drawing game solve different classroom problems.',
+    body: 'Around twenty-five games and classroom tools now, from flashcard and worksheet makers to word races and drawing games. I built them with the technology students and teachers actually use in class in mind: slow Chromebooks and a projector. I do not have a list of features I plan to implement. I add things when I need them, when I have a cool idea, or when a fellow teacher suggests one. Sometimes I remove them right after.',
     image: gamesShot,
     alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
   },
   {
     pillar: 'classroom',
-    title: 'One vocabulary database, and how a word gets in',
+    title: 'One vocabulary database, and how I add new words quickly',
     body: [
-      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. It runs to 51 categories across 11 groups now.',
-      'What I optimized for is how fast a word goes in, because I add them on a whim mid-lesson. A new word starts as one line of text, and that is enough to be useful. Every game can use it immediately, since anything that reads out loud falls back to a browser voice until a recording exists. Nothing waits on media.',
-      'The picture and the voice get layered on after. Images run through a small pipeline. I pull candidates from free photo APIs (Pexels and Pixabay), pick the best in a local review gallery, and it is optimized to a webp with its credit saved. When a photo will not do, I use a Japanese illustration or drop in my own drawing. The voice is batch-generated with ElevenLabs in a clear teacher voice, and the script skips clips that already exist, so adding ten words and re-running only fills the ten gaps. Both are just paths in the manifest, so when I later record a word in my own voice or swap a stock photo for an illustration, it updates everywhere at once.',
-      'Grammar sits on top of the same idea, 107 points of it. A point is a template plus typed slot specs, so "I like ___" knows it wants a gerund and not a bare verb. Word classes finer than noun and verb are what keep the generated sentences usable, and they are what I got wrong on the first pass. With only loose types, random fills will happily tell a student they can eat curry in Switzerland.',
+      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. The database now covers 51 categories across 11 groups.',
+      'I tried to make adding a word as smooth as possible because otherwise I kept putting it off! A new word starts as one line of text, and that is enough to be useful. Every game can use it immediately, since anything that reads out loud falls back to a browser voice until a recording exists. I do not let having to record voice lines get in the way of getting a word finished and usable.',
+      'I add the picture and recorded voice later. Images run through a small pipeline. I pull candidates from free photo APIs (Pexels and Pixabay), pick the best in a local review gallery, and it is optimized to a webp with its credit saved. When a photo will not do, I use a Japanese illustration or drop in my own drawing. The voice is batch-generated with ElevenLabs in a clear teacher voice, and the script skips clips that already exist, so adding ten words and re-running only fills the ten gaps. Both are just paths in the manifest, so when I later record a word in my own voice or swap a stock photo for an illustration, it updates everywhere at once.',
+      'The same database also powers 107 grammar points. A point is a template plus typed slot specs, so "I like ___" knows it wants a gerund and not a bare verb. Word classes finer than noun and verb are what keep the generated sentences usable, and they are what I got wrong on the first pass. With only loose types, random fills will happily tell a student they can eat curry in Switzerland.',
     ],
     image: worksheetShot,
     alt: 'The worksheet maker: word categories and page options on the left, a live preview of a printable vocabulary sheet with illustrated drink words on the right',
@@ -91,9 +91,9 @@ const majorFeatures: {
     pillar: 'town',
     title: 'Writing the town down in English',
     body: [
-      'This did not start with games. It started because the place I live barely existed in English, and the parts that make it specific were not written down anywhere I could point to. The town guide is written by someone who lives here, and it covers the town from the perspective of somebody who works in it.',
-      'Most of my time on it has gone into the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a searchable dictionary. 438 entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is slow, and nobody profits from doing it, which is most of why I want it to exist.',
-      'From there it widens out. There are bilingual pages for the local shrines, with their history and the deity each one honors, and I want to keep going: more shrines, the seasonal festivals, the small attractions a tourism page will never bother with. I have lived and worked here since 2023, and I want the details you only pick up by being here to be readable by someone who does not speak Japanese.',
+      'This did not start with games. It started because the place I live barely existed in English, and the details that make Takko feel like Takko were not written down anywhere I could point to. The town guide is written by someone who lives here, and it covers the town from the perspective of somebody who works in it.',
+      'Most of my time on it has gone into the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a searchable dictionary. 438 entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is a slow and tedious process, but I think it is a way I can give back, in my own way, to the town that has given so much to me.',
+      'I have also started adding bilingual pages for the local shrines, with their history and the deity each one honors. I want to keep going: more shrines, the seasonal festivals, and the small attractions a tourism page will never bother with. I have lived and worked here since 2023, and I want the details you only pick up by being here to be readable by someone who does not speak Japanese.',
     ],
     image: guideShot,
     alt: 'The takkotaco.com homepage: a student-painted mural behind "Welcome to Takko Machi", with links to the English games and the town guide',
@@ -116,7 +116,7 @@ const minorFeatures: {
   {
     pillar: 'classroom',
     title: 'Games that use the camera and the mic',
-    body: 'Two games lean on the Chromebook’s own hardware, in the browser, with nothing to install. Face Catch turns on the webcam and tracks the player’s face, so a student moves their head to catch letters falling across the screen. Letter or Not listens through the microphone instead: a shape flashes up, the class shouts YES or NO, and speech recognition scores it. Both fail softly, so a refused camera permission produces an explanation on screen and the lesson keeps moving.',
+    body: 'Two games lean on the Chromebook’s own hardware, in the browser, with nothing to install. Face Catch turns on the webcam and tracks the player’s face, so a student moves their head to catch letters falling across the screen. Letter or Not listens through the microphone instead: a shape flashes up, the class shouts YES or NO, and speech recognition scores it. If a student refuses camera or microphone permission, the game explains what happened and the lesson can keep moving.',
     media: 'shot',
     image: faceCatchShot,
     alt: 'Face Catch running: a webcam view with a heart marker tracking the player’s face, a letter U falling from the left, and score, best and lives readouts above',
@@ -129,8 +129,8 @@ const minorFeatures: {
   },
   {
     pillar: 'classroom',
-    title: 'Sounds made from scratch',
-    body: 'Game sounds resolve in tiers: a recorded clip if there is one, then a generated voice, and if neither exists the games synthesize the tone themselves with the Web Audio API. Apple here is the generated voice clip the games serve. Chicken is your own browser speaking, pitched up into the range a few of my generated words landed in by accident, closer to a Mii than I intended. Press both.',
+    title: 'How the games find a voice',
+    body: 'Words use a recorded voice clip when one exists, then fall back to the browser voice so a new word works before I make its audio. Mii mode changes it into a voice that is a little silly and more fun than the normal browser voice. Apple here is the generated clip the games serve. Chicken uses that same Mii system, and it should sound a little different on every press.',
     media: 'sound',
   },
   {
@@ -152,7 +152,7 @@ const minorFeatures: {
   {
     pillar: 'town',
     title: 'The Japanese is written in, not translated',
-    body: 'Every string on the site is authored as an English and Japanese pair. Most games and tools then show both at once, side by side, and a few parts of the site swap between them on a switch. I write the Japanese myself because Google Translate does not hold up on the short instructional phrases a game runs on, and a student who has to leave the page to find out what a rule means has already stopped playing. The card here is the paired-string system on a switch.',
+    body: 'Every string on the site is authored as an English and Japanese pair. Most games and tools then show both at once, side by side, and a few parts of the site swap between them on a switch. I write the Japanese myself because Google Translate does not hold up on the short instructional phrases a game runs on, and a student who has to leave the page to find out what a rule means has already stopped playing. Try the switch on the card to see the same system working here.',
     media: 'lang',
   },
   {
@@ -166,7 +166,7 @@ const minorFeatures: {
   {
     pillar: 'town',
     title: 'Train ticket mode',
-    body: 'A toggle in the navbar turns the site into a train station. The link cards become JR tickets with a route, a fare and a serial number, the section headers become LED departure boards, and the town guide nav becomes a platform direction sign. It is pure play, and the kind of unnecessary touch that makes students want to poke around. The whole reskin rides on one data attribute flipping the theme.',
+    body: 'A toggle in the navbar turns the site into a train station. The link cards become JR tickets with a route, a fare and a serial number, the section headers become LED departure boards, and the town guide nav becomes a platform direction sign. It is kind of janky and purely for fun, but it makes me happy. I hope it makes any fellow train fans who come across it happy too.',
     media: 'shot',
     wide: true,
     image: trainShot,
@@ -182,7 +182,7 @@ const minorFeatures: {
 ---
 
 <BaseLayout title={d.name} description={d.tagline} type="article">
-  <article class="container--prose case">
+  <article class="container case">
     <a class="back" href="/#projects">Back to projects</a>
 
     <header class="case-head">
@@ -308,9 +308,9 @@ const minorFeatures: {
       }
 
       <p class="minor-more">
-        There is more in the drawer, like a train timer tuned to exactly how I
-        run class transitions and a name-writing tool built on the letter
-        system above. New tools get added when a lesson needs one.
+        I have built more than I could fit here, including a train timer tuned
+        to exactly how I run class transitions and a name-writing tool built on
+        the letter system above. New tools get added when a lesson needs one.
       </p>
     </section>
 
@@ -323,10 +323,10 @@ const minorFeatures: {
         up in front of thirty students.
       </p>
       <p>
-        The shared vocabulary database was the most useful structural decision on
-        the project. Once a word is in, it can show up in the games, the
+        The shared vocabulary database turned out to be the decision that saved
+        me the most work. Once a word is in, it can show up in the games, the
         flashcards, the worksheet maker and the dictionary without any extra
-        work, and nearly every tool since has been cheap to build because of it.
+        work. Every tool I have built since has benefited from it.
       </p>
       <p>
         Cloudflare's free tier has covered everything so far. Workers, D1, KV and
@@ -340,9 +340,10 @@ const minorFeatures: {
     <section class="arch" aria-label="Architecture">
       <h2>Architecture</h2>
       <p class="arch-intro">
-        I built the site for school Chromebooks on rural wifi, and for a hosting
-        bill I could keep paying on a teacher's salary. It is Astro deployed as
-        a Cloudflare Worker, and it has never cost me anything.
+        I built the site for school Chromebooks on rural wifi, in a way that
+        costs me almost nothing to run. It probably still would even if every
+        ALT in Japan started using it. It is Astro deployed as a Cloudflare
+        Worker, and it has never cost me anything.
       </p>
 
       <div class="arch-list">
@@ -351,9 +352,8 @@ const minorFeatures: {
             <Icon name="file-code" class="arch-icon" /> Astro, static-first
           </h3>
           <p>
-            Most pages ship as plain HTML, so there is almost nothing to
-            download and they hold up on bad wifi and old hardware. There is no
-            always-on server behind any of it.
+            Most pages ship as plain HTML, so they hold up on bad wifi and old
+            hardware. There is no always-on server behind any of it.
           </p>
         </div>
 
@@ -393,8 +393,8 @@ const minorFeatures: {
           <p>
             D1 (SQLite at the edge) backs the leaderboards and feedback; KV
             holds sessions. Both sit close to the people using them and both
-            stay inside the free tier. D1 is young and does not want heavy write
-            traffic, which would matter for a product; at current classroom
+            stay inside the free tier. D1 has limits on heavy write traffic,
+            which would matter for a product; at current classroom
             traffic, a class of thirty submitting scores is nowhere near that
             ceiling.
           </p>
@@ -407,9 +407,9 @@ const minorFeatures: {
           <p>
             Every game and tool that touches vocab reads from the same source,
             so a word I add during third period is in the flashcards, the
-            worksheet maker and the dictionary by fourth. The tradeoff is that a
-            schema change touches every game and tool at once, so I spent a long
-            time on the structure up front.
+            worksheet maker and the dictionary by fourth. If I change how the
+            vocabulary is structured, I also have to update every game and tool
+            that uses it.
           </p>
         </div>
 
@@ -418,8 +418,8 @@ const minorFeatures: {
             <Icon name="triangle-alert" class="arch-icon" /> Production issues
           </h3>
           <p>
-            The site started on Cloudflare Pages and is Workers-only now, and
-            two things from that move stuck. Build-time variables and runtime
+            The site started on Cloudflare Pages and is Workers-only now. Two
+            production problems were especially hard to spot. Build-time variables and runtime
             secrets live in different dashboard panels, and putting a build-time
             one in the runtime panel fails silently: the build passes, the
             deploy passes, and the feature renders its fallback in production
@@ -548,7 +548,6 @@ const minorFeatures: {
   .minor-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
     margin-top: var(--space-7);
   }
   .minor {
@@ -556,6 +555,11 @@ const minorFeatures: {
     grid-template-columns: 1fr 12rem;
     gap: var(--space-5);
     align-items: center;
+  }
+  .minor + .minor {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
   }
   /* Alternate which side the media sits on, keeping the column proportions:
      without swapping the track sizes too, the text lands in the narrow track. */

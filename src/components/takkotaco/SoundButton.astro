@@ -6,10 +6,9 @@
  * tone themselves with the Web Audio API.
  *
  * Apple plays the clip takkotaco.com actually serves, copied from its
- * audio/vocab folder. Chicken is the browser's own SpeechSynthesis voice with
- * pitch and rate pushed into Mii range, so the two can be heard back to back;
- * the site does not do that, it is a demo effect. It falls back to the real
- * chicken clip where speech synthesis is unavailable. The bars are decorative
+ * audio/vocab folder. Chicken uses the same randomized local voice, pitch and
+ * rate selection as TakkoTaco's Mii mode. It falls back to the real chicken
+ * clip where speech synthesis is unavailable. The bars are decorative
  * feedback, not a real analyser.
  */
 const WORDS = [
@@ -34,8 +33,8 @@ const WORDS = [
     </div>
   </div>
   <figcaption>
-    Live: apple is the clip the games serve, chicken is your browser's own voice
-    pitched into Mii range.
+    Live: apple uses the recorded clip. Chicken picks a new Mii-style browser
+    voice each time.
   </figcaption>
 </figure>
 
@@ -43,6 +42,33 @@ const WORDS = [
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const speech = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  let voices: SpeechSynthesisVoice[] = [];
+
+  const preferredVoices = [
+    /samantha/i, /karen/i, /moira/i, /tessa/i, /victoria/i,
+    /fiona/i, /serena/i, /allison/i, /ava/i, /susan/i, /daniel/i,
+  ];
+  const loadVoices = () => {
+    if (speech) voices = speech.getVoices();
+  };
+  function pick<T>(items: T[]): T | undefined {
+    return items[Math.floor(Math.random() * items.length)];
+  }
+  const randomBetween = (min: number, max: number) =>
+    min + Math.random() * (max - min);
+  const miiVoicePool = () => {
+    const english = voices.filter((voice) => voice.lang.toLowerCase().startsWith('en'));
+    const base = english.length ? english : voices;
+    const local = base.filter((voice) => voice.localService);
+    const available = local.length ? local : base;
+    const preferred = available.filter((voice) =>
+      preferredVoices.some((pattern) => pattern.test(voice.name)),
+    );
+    return preferred.length ? preferred : available;
+  };
+
+  loadVoices();
+  speech?.addEventListener('voiceschanged', loadVoices);
 
   document.querySelectorAll<HTMLElement>('.sfx-demo').forEach((demo) => {
     let current: HTMLAudioElement | null = null;
@@ -85,11 +111,14 @@ const WORDS = [
           return;
         }
 
-        // Mii range: pitch is capped at 2, and the words land better fast.
+        if (!voices.length) loadVoices();
         const line = new SpeechSynthesisUtterance(say);
         line.lang = 'en-US';
-        line.pitch = 2;
-        line.rate = 1.3;
+        // Keep the character without hitting the browser's squeaky pitch limit.
+        line.pitch = randomBetween(1.25, 1.7);
+        line.rate = randomBetween(1.1, 1.35);
+        const voice = pick(miiVoicePool());
+        if (voice) line.voice = voice;
         line.addEventListener('start', () => {
           if (active === line) start();
         });
