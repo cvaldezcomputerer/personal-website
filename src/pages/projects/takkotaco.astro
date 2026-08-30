@@ -138,6 +138,7 @@ const minorFeatures: {
     title: 'Word sets a teacher can build',
     body: 'Teachers sign in with Google and build their own word sets, which then feed any tool or game on the site. A set is just a name and a list of words, so a unit’s vocabulary becomes a worksheet, a flashcard round, and a race without retyping it three times. Sign-in is hand-rolled against Google OAuth, with the session held in KV.',
     media: 'shot',
+    wide: true,
     image: wordSetsShot,
     alt: 'The My Word Sets page: two saved sets, "4th grade" and "Unit 4", each showing its word chips and bilingual edit and delete buttons',
   },
@@ -160,6 +161,7 @@ const minorFeatures: {
     title: 'Places worth going, written up properly',
     body: 'Nineteen restaurants and the local shrines, each with its own bilingual page: what to order, what the room is like, what the shrine is there for. The restaurant list opens on a map of the town with every place pinned and filtered by what kind of food it is.',
     media: 'shot',
+    wide: true,
     image: restaurantsShot,
     alt: 'The Takko restaurants page: a hanging wooden shop sign reading Restaurants, an English introduction to eating in town, and a map of Takko with fourteen numbered pins colour-coded by category',
   },
@@ -281,6 +283,7 @@ const minorFeatures: {
                     class:list={[
                       'minor',
                       { 'minor--live': ['letters', 'map', 'lang', 'sound'].includes(f.media) },
+                      { 'minor--map': f.media === 'map' },
                       { 'minor--text': f.media === 'none' || (f.media === 'shot' && !f.image) },
                       { 'minor--stack': f.wide === true },
                     ]}
@@ -298,7 +301,12 @@ const minorFeatures: {
                       </div>
                     )}
                     {f.media === 'shot' && f.image && (
-                      <Image class="minor-shot" src={f.image} alt={f.alt ?? ''} width={f.wide ? 1200 : 520} />
+                      <Image
+                        class="minor-shot"
+                        src={f.image}
+                        alt={f.alt ?? ''}
+                        width={f.wide ? Math.min(f.image.width, 1200) : 520}
+                      />
                     )}
                   </article>
                 ))}
@@ -439,6 +447,7 @@ const minorFeatures: {
 
 <style>
   .case { padding-block: var(--space-7) var(--space-9); }
+  .case > .prose { max-width: 64ch; }
 
   .back {
     display: inline-block;
@@ -573,6 +582,7 @@ const minorFeatures: {
   /* Live artifacts (letters, map) earn a wider media column than screenshots. */
   .minor--live { grid-template-columns: 1fr 17rem; }
   .minor--live:nth-child(even):not(.minor--stack) { grid-template-columns: 17rem 1fr; }
+  .minor--map:nth-child(even):not(.minor--stack) { grid-template-columns: minmax(20rem, 24rem) 1fr; }
   .minor--text { grid-template-columns: 1fr; }
 
   /* A screenshot too dense for the side column: full width under the text. */

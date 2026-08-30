@@ -49,7 +49,7 @@ Spend disproportionate effort here. Be aggressive, be creative, refuse to give u
 9. **Differential loop.** The same component through `/` and `/ja/`, or the takkotaco case study against the bloggydoggy one, then diff the rendered HTML. Two near-identical pages where one works is the cheapest bisect available.
 10. **Bisection.** If it appeared between two known-good states, automate the check and `git bisect run` it.
 
-**Playwright is not a dependency here**, though it has been run through `npx` for screenshots. For a DOM-level bug, prefer asserting on the built HTML: this site ships almost no client JS, so the markup in `dist/client/` is very nearly the whole truth. If you genuinely need to drive a browser, say so and ask first. Never take a screenshot without asking.
+**Playwright is not a dependency here**, though it has been run through `npx` for screenshots. For a DOM-level bug, prefer asserting on the built HTML: this site ships almost no client JS, so the markup in `dist/client/` is very nearly the whole truth.
 
 Build the right feedback loop and the bug is 90% fixed.
 

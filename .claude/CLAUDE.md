@@ -246,4 +246,3 @@ load them by name when they do not.
 - **Never commit for the owner.** He writes his own commit messages and runs git
   himself. A brief note that it is a good time to commit is fine. (Exception this
   setup phase: he asked me to create + push the repo.)
-- **Never take screenshots without asking first.**
