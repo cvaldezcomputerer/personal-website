@@ -21,6 +21,7 @@
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import Icon from '~/components/Icon.astro';
 import ProjectCaseHeader from '~/components/ProjectCaseHeader.astro';
 import Loader from '~/components/bloggydoggy/Loader.astro';
 import LangDemo from '~/components/bloggydoggy/LangDemo.astro';
@@ -40,13 +41,13 @@ const glance: { label: string; value: string; href?: string }[] = [
   {
     label: 'Problem',
     value:
-      'I wanted a place to post my photography and write, and a testing ground for interactive features, without a heavy frontend framework or off-the-shelf plugins deciding how any of it behaves.',
+      'I wanted a place to post my photography and write about my life in Japan. I also wanted room to try out interactive features without a frontend framework or off-the-shelf plugins deciding how any of it behaves.',
   },
   { label: 'My role', value: 'Solo designer and developer, 2024 to present.' },
   {
     label: 'Impact',
     value:
-      'Reader-controlled trilingual posts, plus quizzes and likes on an API I own, all running at no cost on Cloudflare’s free tier.',
+      'Three different versions of each post that readers can swap between instantly, plus quizzes and likes on my own Workers and D1 API, all running at no cost on Cloudflare’s free tier.',
   },
 ];
 
@@ -88,26 +89,26 @@ const majorFeatures: {
   {
     pillar: 'reader',
     title: 'Reader-controlled language modes',
-    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. The reader picks how they want to read instead of the choice being baked into the URL, which fits my actual audience: a mix of native speakers, learners, and Japanese friends. The mode you choose sticks as you read. The demo here is the real mechanism running on a paragraph from an actual post; try the toggle.',
+    body: 'Every post is readable in normal English, Simple English, and Japanese, switched from a toggle in the navbar. Readers can switch modes without leaving the page, and their selection persists between posts. The blog is read by native English speakers, English learners, and Japanese friends. The demo below uses the production language-switching component on a paragraph from a published post; try the toggle.',
     media: 'lang',
   },
   {
     pillar: 'authoring',
-    title: 'An editor for the shape a post actually has',
+    title: 'A custom editor for trilingual posts',
     body: [
-      'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that reads a post apart into its real structure and gives each slot a field.',
-      'It writes back to the same .mdx file on disk, so the editor is a view over the source rather than a database that owns it. Nothing is locked in: I can close the editor and keep working in the file by hand, which matters because I did not want a tool I would have to keep maintaining to be able to publish.',
+      'A post is not one block of text. It is three language versions of every paragraph, plus captions, plus an image order, and editing that as raw MDX means counting slots by eye and getting it wrong. So the blog has its own editor, dev-only, that parses the MDX file and gives each language, caption, and image slot its own field.',
+      'It writes back to the same .mdx file on disk. If I ever stop using the editor, I can still open the file and keep working on it by hand.',
     ],
     media: 'editor',
     image: editorShot,
-    alt: 'The dev editor open on a real post: each block labelled by type and id, with separate EN, JA and SIMPLE text fields side by side for a paragraph and a heading',
+    alt: 'The dev editor open on a post: each block labelled by type and id, with separate EN, JA and SIMPLE text fields side by side for a paragraph and a heading',
   },
   {
     pillar: 'authoring',
     title: 'A validator that gets stricter when you publish',
     body: [
-      'Before a post goes out, one script checks it: empty translation slots, missing frontmatter, images that are unreferenced or oversized or still carrying GPS coordinates from my phone, mojibake, and placeholder text I left behind.',
-      'The part I like is the severity rule. While a post is still set to draft, incompleteness is a warning, because a draft is supposed to be unfinished and nagging me about it is noise. The moment I remove the draft flag, the same findings become errors and the script exits non-zero. One flag changes what the tool is for: a drafting companion, then a publish gate.',
+      'Before publishing, I run a validation script that checks for empty translation slots, missing frontmatter, oversized or unused images, GPS metadata off my phone, mojibake, and leftover placeholder text.',
+      'Draft posts report incomplete content as warnings. Once the draft flag is removed, the same findings become errors and the command exits non-zero. This lets me work on incomplete posts without constant failures while still preventing them from being published accidentally.',
     ],
     media: 'checkpost',
   },
@@ -124,13 +125,13 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Quiz component',
-    body: 'Small quizzes backed by my own Cloudflare Workers and D1 API rather than a third-party embed. Because I own the endpoint, the quiz behaves exactly how I designed it. This one is the real component fed sample data instead of the live API, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
+    body: 'Each post can end with a short quiz, powered by an API I built with Cloudflare Workers and D1. The demo below uses the production quiz component with sample data, and it follows the language toggle above, the same way every quiz on the blog follows the navbar.',
     media: 'quiz',
   },
   {
     pillar: 'reader',
     title: 'Custom gallery components',
-    body: 'Some posts end in a photo gallery. I wanted it to look and behave a specific way and no generic option did it, so I built the component myself.',
+    body: 'Some posts end in a photo gallery. I could not find one that looked or behaved the way I wanted, so I built the component myself.',
     media: 'shot',
     image: galleryShot,
     alt: 'A post gallery on bloggydoggy.com: photos styled as polaroids with handwritten captions, pinned to a grid-paper scrapbook background',
@@ -138,32 +139,32 @@ const minorFeatures: {
   {
     pillar: 'reader',
     title: 'Reading settings that stay put',
-    body: 'Text size, a dark theme, and an option to stop highlighting defined words: all stored in localStorage and applied as classes on the root element before first paint, so nothing flashes on load. The definition-highlight switch exists because the feature that helps a learner is clutter to everyone else.',
+    body: 'Text size, a dark theme, and an option to stop highlighting defined words. All three are stored in localStorage and applied as classes on the root element before first paint, so nothing flashes on load. The highlight switch is there because the underlining that helps a learner is clutter to everyone else.',
     media: 'none',
   },
   {
     pillar: 'reader',
-    title: 'The floating island',
-    body: 'The language selector and settings live in a small floating bar rather than a fixed header, and it can be hidden entirely from the settings panel. Readers who want the controls have them a thumb away; readers who do not can make them go away.',
+    title: 'Reading controls within reach',
+    body: 'The language selector and settings live in a small floating bar that can be hidden entirely from the settings panel. On a phone it sits a thumb away from where you are already holding the screen, and it disappears completely for anyone who just wants to read.',
     media: 'none',
   },
   {
     pillar: 'reader',
     title: 'Likes',
-    body: 'Also my own API rather than a plugin. Nothing complicated, but it behaves exactly how I want and costs nothing to run.',
+    body: 'A like button on the same API. One counter, one endpoint, and no third-party script loading on every post to support it.',
     media: 'none',
   },
   {
     pillar: 'authoring',
-    title: 'An image pipeline that takes what my phone gives it',
-    body: 'One script eats whatever I drop in a post folder: it converts iPhone HEIC to JPEG, caps anything over 1600px, and strips the metadata I do not want published. I run it the moment photos land, because I need the filenames before I can write the post around them. Astro handles avif and webp at build time, so the script stops where the build takes over.',
+    title: 'Preparing photos before the build',
+    body: 'An image preparation script handles the HEIC photos from my phone. It converts them to JPEG, corrects their orientation, and shrinks anything larger than 1600px. It removes the GPS data but keeps the camera, lens, and date, which I use elsewhere on the blog. Files that are already ready are skipped. Astro creates the final AVIF and WebP versions when the site builds.',
     media: 'none',
   },
 ];
 ---
 
 <BaseLayout title={d.name} description={d.tagline} type="article">
-  <article class="container--prose case">
+  <article class="container case">
     <a class="back" href="/#projects">Back to projects</a>
 
     <ProjectCaseHeader
@@ -203,54 +204,20 @@ const minorFeatures: {
     <div class="prose">
       <h2>Overview</h2>
       <p>
-        Bloggy Doggy started as a place to express myself: somewhere to post my
-        photography and write about what I'm doing, and it has grown into
-        something I add to steadily. It doubles as a{' '}
-        <Explain meaning="a place to try new ideas">testing ground</Explain>, a
-        place to build interactive features I have no specific reason to build
-        elsewhere, and to work out what actually makes a reading experience
-        good.
-      </p>
-
-      <h2>Architecture</h2>
-      <p>
-        A custom blog with no frontend framework, built to stay light and free to
-        run.
-      </p>
-      <p>
-        <strong>Astro, deployed as a Cloudflare Worker.</strong> Posts ship as
-        static HTML, so pages stay fast and cheap to serve, the same priority
-        that runs through everything I build.
-      </p>
-      <p>
-        <strong>A REST API I own, on Workers and D1.</strong> I used it for likes
-        and quiz data instead of reaching for plugins. The benefit is that these
-        features behave exactly the way I designed them rather than however a
-        plugin author decided. The limit is that I maintain it myself, which is
-        the price of that control.
-      </p>
-      <p>
-        <strong>Native Web Components, no framework.</strong> Each interactive
-        piece is a custom element. The benefit is a tiny JavaScript footprint and
-        markup that is easy to reason about. The limit is that it is more manual
-        than a framework: I write the wiring a library would otherwise hand me.
-      </p>
-      <p>
-        <strong>A single-source reading-mode system.</strong> The three language
-        modes come from one source file rather than separate pages or routes. The
-        benefit is that there is no duplicated content to keep in sync. The limit
-        is that every post has to be authored in all three modes to feel
-        complete.
+        I started Bloggy Doggy to publish my photography and write about my life
+        in Japan. It also became a{' '}
+        <Explain meaning="a place to try new ideas">testing ground</Explain> for
+        reading modes and small interactive features. Posts can be read in
+        English, Simple English, or Japanese, and the blog has its own quizzes,
+        galleries, reading settings, and animations.
       </p>
     </div>
 
-    <section class="features" aria-label="Favorite parts">
-      <h2>Favorite parts</h2>
-
+    <section class="features" aria-label="Features">
       {
         pillars.map((pillar) => (
           <div class="pillar">
-            <h3 class="pillar-head">{pillar.label}</h3>
+            <h2 class="pillar-head">{pillar.label}</h2>
 
             <div class="major-list">
               {majorFeatures
@@ -258,7 +225,7 @@ const minorFeatures: {
                 .map((f) => (
                   <article class="major">
                     <div class="major-text">
-                      <h4>{f.title}</h4>
+                      <h3>{f.title}</h3>
                       {(Array.isArray(f.body) ? f.body : [f.body]).map((para) => (
                         <p>{para}</p>
                       ))}
@@ -286,7 +253,7 @@ const minorFeatures: {
                     ]}
                   >
                     <div class="minor-text">
-                      <h5>{f.title}</h5>
+                      <h4>{f.title}</h4>
                       <p>{f.body}</p>
                     </div>
                     {f.media === 'quiz' && <QuizDemo />}
@@ -314,9 +281,9 @@ const minorFeatures: {
             <Loader size={64} stepMs={620} />
           </div>
           <figcaption>
-            <strong>Loading animation.</strong> Real SVG: garlic shapes morph to
-            dots and back around the logo. I built it after getting curious about
-            the scene transitions in a show I like.
+            <strong>Loading animation.</strong> Garlic shapes morph to dots and
+            back around the logo, drawn as SVG. I built it after getting curious
+            about the scene transitions in a show I like.
           </figcaption>
         </figure>
 
@@ -367,40 +334,97 @@ const minorFeatures: {
       </div>
 
       <p class="style-note">
-        One more is hiding in plain sight: the dotted-underlined phrase up in
-        the overview is the blog's Explain tooltip, a component for quietly
-        defining words a learner might not know, doing its actual job.
+        The phrase with the dotted underline in the overview is an Explain
+        tooltip. I use the same component on Bloggy Doggy to define a word
+        without making the reader leave the sentence to open an English
+        dictionary.
       </p>
     </section>
 
     <div class="prose">
       <h2>What I took away</h2>
       <p>
-        SVG animation is worth actually learning. The loading animation above is
-        the payoff: I built it after getting curious about how a show I like
-        handled its scene transitions, and it opened up a whole category of
-        things I used to reach for images or video for. The result is smaller,
-        scales cleanly, and is more fun to look at.
+        Web Components have been a good fit for things that only appear on some
+        posts, like quizzes, tooltips, galleries and the settings panel. A post
+        only downloads the JavaScript for the components it actually uses, and
+        I have been able to avoid loading a whole frontend framework alongside
+        them.
       </p>
       <p>
-        Image optimization turned into a recurring lesson. At various points I
-        was double-optimizing images without realizing it, or skipping it
-        entirely and wondering why pages felt slow. Getting the pipeline right is
-        not glamorous, but it genuinely matters, and the animated WebPs above are
-        a reminder that not everything should go through the same pipe.
+        Image handling needed more automation than I expected. The preprocessing
+        script now converts HEIC files, resizes large photos, and strips metadata
+        before Astro builds the final avif and webp versions. Before that I was
+        double-optimizing some images and skipping others entirely, then
+        wondering why some posts felt slow.
       </p>
       <p>
-        There is a constant tension between adding a feature and overloading the
-        page. I shipped things I thought were fun that just cluttered the reading
-        experience, and I pulled back others that mattered more than I expected.
-        The blog is better for having gone through that cycle a few times.
+        Some interactive features were more distracting than useful. I removed a
+        few and made others optional through the settings panel, so the blog
+        still works as a straightforward reading experience.
       </p>
     </div>
+
+    <!-- Architecture last: one row per piece of the stack -->
+    <section class="arch" aria-label="Architecture">
+      <h2>Architecture</h2>
+      <p class="arch-intro">
+        I built the interactive features with native Web Components, so the
+        blog does not need a frontend framework.
+      </p>
+
+      <div class="arch-list">
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="file-code" class="arch-icon" /> Astro, deployed as a
+            Cloudflare Worker
+          </h3>
+          <p>Posts ship as static HTML, so pages stay fast and cheap to serve.</p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="database" class="arch-icon" /> A REST API on Workers and
+            D1
+          </h3>
+          <p>
+            Likes and quiz data go through my own endpoints, so quizzes can
+            follow the language toggle and I can design the like button to match
+            the rest of the site. I maintain the API and its data model myself.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="puzzle" class="arch-icon" /> Web Components for every
+            interactive piece
+          </h3>
+          <p>
+            Each one is a custom element, so a post with no interactive parts
+            ships no JavaScript at all.
+          </p>
+        </div>
+
+        <div class="arch-row">
+          <h3 class="arch-head">
+            <Icon name="languages" class="arch-icon" /> A reading mode system
+            with one source
+          </h3>
+          <p>
+            At first I intended to build a translation system to handle the
+            three versions automatically. But the whole point of this feature is
+            to help learners, and I found it too valuable to be lazy about. I
+            write the English, Simple English and Japanese myself, and store all
+            three together in one source file.
+          </p>
+        </div>
+      </div>
+    </section>
   </article>
 </BaseLayout>
 
 <style>
   .case { padding-block: var(--space-7) var(--space-9); }
+  .case > .prose { max-width: 64ch; }
 
   .back {
     display: inline-block;
@@ -459,7 +483,6 @@ const minorFeatures: {
   }
 
   .features { margin: var(--space-8) 0; }
-  .features > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-6); }
 
   /* Pillar: the one grouping primitive both case studies share. */
   .pillar + .pillar { margin-top: var(--space-9); }
@@ -469,13 +492,13 @@ const minorFeatures: {
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
+    margin: 0 0 var(--space-6);
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
   .major-list { display: flex; flex-direction: column; gap: var(--space-8); }
-  .major-text h4 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .major-text h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
   .major-text p { color: var(--color-text-muted); max-width: 64ch; margin-bottom: var(--space-4); }
 
   /* Real check:post output. Scrolls on its own so the page never does. */
@@ -497,7 +520,6 @@ const minorFeatures: {
   .minor-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
     margin-top: var(--space-7);
   }
   .minor {
@@ -506,13 +528,18 @@ const minorFeatures: {
     gap: var(--space-5);
     align-items: center;
   }
+  .minor + .minor {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
   /* Alternate which side the media sits on, keeping the column proportions:
      without swapping the track sizes too, the text lands in the narrow track. */
   .minor:nth-child(even):not(.minor--stack):not(.minor--text) {
     grid-template-columns: 12rem 1fr;
   }
   .minor:nth-child(even):not(.minor--stack):not(.minor--text) .minor-text { order: 2; }
-  .minor-text h5 { font-size: var(--text-base); margin-bottom: var(--space-2); }
+  .minor-text h4 { font-size: var(--text-base); margin-bottom: var(--space-2); }
   .minor-text p { color: var(--color-text-muted); max-width: 52ch; }
   .minor--text { grid-template-columns: 1fr; }
 
@@ -558,11 +585,45 @@ const minorFeatures: {
     margin-top: var(--space-5);
   }
 
+  /* Architecture: same contained-panel primitive as the glance list up top. */
+  .arch { margin: var(--space-9) 0 0; }
+  .arch > h2 { font-size: var(--text-2xl); margin-bottom: var(--space-3); }
+  .arch-intro {
+    color: var(--color-text-muted);
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+  }
+  .arch-list {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .arch-row {
+    padding: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .arch-row:first-child { border-top: 0; }
+  .arch-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: var(--text-base);
+    margin-bottom: var(--space-2);
+  }
+  /* Icon.astro renders the svg in its own scope, so reach it with :global. */
+  .arch-head :global(.arch-icon) {
+    color: var(--color-accent);
+    font-size: 1.15em;
+  }
+  .arch-row p { color: var(--color-text-muted); max-width: 64ch; }
+
   @media (max-width: 720px) {
     .style-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .glance-row { grid-template-columns: 1fr; gap: var(--space-1); }
+    .arch-row { padding: var(--space-4); }
     .minor { grid-template-columns: 1fr; }
     .minor:nth-child(even) .minor-text { order: 0; }
     .minor:nth-child(even):not(.minor--stack):not(.minor--text) { grid-template-columns: 1fr; }

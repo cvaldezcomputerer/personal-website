@@ -1,11 +1,11 @@
 ---
 /**
  * LangToggle (live) - a miniature of the bilingual system that runs all of
- * takkotaco.com. On the real site every visible string is wrapped in one <T>
- * component with an `en` slot and a `ja` slot, and a single switch flips the
- * whole page between them. This is that mechanism in one card: the same paired
- * strings, the same in-place swap. Without JS the English shows and nothing
- * breaks.
+ * takkotaco.com. Every visible string there is authored as an English/Japanese
+ * pair; most games and tools render both at once, side by side, and some parts
+ * of the site swap between them on a switch. This card shows the pairs on that
+ * switch, since taking turns is what reads in a small demo. Without JS the
+ * English shows and nothing breaks.
  */
 ---
 
@@ -30,7 +30,7 @@
     </p>
   </div>
 
-  <figcaption>Live: one component wraps every string; the real site flips on this switch.</figcaption>
+  <figcaption>Live: every string is written as a pair. On the site most of them show side by side.</figcaption>
 </figure>
 
 <script>

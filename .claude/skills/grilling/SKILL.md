@@ -36,4 +36,4 @@ This is a **credibility site**, not a playground: a resume up front for people d
 - Does it reuse the existing layout primitive, or introduce a new one? The design rules say pick one and repeat it, so a new primitive needs a reason.
 - Is it a new route? Then it needs its own title and description, and either a place in the sitemap or noindex in all three places (`NOINDEX_ROUTES`, the meta tag, `robots.txt`).
 - Does it stay static? Anything needing a request at runtime moves the adapter's output from `dist/client/` to `dist/server/` and changes the deploy config path. Worth knowing before, not after.
-- Does it need a real asset (screenshot, photo, diagram)? Real assets only, and screenshots need the owner's say-so first.
+- Does it need a real asset (screenshot, photo, diagram)? Real assets only.
