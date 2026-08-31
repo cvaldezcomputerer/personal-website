@@ -1,0 +1,108 @@
+---
+/** Shared compact lockup used at the top of each project case study. */
+import Icon from '~/components/Icon.astro';
+import LogoTile from '~/components/LogoTile.astro';
+
+interface Props {
+  name: string;
+  tagline: string;
+  meta?: string;
+  logo: string;
+  url?: string;
+  repo?: string;
+}
+
+const { name, tagline, meta, logo, url, repo } = Astro.props;
+---
+
+<header class="case-head">
+  <div class="lockup-row">
+    <LogoTile src={logo} alt={`${name} logo`} size="lg" bare href={url} class="case-logo" />
+    <div class="heading">
+      <h1>{name}</h1>
+      {meta && <p class="eyebrow">{meta}</p>}
+    </div>
+  </div>
+
+  <div class="summary-row">
+    <p class="tagline">{tagline}</p>
+    <div class="actions">
+      {
+        url && (
+          <a class="visit-link" href={url} target="_blank" rel="noopener">
+            <Icon name="external-link" /> Visit site
+          </a>
+        )
+      }
+      {
+        repo && (
+          <a class="btn btn--secondary" href={repo} target="_blank" rel="noopener">
+            <Icon name="github" /> Code
+          </a>
+        )
+      }
+    </div>
+  </div>
+</header>
+
+<style>
+  .case-head { margin-bottom: var(--space-6); }
+  .lockup-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .heading { min-width: 0; }
+  h1 {
+    font-size: var(--text-3xl);
+    margin: 0;
+  }
+  .eyebrow {
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+  .summary-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-5);
+    align-items: end;
+    margin-top: var(--space-5);
+  }
+  .tagline {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-4);
+  }
+  .visit-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1px;
+    transition: color var(--transition-base), border-color var(--transition-base);
+  }
+  .visit-link :global(svg) { width: 0.9em; height: 0.9em; flex: none; }
+  .visit-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
+
+  @media (max-width: 640px) {
+    .summary-row { grid-template-columns: 1fr; align-items: start; }
+    .actions { justify-content: flex-start; }
+  }
+
+  @media (max-width: 440px) {
+    .lockup-row { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+  }
+</style>

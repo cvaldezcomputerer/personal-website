@@ -21,8 +21,7 @@
 import { getEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import Icon from '~/components/Icon.astro';
-import LogoTile from '~/components/LogoTile.astro';
+import ProjectCaseHeader from '~/components/ProjectCaseHeader.astro';
 import Loader from '~/components/bloggydoggy/Loader.astro';
 import LangDemo from '~/components/bloggydoggy/LangDemo.astro';
 import QuizDemo from '~/components/bloggydoggy/QuizDemo.astro';
@@ -167,29 +166,14 @@ const minorFeatures: {
   <article class="container--prose case">
     <a class="back" href="/#projects">Back to projects</a>
 
-    <header class="case-head">
-      <LogoTile src={bloggydoggyLogo} alt={`${d.name} logo`} size="lg" bare href={d.url} class="case-logo" />
-      {meta && <p class="eyebrow">{meta}</p>}
-      <h1>{d.name}</h1>
-      <p class="tagline">{d.tagline}</p>
-
-      <div class="actions">
-        {
-          d.url && (
-            <a class="visit-link" href={d.url} target="_blank" rel="noopener">
-              <Icon name="external-link" /> Visit site
-            </a>
-          )
-        }
-        {
-          d.repo && (
-            <a class="btn btn--secondary" href={d.repo} target="_blank" rel="noopener">
-              <Icon name="github" /> Code
-            </a>
-          )
-        }
-      </div>
-    </header>
+    <ProjectCaseHeader
+      name={d.name}
+      tagline={d.tagline}
+      meta={meta}
+      logo={bloggydoggyLogo}
+      url={d.url}
+      repo={d.repo}
+    />
 
     <dl class="glance">
       {
@@ -427,33 +411,6 @@ const minorFeatures: {
   }
   .back:hover { color: var(--color-accent); }
   .back::before { content: '\2190'; margin-right: 0.4em; }
-
-  .case-head { margin-bottom: var(--space-6); }
-  :global(.case-logo) { margin-bottom: var(--space-5); }
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--color-accent);
-    margin-bottom: var(--space-2);
-  }
-  .case-head h1 { font-size: var(--text-3xl); margin-bottom: var(--space-3); }
-  .tagline { color: var(--color-text-muted); font-size: var(--text-lg); }
-
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-top: var(--space-5); }
-  .visit-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35em;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 1px;
-    transition: color var(--transition-base), border-color var(--transition-base);
-  }
-  .visit-link svg { width: 0.9em; height: 0.9em; flex: none; }
-  .visit-link:hover { color: var(--color-accent); border-color: var(--color-accent); }
 
   .glance {
     margin: var(--space-6) 0 var(--space-8);
