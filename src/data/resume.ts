@@ -19,6 +19,7 @@ const ccnaLogo = '/logos/ccna.png';
 const jlptLogo = '/logos/jlpt.svg';
 const awsLogo = '/logos/aws.svg';
 const csusbLogo = '/logos/csusb.svg';
+const oroLogo = '/logos/oro.png';
 
 export interface Contact {
   name: string;
@@ -136,6 +137,17 @@ export const resume: Record<Lang, ResumeContent> = {
         bullets: [
           'Maintain and administer the National AJET WordPress site for a 5,000+ member organization.',
           'Troubleshoot hosting and reliability issues and coordinate technical changes with the AJET board.',
+        ],
+      },
+      {
+        role: 'Intern - JET Programme Internship',
+        org: 'oRo Miyazaki',
+        start: 'Sep 7',
+        end: 'Sep 11, 2026',
+        logo: oroLogo,
+        orgUrl: 'https://www.oro-miyazaki.com/',
+        bullets: [
+          'Selected through the JET Programme internship placement and assigned to oRo Miyazaki, where I wrote a requirements spec, implemented against it, and presented the result to the team.',
         ],
       },
       {
@@ -265,6 +277,17 @@ export const resume: Record<Lang, ResumeContent> = {
         bullets: [
           '会員5,000名以上の組織であるNational AJETのWordPressサイトを保守・運用しています。',
           'ホスティングや安定性の問題に対応し、技術的な変更をAJET理事会と調整しています。',
+        ],
+      },
+      {
+        role: 'インターン（JETプログラム）',
+        org: '株式会社オロ宮崎',
+        start: '2026年9月7日',
+        end: '9月11日',
+        logo: oroLogo,
+        orgUrl: 'https://www.oro-miyazaki.com/',
+        bullets: [
+          'JETプログラムのインターンシップ制度で選ばれ、株式会社オロ宮崎に配属されました。要件定義書を作成し、それに沿って実装し、成果をチームの皆さんに発表しました。',
         ],
       },
       {
