@@ -2,8 +2,8 @@
 /**
  * Seo - canonical + Open Graph + Twitter + optional JSON-LD. Rendered inside
  * <head> by BaseLayout, so every page inherits it. Needs `site` set in
- * astro.config (it is). Pass `image` (path or absolute) for share cards once OG
- * images exist; omitted for now means no image tags rather than a broken URL.
+ * astro.config (it is). BaseLayout passes public/og/default.png unless a page
+ * supplies its own `image` (path or absolute); with no image, no image tags.
  */
 interface Props {
   title: string;

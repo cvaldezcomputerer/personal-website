@@ -36,7 +36,8 @@ interface Props {
 const {
   title = 'Cristian Valdez',
   description = 'Cristian Valdez - IT and web development, based in Aomori, Japan.',
-  image,
+  // Default share card (1200x630). Pages can pass their own `image`.
+  image = '/og/default.png',
   noindex = false,
   type = 'website',
   jsonLd,
@@ -60,7 +61,6 @@ const fullTitle = title === 'Cristian Valdez' ? title : `${title} - Cristian Val
     <Seo title={fullTitle} description={description} image={image} noindex={noindex} type={type} jsonLd={jsonLd} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title="Cristian Valdez - Writing" href="/rss.xml" />
     {
       hreflang && (
         <>

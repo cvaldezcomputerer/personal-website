@@ -37,6 +37,8 @@ export interface AboutContent {
   town: string;
   /** Display location (region), shown after the town. */
   location: string;
+  /** Relocation line shown under the location in the sidebar. */
+  relocation: string;
   /** The About section, one string per paragraph. */
   paragraphs: string[];
   /** Alt text for the About photo (matches the page language). */
@@ -49,7 +51,8 @@ export interface ExperienceItem {
   role: string;
   org: string;
   start: string;
-  end: string;
+  /** Omit for a short stint whose `start` already says it all. */
+  end?: string;
   bullets: string[];
   /** Optional org logo path (under /logos), shown as a small chip. */
   logo?: string;
@@ -101,15 +104,16 @@ export const contact: Contact = {
 export const resume: Record<Lang, ResumeContent> = {
   en: {
     about: {
-      role: 'IT & Web Development',
-      tagline: 'I build and tinker across tech, from infrastructure to the web.',
+      role: 'Cloud & Network Support',
+      tagline: 'I troubleshoot systems, from the network up to the cloud, and build things to understand them better.',
       town: 'Takko',
       location: 'Aomori, Japan',
+      relocation: 'Open to relocating anywhere in Japan',
       imageAlt: 'Cristian planting rice with local students at a community rice-planting class in Aomori',
       summary:
-        'Cristian Valdez is an American IT professional based in Aomori, Japan, working across infrastructure, support, and web development. Business-level Japanese (JLPT N2).',
+        'Cristian Valdez troubleshoots systems from the network up to the cloud. American IT professional based in Aomori, Japan, CCNA certified, with business-level Japanese (JLPT N2). Open to relocating anywhere in Japan.',
       paragraphs: [
-        "I'm an American living in Aomori, Japan. I came over in 2023 to teach on the <a href=\"https://jetprogramme.org\">JET Programme</a>, but I never stopped making things and messing with tech on the side. Personal projects have been a constant the whole time, and I keep learning whatever a project needs or whatever I happen to be curious about. As my time on JET comes to a close, I'm looking to move back into tech here in Japan, whether that's IT support, infrastructure, or web development.",
+        "I'm an American living in Aomori, Japan. I came over in 2023 to teach on the <a href=\"https://jetprogramme.org\">JET Programme</a>, but I never stopped making things and messing with tech on the side. Personal projects have been a constant the whole time, and I keep learning whatever a project needs or whatever I happen to be curious about. As my time on JET comes to a close, I'm looking to move back into tech here in Japan, in IT support, networking, or cloud infrastructure, and I'm open to relocating anywhere in the country.",
         "Mostly I just build things for myself: whatever would actually be useful, or whatever I want to understand better. That might be <a href=\"https://takkotaco.com/game/\">tools for the classroom</a>, a place to <a href=\"https://bloggydoggy.com\">express myself</a>, or a quick fix for something annoying, like a Chrome extension or a custom keyboard. I like being able to customize and tinker, and I'm not satisfied until I get something exactly how I want it.",
         "Outside of work you'll usually find me lifting or running, taking part in local groups like the badminton team or ceramics club, and helping out at community events like the <a href=\"https://bloggydoggy.com/blog/3d-printing-culture-festival/\">culture festival</a>, or running my own, like <a href=\"https://bloggydoggy.com/blog/pasta-time/\">cooking classes</a> and a hands-on electronics class.",
       ],
@@ -142,8 +146,7 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         role: 'Intern - JET Programme Internship',
         org: 'oRo Miyazaki',
-        start: 'Sep 7',
-        end: 'Sep 11, 2026',
+        start: 'Sep 2026 (1 week)',
         logo: oroLogo,
         orgUrl: 'https://www.oro-miyazaki.com/',
         bullets: [
@@ -193,7 +196,7 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         title: 'AWS Solutions Architect Associate (SAA-C03)',
         org: 'Amazon Web Services',
-        date: 'Target 2026',
+        date: 'Target Nov 2026',
         inProgress: true,
         logo: awsLogo,
         orgUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
@@ -241,15 +244,16 @@ export const resume: Record<Lang, ResumeContent> = {
 
   ja: {
     about: {
-      role: 'IT・Web開発',
-      tagline: 'インフラからウェブまで、いろいろ作ったり、いじったりしています。',
+      role: 'クラウド・ネットワークサポート',
+      tagline: 'ネットワークからクラウドまで、システムのトラブルを解決しています。仕組みを理解するために、自分でもいろいろ作っています。',
       town: '田子町',
       location: '青森県、日本',
+      relocation: '日本国内どこでも転居可能',
       imageAlt: '青森の地域の田植え教室で、地元の生徒たちと田植えをするクリスチャン',
       summary:
-        'Cristian Valdez（クリスチャン・バルデス）は、青森県を拠点に、インフラ・サポート・ウェブ開発まで幅広く手がけるアメリカ出身のITエンジニアです。ビジネスレベルの日本語（JLPT N2）。',
+        'Cristian Valdez（クリスチャン・バルデス）は、ネットワークからクラウドまで、システムのトラブル解決に取り組むアメリカ出身のITエンジニアです。青森県在住、CCNA取得、ビジネスレベルの日本語（JLPT N2）。日本国内であればどこへでも転居可能です。',
       paragraphs: [
-        '青森県に住んでいる、アメリカ出身です。2023年に<a href="https://jetprogramme.org">JETプログラム</a>の外国語指導助手として来日しましたが、その後もものづくりや技術いじりの手を止めることはありませんでした。個人プロジェクトはずっと続けてきていて、プロジェクトに必要なことや、その時々で気になったことを学び続けています。JETでの任期が終わりに近づいた今、日本でITの世界へ戻ろうと考えていて、ITサポート、インフラ、ウェブ開発まで幅広く視野に入れています。',
+        '青森県に住んでいる、アメリカ出身です。2023年に<a href="https://jetprogramme.org">JETプログラム</a>の外国語指導助手として来日しましたが、その後もものづくりや技術いじりの手を止めることはありませんでした。個人プロジェクトはずっと続けてきていて、プロジェクトに必要なことや、その時々で気になったことを学び続けています。JETでの任期が終わりに近づいた今、日本でITの世界へ戻ろうと考えていて、ITサポート、ネットワーク、クラウドインフラの分野を目指しています。日本国内であれば、どこへでも転居できます。',
         '基本的には、自分のために物を作っています。実際に役立つものだったり、もっと深く理解したいと思ったものだったりです。たとえば<a href="https://takkotaco.com/game/">授業で使えるツール</a>だったり、<a href="https://bloggydoggy.com">自分を表現する場所</a>だったり、Chrome拡張機能や自作キーボードのように、ちょっとした面倒を解決するものだったりします。自分好みにカスタマイズしたり、いじったりするのが好きで、思い通りになるまで納得できない性格です。',
         '仕事以外では、筋トレやランニングをしたり、地元のサークル（バドミントンや陶芸）に参加したりしています。<a href="https://bloggydoggy.com/blog/3d-printing-culture-festival/">文化祭</a>のような地域のイベントを手伝ったり、<a href="https://bloggydoggy.com/blog/pasta-time/">料理教室</a>や電子工作の体験教室のように、自分でイベントを開くこともあります。',
       ],
@@ -282,8 +286,7 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         role: 'インターン（JETプログラム）',
         org: '株式会社オロ宮崎',
-        start: '2026年9月7日',
-        end: '9月11日',
+        start: '2026年9月（1週間）',
         logo: oroLogo,
         orgUrl: 'https://www.oro-miyazaki.com/',
         bullets: [
@@ -333,7 +336,7 @@ export const resume: Record<Lang, ResumeContent> = {
       {
         title: 'AWS Solutions Architect Associate（SAA-C03）',
         org: 'Amazon Web Services',
-        date: '2026年取得予定',
+        date: '2026年11月取得予定',
         inProgress: true,
         logo: awsLogo,
         orgUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/',

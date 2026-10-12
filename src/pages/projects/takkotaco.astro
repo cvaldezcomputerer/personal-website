@@ -73,16 +73,16 @@ const majorFeatures: {
     title: 'A growing classroom toolkit',
     body: 'Around twenty-five games and classroom tools now, from flashcard and worksheet makers to word races and drawing games. I built them with the technology students and teachers actually use in class in mind: slow Chromebooks and a projector. I do not have a list of features I plan to implement. I add things when I need them, when I have a cool idea, or when a fellow teacher suggests one. Sometimes I remove them right after.',
     image: gamesShot,
-    alt: 'The takkotaco.com games page: a grid of classroom game cards including School Map Game, How Many?, Letter Flip Game, Face Catch, and Odd One Out',
+    alt: 'The takkotaco.com games page: a grid of classroom game cards including Directions Game, How Many?, Letter Flip Game, Face Catch, Letter or Not?, and Anarika\'s Star Hunt, each with topic tags, a Play button and a share button',
   },
   {
     pillar: 'classroom',
     title: 'One vocabulary database, and how I add new words quickly',
     body: [
-      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. The database now covers 51 categories across 11 groups.',
+      'Every game and tool that touches vocabulary reads from one typed database. A word is a single entry: the English, the Japanese readings I will accept as correct, and an optional kanji spelling. Two generated manifests map that word to its picture and its voice clip, so a flashcard game, a printable worksheet, the review challenge, and the dictionary all pull from the same source and never drift apart. The database now covers 53 categories across 12 groups.',
       'I tried to make adding a word as smooth as possible because otherwise I kept putting it off! A new word starts as one line of text, and that is enough to be useful. Every game can use it immediately, since anything that reads out loud falls back to a browser voice until a recording exists. I do not let having to record voice lines get in the way of getting a word finished and usable.',
       'I add the picture and recorded voice later. Images run through a small pipeline. I pull candidates from free photo APIs (Pexels and Pixabay), pick the best in a local review gallery, and it is optimized to a webp with its credit saved. When a photo will not do, I use a Japanese illustration or drop in my own drawing. The voice is batch-generated with ElevenLabs in a clear teacher voice, and the script skips clips that already exist, so adding ten words and re-running only fills the ten gaps. Both are just paths in the manifest, so when I later record a word in my own voice or swap a stock photo for an illustration, it updates everywhere at once.',
-      'The same database also powers 107 grammar points. A point is a template plus typed slot specs, so "I like ___" knows it wants a gerund and not a bare verb. Word classes finer than noun and verb are what keep the generated sentences usable, and they are what I got wrong on the first pass. With only loose types, random fills will happily tell a student they can eat curry in Switzerland.',
+      'The same database also powers 124 grammar points. A point is a template plus typed slot specs, so "I like ___" knows it wants a gerund and not a bare verb. Word classes finer than noun and verb are what keep the generated sentences usable, and they are what I got wrong on the first pass. With only loose types, random fills will happily tell a student they can eat curry in Switzerland.',
     ],
     image: worksheetShot,
     alt: 'The worksheet maker: word categories and page options on the left, a live preview of a printable vocabulary sheet with illustrated drink words on the right',
@@ -92,7 +92,7 @@ const majorFeatures: {
     title: 'Writing the town down in English',
     body: [
       'This did not start with games. It started because the place I live barely existed in English, and the details that make Takko feel like Takko were not written down anywhere I could point to. The town guide is written by someone who lives here, and it covers the town from the perspective of somebody who works in it.',
-      'Most of my time on it has gone into the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I have been transcribing it from a local book,「南部田子の言葉」, into a searchable dictionary. 438 entries so far, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It is a slow and tedious process, but I think it is a way I can give back, in my own way, to the town that has given so much to me.',
+      'Most of my time on it has gone into the dialect. Takko-ben is the local way of speaking, and it is fading with the older generation. I transcribed a local book,「南部田子の言葉」, cover to cover into a searchable dictionary: 1,810 entries, each with the dialect spelling, a standard-Japanese reading, and an English gloss, plus a word of the day on the front page. It was a slow and tedious process, but it was a way I could give back, in my own way, to the town that has given so much to me.',
       'I have also started adding bilingual pages for the local shrines, with their history and the deity each one honors. I want to keep going: more shrines, the seasonal festivals, and the small attractions a tourism page will never bother with. I have lived and worked here since 2023, and I want the details you only pick up by being here to be readable by someone who does not speak Japanese.',
     ],
     image: guideShot,
@@ -302,8 +302,9 @@ const minorFeatures: {
 
       <p class="minor-more">
         I have built more than I could fit here, including a train timer tuned
-        to exactly how I run class transitions and a name-writing tool built on
-        the letter system above. New tools get added when a lesson needs one.
+        to exactly how I run class transitions, a typing game with an
+        on-screen keyboard guide, and a name-writing tool built on the letter
+        system above. New tools get added when a lesson needs one.
       </p>
     </section>
 
@@ -352,15 +353,19 @@ const minorFeatures: {
 
         <div class="arch-row">
           <h3 class="arch-head">
-            <Icon name="box" class="arch-icon" /> Durable Objects, stood up but not finished
+            <Icon name="box" class="arch-icon" /> Durable Objects for live class games
           </h3>
           <p>
-            There is a separate Worker deployed for real-time rooms, where each
-            room is one Durable Object holding the state and talking to players
-            over WebSockets. Only the ABC race uses it so far and it is rough
-            enough that I do not put it in front of a class yet. I built it to
-            work with one-object-per-room state on something small before I try
-            it on the larger real-time project I have planned.
+            Real-time games run on their own Workers, routed under
+            takkotaco.com, where each room is one Durable Object holding the
+            game state and talking to every device over WebSockets. The first
+            real use is a Kahoot-style class quiz: the projector hosts,
+            students join from their tablets with a room code, and the room
+            keeps the answer to itself until the reveal. Room state lives in
+            the object's storage, so a restart mid-question does not lose the
+            game. It went in front of a class of about thirty for the first
+            time in October 2026, and it stays marked work in progress while I
+            fix what that class turned up.
           </p>
         </div>
 
@@ -416,7 +421,7 @@ const minorFeatures: {
             secrets live in different dashboard panels, and putting a build-time
             one in the runtime panel fails silently: the build passes, the
             deploy passes, and the feature renders its fallback in production
-            while working fine locally. Then an audit this August turned up 31
+            while working fine locally. Then an audit in August 2026 turned up 31
             stray files, 1.4 MB of Vite dev-toolbar bundles, that had been
             shipping to production from inside <code>public/</code>, invisible
             to git but not to the build. Retiring the old Pages project was its

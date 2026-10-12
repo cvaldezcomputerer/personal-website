@@ -47,7 +47,7 @@ const navItems = [
   { id: 'credentials', label: t.nav.credentials },
 ];
 
-const homeHref = lang === 'en' ? '/' : '/ja';
+const homeHref = lang === 'en' ? '/' : '/ja/';
 const year = new Date().getFullYear();
 
 const personLd = {
@@ -56,7 +56,7 @@ const personLd = {
   name: contact.name,
   jobTitle: c.about.role,
   email: `mailto:${contact.email}`,
-  url: `https://cristianvaldez.jp${lang === 'en' ? '' : '/ja'}`,
+  url: `https://cristianvaldez.jp${lang === 'en' ? '/' : '/ja/'}`,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Takko',
@@ -73,7 +73,7 @@ const personLd = {
   title={contact.name}
   description={c.about.summary}
   jsonLd={personLd}
-  hreflang={{ en: 'https://cristianvaldez.jp/', ja: 'https://cristianvaldez.jp/ja' }}
+  hreflang={{ en: 'https://cristianvaldez.jp/', ja: 'https://cristianvaldez.jp/ja/' }}
 >
   <div class="layout container--page">
     <header class="sidebar">
@@ -85,7 +85,11 @@ const personLd = {
           <p class="tagline">{c.about.tagline}</p>
           <p class="loc">
             <Icon name="garlic" class="garlic" />
-            <span class="loc-town">{c.about.town}</span>, {c.about.location}
+            <span><span class="loc-town">{c.about.town}</span>, {c.about.location}</span>
+          </p>
+          <p class="loc loc--move">
+            <Icon name="map-pin" />
+            {c.about.relocation}
           </p>
         </div>
 
@@ -113,9 +117,8 @@ const personLd = {
 
     <main id="main" class="content">
       <div class="topbar no-print">
-        <a class="writing-link" href="/blog">{t.nav.writing} <Icon name="arrow-up-right" /></a>
         <div class="toggles">
-          <LanguageToggle lang={lang} enHref="/" jaHref="/ja" label={t.toggleLang} />
+          <LanguageToggle lang={lang} enHref="/" jaHref="/ja/" label={t.toggleLang} />
           <ThemeToggle label={t.toggleTheme} />
         </div>
       </div>
@@ -140,7 +143,7 @@ const personLd = {
               const tagline = lang === 'ja' && p.data.taglineJa ? p.data.taglineJa : p.data.tagline;
               return (
                 <li>
-                  <a class="project-card" href={`/projects/${p.id}`}>
+                  <a class="project-card" href={`/projects/${p.id}/`}>
                     {p.data.cardImage && (
                       <div class="project-thumb">
                         <Image src={p.data.cardImage} alt={`Screenshot of ${name}`} width={520} />
@@ -210,7 +213,7 @@ const personLd = {
                     <p class="entry-org">{job.org}</p>
                   </div>
                   <p class="entry-dates">
-                    {job.start} - {job.end}
+                    {job.end ? `${job.start} - ${job.end}` : job.start}
                   </p>
                 </div>
                 <ul class="bullets" role="list">
@@ -340,7 +343,7 @@ const personLd = {
     max-width: 32ch;
   }
   .loc {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: var(--space-2);
     color: var(--color-text-muted);
@@ -348,6 +351,7 @@ const personLd = {
     margin-top: var(--space-4);
   }
   .loc :global(svg) { color: var(--color-accent); }
+  .loc--move { margin-top: var(--space-2); }
   .loc-town {
     display: inline-flex;
     align-items: center;
@@ -391,17 +395,6 @@ const personLd = {
     border-color: var(--color-border-strong);
   }
 
-  .writing-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-decoration: none;
-  }
-  .writing-link:hover { color: var(--color-accent); }
-  .writing-link :global(svg) { font-size: 0.9em; }
   .toggles {
     display: flex;
     align-items: center;
@@ -420,16 +413,13 @@ const personLd = {
     .content { padding-block: var(--space-8); }
   }
 
-  /* Page controls (Writing + language + theme), top-right of the content. */
+  /* Page controls (language + theme), top-right of the content. */
   .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--space-4);
     margin-bottom: calc(var(--space-8) * -1 + var(--space-5));
-  }
-  @media (min-width: 64rem) {
-    .topbar { justify-content: flex-end; gap: var(--space-5); }
   }
   .section { scroll-margin-top: var(--space-5); }
   .section-title {

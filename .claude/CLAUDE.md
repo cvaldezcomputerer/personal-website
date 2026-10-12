@@ -120,10 +120,17 @@ Read the relevant official guide before changing these areas:
   frontmatter only, including `nameJa`, `taglineJa`, and `cardImage`.
 - **Project case studies:** bespoke pages at
   `src/pages/projects/{takkotaco,bloggydoggy}.astro`. Their labelled pillar
-  structure is intentional. Keep claims tied to shipped work: Takko's rough ABC
-  race multiplayer is not a portfolio feature.
-- **Blog posts:** `src/content/blog/*.md` (set `draft: true` to hide). RSS at
-  `/rss.xml`. Posts + full case-study bodies are English-only for now.
+  structure is intentional. Keep claims tied to shipped work: Takko's ABC race
+  multiplayer is not a portfolio feature, and its live class quiz (Kabloo, a
+  placeholder name) stays the Durable Objects architecture row, unnamed, until
+  it launches. Re-verify counts (games, dialect entries, grammar points) against
+  the takkotaco repo before editing.
+- **Blog: hidden** (Oct 2026, the owner is not writing for now). Routes are
+  `src/pages/_blog/` and `src/pages/_rss.xml.ts`; the underscore makes Astro
+  skip them. Posts live in `src/content/blog/`. To unhide: drop the
+  underscores, restore the Writing links (homepage topbar, `Nav.astro`, 404)
+  and the RSS `<link>` in `BaseLayout.astro`, and replace the placeholder
+  `welcome` post. Posts + full case-study bodies are English-only for now.
 - **Design tokens / global CSS:** `src/styles/global.css` (never hardcode color).
 - **Homepage:** `src/components/Home.astro` (split-sidebar, rendered by
   `src/pages/index.astro` en + `src/pages/ja/index.astro` ja).
@@ -183,15 +190,16 @@ always this.
 ## SEO
 
 Every page renders through a layout that includes `src/components/Seo.astro`
-(canonical, Open Graph, Twitter, JSON-LD Person schema). Set a unique title +
+(canonical, Open Graph, Twitter, JSON-LD Person schema). The default share card
+`public/og/default.png` repeats the headline, tagline, and photo as pixels, so
+regenerate it when those change. Write internal links with a trailing slash
+(`/projects/x/`, `/ja/`): the Worker 307-redirects the bare form. Set a unique title +
 description per page. `site` must stay set in `astro.config.mjs`. The sitemap is
 auto-generated; dev/preview pages go in `NOINDEX_ROUTES` (astro.config) AND get
 a noindex meta AND go in `public/robots.txt`.
 
 ## TODO
 
-- [ ] **Fill in real content** - resume tweaks and real blog posts. Replace the
-  placeholder `welcome` post.
 - [ ] **Prose voice audit** - the case-study prose reads as AI-written in
   places. Two tells run through both pages: the "The benefit is X. The limit is
   Y." template repeated across every Architecture paragraph, and a constant
@@ -203,12 +211,9 @@ a noindex meta AND go in `public/robots.txt`.
 - [ ] **Screenshot upgrades (optional)** - review the current real feature
   shots and reshoot only with the owner's approval. Face Catch includes the
   unidentifiable back of a coworker's head.
-- [ ] **Regenerate `public/favicon.ico`** - the SVG favicon is the new クリス
-  hanko, but the legacy `.ico` fallback (auto-requested at `/favicon.ico`) is
-  still the old green CV tile. Rasterize the hanko to a multi-size `.ico` (sharp /
-  ImageMagick) so old browsers match.
-- [ ] **OG share image** - branded 1200x630 `public/og/default.png` via sharp;
-  `Seo.astro` already emits image tags when an `image` is passed. Wire a default.
+- [ ] **AWS SAA result** - exam due late Oct / early Nov 2026. On a pass, flip
+  the credential in `resume.ts` (drop `inProgress`, add the Credly link) and
+  update the headline / OG image if the positioning changes.
 - [ ] **Accessibility sweep + Lighthouse** - landmarks, heading order, contrast,
   focus, labels. Full Lighthouse run against the deployed site.
 - [ ] **Print styles for the new homepage** - the split-sidebar home dropped
