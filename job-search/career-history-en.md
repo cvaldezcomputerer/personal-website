@@ -65,6 +65,7 @@ Duties:
 
 - Over 1,000 visits on a typical school day (October 2026), about 90% from Japan and mostly from school Chromebooks
 - Real-time multiplayer classroom games with WebSocket game rooms on Durable Objects. Stack: TypeScript, Astro, Cloudflare Workers, D1, KV, automatic deploys on push to main
+- Every page in English and Japanese, with the Japanese prepared in advance and kept simple for kids, so students do not have to rely on Google Translate
 - Town guide with 19 restaurants and 4 local shrines, and a 1,810-entry dictionary of the local dialect, transcribed from a local book
 - A school web filter blocked the game server's workers.dev address and broke a class mid-lesson. Fixed it by routing the game servers through the site's own domain.
 - Open game rooms kept their servers awake all night and used up the free plan's daily limit. Traced it with Cloudflare usage data and moved the rooms to the WebSocket hibernation API.
