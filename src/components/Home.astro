@@ -97,21 +97,35 @@ const personLd = {
           <SectionNav items={navItems} ariaLabel={t.nav.about} />
         </div>
 
-        <ul class="socials sidebar-foot no-print" role="list">
-          <li>
-            <a href={contact.github} aria-label="GitHub" target="_blank" rel="me noopener">
-              <Icon name="github" />
-            </a>
-          </li>
-          <li>
-            <a href={contact.linkedin} aria-label="LinkedIn" target="_blank" rel="me noopener">
-              <Icon name="linkedin" />
-            </a>
-          </li>
-          <li>
-            <a href={`mailto:${contact.email}`} aria-label="Email"><Icon name="mail" /></a>
-          </li>
-        </ul>
+        <div class="sidebar-foot no-print">
+          {c.downloads.length > 0 && (
+            <ul class="downloads" role="list">
+              {c.downloads.map((d) => (
+                <li>
+                  <a href={d.href} target="_blank" rel="noopener">
+                    <Icon name="download" />
+                    <span>{d.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          <ul class="socials" role="list">
+            <li>
+              <a href={contact.github} aria-label="GitHub" target="_blank" rel="me noopener">
+                <Icon name="github" />
+              </a>
+            </li>
+            <li>
+              <a href={contact.linkedin} aria-label="LinkedIn" target="_blank" rel="me noopener">
+                <Icon name="linkedin" />
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${contact.email}`} aria-label="Email"><Icon name="mail" /></a>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
 
@@ -373,6 +387,29 @@ const personLd = {
   @media (min-width: 64rem) {
     .sidebar-foot { margin-top: auto; }
   }
+
+  .downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+  .downloads a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 40px;
+    padding-inline: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition-fast) ease;
+  }
+  .downloads a :global(svg) { color: var(--color-accent); }
+  .downloads a:hover { border-color: var(--color-border-strong); }
 
   .socials {
     display: flex;

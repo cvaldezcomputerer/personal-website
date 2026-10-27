@@ -86,12 +86,23 @@ export interface OtherProject {
   stack: string[];
 }
 
+/**
+ * A downloadable resume PDF, shown in the sidebar. Files live in public/files
+ * and are exported from the Google Drive originals (see job-search/README.md),
+ * with private details (phone, street address, birthday, photo) left out.
+ */
+export interface DownloadLink {
+  label: string;
+  href: string;
+}
+
 export interface ResumeContent {
   about: AboutContent;
   experience: ExperienceItem[];
   skills: SkillGroup[];
   credentials: Credential[];
   otherProjects: OtherProject[];
+  downloads: DownloadLink[];
 }
 
 export const contact: Contact = {
@@ -240,6 +251,7 @@ export const resume: Record<Lang, ResumeContent> = {
         stack: ['ZMK', 'Zephyr', 'Devicetree'],
       },
     ],
+    downloads: [{ label: 'Resume (PDF)', href: '/files/cristian-valdez-resume.pdf' }],
   },
 
   ja: {
@@ -379,6 +391,12 @@ export const resume: Record<Lang, ResumeContent> = {
         url: 'https://github.com/cvaldezcomputerer/zmk-config',
         stack: ['ZMK', 'Zephyr', 'Devicetree'],
       },
+    ],
+    // The 履歴書 goes first once its reduced PDF is exported:
+    // { label: '履歴書（PDF）', href: '/files/cristian-valdez-rirekisho.pdf' },
+    downloads: [
+      { label: '職務経歴書（PDF）', href: '/files/cristian-valdez-shokumu-keirekisho.pdf' },
+      { label: '英文レジュメ（PDF）', href: '/files/cristian-valdez-resume.pdf' },
     ],
   },
 };
