@@ -63,16 +63,11 @@ Duties:
 
 2024 to present. Built and run alone.
 
-- Real-time multiplayer classroom games built on Cloudflare Workers and Durable Objects with WebSocket game rooms
 - Over 1,000 visits on a typical school day (October 2026), about 90% from Japan and mostly from school Chromebooks
-- Stack: TypeScript, Astro, Cloudflare Workers, D1, KV, Durable Objects, automatic deploys on push to main
-- Diagnosed a school web filter that blocked the game server's workers.dev address and broke a class mid-lesson. Fixed it by routing the game servers through the site's own domain.
-- Found that open game rooms kept their servers awake all night and used up the free plan's daily limit. Traced it with Cloudflare usage data and moved the rooms to the WebSocket hibernation API, with room state in storage and timers as alarms.
-- Classroom games also use the Chromebook's webcam (face tracking) and microphone (speech recognition) in the browser, with nothing to install
-- English guide to the town, written by a resident: 19 restaurants and 4 local shrines with their own bilingual pages, and a town map with every restaurant pinned and filtered by type of food
-- Transcribed a local dialect book (「南部田子の言葉」) into a searchable Takko-ben dictionary of 1,810 entries, each with a standard Japanese reading and an English gloss
-- All site text written by me in both English and Japanese, not machine-translated
-- "Where are you from?" visitor map on a Worker and D1 that stores a salted hash instead of the visitor's IP address
+- Real-time multiplayer classroom games with WebSocket game rooms on Durable Objects. Stack: TypeScript, Astro, Cloudflare Workers, D1, KV, automatic deploys on push to main
+- Town guide with 19 restaurants and 4 local shrines, and a 1,810-entry dictionary of the local dialect, transcribed from a local book
+- A school web filter blocked the game server's workers.dev address and broke a class mid-lesson. Fixed it by routing the game servers through the site's own domain.
+- Open game rooms kept their servers awake all night and used up the free plan's daily limit. Traced it with Cloudflare usage data and moved the rooms to the WebSocket hibernation API.
 
 ### bloggydoggy.com, multilingual blog
 
