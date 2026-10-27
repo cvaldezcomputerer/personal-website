@@ -1,13 +1,24 @@
 # Job search documents
 
 Backup of the resume documents for the 2026 job search, plus what is left to
-do. Not used by the site build. This repo is public, so these copies leave out
+do. Not used by the site build. The Google Drive folder is the source of
+truth; these copies only exist in case it is lost. This repo is public, so these copies leave out
 private details (phone, street address, birthday, photo). The full versions
 live in the Google Drive folder "Job Applications 2026 (Resumes)":
 
 - `Resume-reworked` (Google Doc): English resume
 - `Career History (職務経歴書) – Cristian Valdez – Draft EN` (Google Doc)
 - `rirekisho.docx`: full 履歴書 on the 厚労省 form
+- `Where my resume lives (update checklist)` (Google Doc): every place to
+  update after a change
+
+## Places to update after a change
+
+- cristianvaldez.jp: `src/data/resume.ts` (EN and JA), later the resume PDFs,
+  and `public/og/default.png` if the headline changes
+- this `job-search/` folder (only after big changes)
+- LinkedIn
+- Daijob
 
 | File | What it is |
 | --- | --- |

@@ -9,7 +9,7 @@ Cristian Valdez
 
 ## Career Summary
 
-IT support technician turned English teacher, now returning to IT with a focus on cloud and network infrastructure. At California State University, San Bernardino I spent two years managing macOS lab computers with JAMF and resolving hardware, OS and account issues. Since 2023 I have worked in Japan on the JET Programme in a Japanese-language workplace. Alongside that job I run the website of National AJET (5,000+ members) as volunteer webmaster, and I built and operate takkotaco.com, a real-time classroom game platform on Cloudflare Workers that students use in class every school day. I hold the CCNA and JLPT N2, and I am taking the AWS Solutions Architect Associate exam in November 2026.
+IT support technician turned English teacher, now returning to IT with a focus on cloud and network infrastructure. At California State University, San Bernardino I spent two years managing macOS lab computers with JAMF, resolving hardware issues, and assisting university staff with various IT tasks and problems. Since 2023 I have worked in Japan on the JET Programme in a Japanese-language workplace. Alongside that job I run the website of National AJET (5,000+ members) as volunteer webmaster, and I built and operate takkotaco.com, an English study website and town guide on Cloudflare that is used by students and teachers across Japan every school day. I hold the CCNA and JLPT N2, and I am taking the AWS Solutions Architect Associate exam in November 2026.
 
 ## Work History
 
@@ -20,30 +20,28 @@ Assistant Language Teacher (ALT), full-time contract
 
 Duties:
 
-- Team-teach English at 3 public schools, about 250 students in total
+- Team-teach English at 3 public schools
 - Plan lessons and make teaching materials together with Japanese teachers
 - Help run school events and English activities
 - Work, attend meetings and coordinate with staff in Japanese every day
 
 Results:
 
-- Built takkotaco.com to replace paper activities with live class games (see Personal Projects). It is now used in my classes and by teachers across Japan, who find it through ALTopedia, an activity-sharing site for ALTs where I post it.
+- Built takkotaco.com, an English guide to Takko plus classroom games and tools (see Personal Projects). It is now used in my classes and by teachers across Japan.
 
 ### National AJET (Association for Japan Exchange and Teaching)
 
 **April 2025 to present**
 Webmaster (volunteer)
 
-National AJET is the national support organization for JET participants, with 5,000+ members. I am responsible for its WordPress website.
+National AJET is the national support organization for JET participants, with 5,000+ members. I am responsible for its WordPress website and backend.
 
 Results:
 
-- Overhauled the whole site, including the changes below
-- Fixed security problems on the site
-- Set up regular backups, which the site did not have before
-- Fixed outgoing email from the site
-- Removed unused and overlapping plugins
-- Moved scattered page styles into one shared stylesheet so the site looks consistent and is easier to change
+- Security: found and removed an active hack (a hidden job that reinstalled a malicious plugin every hour), took leaked files off the public web, changed the leaked passwords and keys, and locked down server and admin access on ajet.net and connect.ajet.net
+- Cleanup and speed: removed over 60% of the plugins and over 10 unused domains and databases, cut the site from 13 GB to 2 GB, and cut page load time from about 4 seconds to about 1
+- Reliability: set up backups, stopped intermittent 500 errors, and fixed outgoing email so the newsletter works again
+- Design and content: built a shared design system in the block editor, moved all custom CSS into one stylesheet, and rebuilt the homepage and mobile menu
 - Coordinate technical changes with the AJET board
 
 ### California State University, San Bernardino, IT Department
@@ -61,16 +59,20 @@ Duties:
 
 ## Personal Projects
 
-### takkotaco.com, English learning site for Takko Town
+### takkotaco.com, English town guide and classroom platform for Takko
 
-Built and run alone.
+2024 to present. Built and run alone.
 
-- Real-time multiplayer class games, including a class race and a Kahoot-style live quiz, built on Cloudflare Workers and Durable Objects with WebSocket game rooms
+- Real-time multiplayer classroom games built on Cloudflare Workers and Durable Objects with WebSocket game rooms
 - Used in class by about 100 or more students on a typical school day
 - Stack: TypeScript, Astro, Cloudflare Workers, D1, KV, Durable Objects, automatic deploys on push to main
 - Diagnosed a school web filter that blocked the game server's workers.dev address and broke a class mid-lesson. Fixed it by routing the game servers through the site's own domain.
 - Found that open game rooms kept their servers awake all night and used up the free plan's daily limit. Traced it with Cloudflare usage data and moved the rooms to the WebSocket hibernation API, with room state in storage and timers as alarms.
-- Also includes an interactive map of Takko and face detection in the browser
+- Classroom games also use the Chromebook's webcam (face tracking) and microphone (speech recognition) in the browser, with nothing to install
+- English guide to the town, written by a resident: 19 restaurants and 4 local shrines with their own bilingual pages, and a town map with every restaurant pinned and filtered by type of food
+- Transcribed a local dialect book (「南部田子の言葉」) into a searchable Takko-ben dictionary of 1,810 entries, each with a standard Japanese reading and an English gloss
+- All site text written by me in both English and Japanese, not machine-translated
+- "Where are you from?" visitor map on a Worker and D1 that stores a salted hash instead of the visitor's IP address
 
 ### bloggydoggy.com, multilingual blog
 
