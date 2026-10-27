@@ -101,7 +101,7 @@ Duties:
 
 ## Self-PR
 
-**I fix the root cause, not just the symptom.** In university IT, in the AJET website and in my own platform, I make quick fixes when needed, but I always find and fix the main cause. When the AJET site was hacked, deleting the malicious plugin was the quick fix, but it kept coming back. I traced it to a hidden scheduled job that reinstalled it every hour, removed that, and then closed the holes that let it in. On takkotaco.com, when my users complained about inconsistent images and vocabulary, I didn't just fix those games. I unified all my vocabulary and images into an easy-to-update library that affects every game and tool at once.
+**I fix the root cause, not just the symptom.** In university IT, in the AJET website and in my own platform, I make quick fixes when needed, but I always find and fix the main cause. On the AJET site, the plugins had stopped being updated because updates sometimes broke the site, which left it hard to maintain and open to security problems. I removed over 60% of the plugins, brought the rest up to date, and set up proper backups, so the site can now be updated safely. On takkotaco.com, when my users complained about inconsistent images and vocabulary, I didn't just fix those games. I unified all my vocabulary and images into an easy-to-update library that affects every game and tool at once.
 
 **I build and run real systems, not only practice projects.** takkotaco.com has real users every school day. I handle deployments, outages, costs and user feedback myself, and I enjoy that work because these are projects I care about.
 

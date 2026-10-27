@@ -42,7 +42,8 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
 2. oRo Miyazaki internship and Spanish: done in the English resume (still one
    page; three bullets shortened to make room) and the career history.
    履歴書: not under 職歴 (it was not employment); one line in 自己PR at most.
-3. Update the 履歴書 to match the final review (employer name, date).
+3. 履歴書: done. 自己PR now uses the AJET plugin cleanup story and the takkotaco
+   usage figure. Employer stays CLAIR JETプログラム.
 4. Translate the 職務経歴書 into Japanese.
 5. Export three PDFs: English resume (no phone), 職務経歴書, and a reduced
    履歴書 (address 青森県 only, no phone, birthday or photo).
