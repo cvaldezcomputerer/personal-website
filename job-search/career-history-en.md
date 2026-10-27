@@ -13,7 +13,7 @@ IT support technician turned English teacher, now returning to IT with a focus o
 
 ## Work History
 
-### Takko Town Board of Education, Aomori (JET Programme)
+### JET Programme (Takko, Aomori)
 
 **January 2023 to present**
 Assistant Language Teacher (ALT), full-time contract
@@ -49,7 +49,7 @@ Results:
 **January 2021 to January 2023**
 IT Technician (part-time, while a student)
 
-Supported the computer labs and staff of a university college (about 10 labs).
+Supported several computer labs and the staff of one of the university's colleges.
 
 Duties:
 

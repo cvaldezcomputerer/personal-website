@@ -29,9 +29,11 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
 ## To do
 
 1. Cristian reviews the career history draft and checks:
-   - employer name on the JET contract (draft says Takko Town Board of
-     Education; the 履歴書 says CLAIR, so make them match)
-   - CSUSB college name and "about 10 labs"
+   - employer name: done. "JET Programme (Takko, Aomori)", not the Board of
+     Education (JET placements can be BOEs, schools or city halls, and other
+     JETs list just the programme). The 履歴書's CLAIR JETプログラム line fits.
+   - CSUSB labs: done. "several computer labs" (somewhere between 5 and 12;
+     the exact number and college name are unknown)
    - takkotaco.com usage: done. Cloudflare, Oct 13-27 2026: 29.4k pageviews,
      14.5k visits, about 1,300 visits per school day, 90% Japan, ChromeOS top
      OS. Peak period (ABC unit, +88% visits on the two weeks before), so the
