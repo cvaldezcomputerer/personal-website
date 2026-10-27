@@ -16,7 +16,7 @@ American IT professional based in Japan since 2023. Two years of university IT s
 
 > • Teach English at public schools in rural Aomori while working daily in a Japanese-language environment
 >
-> • Adapt technical and educational content for non-native English speakers across varying proficiency levels, requiring clear written and verbal communication
+> • Adapt technical and educational content for non-native English speakers across varying proficiency levels
 
 **National AJET, Japan — Webmaster (Volunteer)**
 
@@ -26,13 +26,19 @@ American IT professional based in Japan since 2023. Two years of university IT s
 >
 > • Troubleshoot hosting and reliability issues; coordinate technical changes with the AJET board
 
+**oRo Miyazaki — Intern (JET Programme Internship)**
+
+*September 2026 (1 week)*
+
+> • Wrote a requirements spec, built to it in Python and TypeScript, and presented the result to the team
+
 **California State University, San Bernardino — IT Technician**
 
 *January 2021 – January 2023*
 
-> • Managed and deployed macOS endpoints across department computer labs using JAMF, including imaging, configuration, software distribution, and lifecycle replacement
+> • Managed lab macOS endpoints with JAMF: imaging, configuration, software distribution, and lifecycle replacement
 >
-> • Resolved a wide range of incidents including OS issues, account/permissions troubleshooting, peripheral failures, and software installs
+> • Resolved incidents across OS issues, account permissions, peripheral failures, and software installs
 
 **PROJECTS**
 
@@ -58,7 +64,7 @@ American IT professional based in Japan since 2023. Two years of university IT s
 
 **Other:** WordPress, REST APIs, WebSockets, Serverless, Astro, Technical Support, Troubleshooting
 
-**Languages:** English (native), Japanese (Business level, JLPT N2)
+**Languages:** English (native), Japanese (Business level, JLPT N2), Spanish (conversational)
 
 **EDUCATION & CERTIFICATIONS**
 

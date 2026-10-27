@@ -39,11 +39,9 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
      OS. Peak period (ABC unit, +88% visits on the two weeks before), so the
      doc says "over 1,000 visits on a typical school day (October 2026)".
    - the full AJET webmaster list, to pick the strongest items with specifics
-2. Add the oRo Miyazaki internship (Sep 2026, 1 week: wrote a requirements
-   spec, built to it, presented to the team) and Spanish (conversational):
-   - 職務経歴書: its own short entry
-   - 履歴書: not under 職歴 (it was not employment); one line in 自己PR at most
-   - English resume: one line under Experience, as on the site
+2. oRo Miyazaki internship and Spanish: done in the English resume (still one
+   page; three bullets shortened to make room) and the career history.
+   履歴書: not under 職歴 (it was not employment); one line in 自己PR at most.
 3. Update the 履歴書 to match the final review (employer name, date).
 4. Translate the 職務経歴書 into Japanese.
 5. Export three PDFs: English resume (no phone), 職務経歴書, and a reduced

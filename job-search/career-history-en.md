@@ -44,6 +44,13 @@ Results:
 - Design and content: built a shared design system in the block editor, moved all custom CSS into one stylesheet, and rebuilt the homepage and mobile menu
 - Coordinate technical changes with the AJET board
 
+### oRo Miyazaki (JET Programme Internship)
+
+**September 2026 (1 week)**
+Intern
+
+- Wrote a requirements spec, built to it in Python and TypeScript, and presented the result to the team
+
 ### California State University, San Bernardino, IT Department
 
 **January 2021 to January 2023**
@@ -83,7 +90,7 @@ Duties:
 | Networking | TCP/IP, routing, switching, VLANs (CCNA) |
 | Systems and support | macOS endpoint management with JAMF, Linux, troubleshooting hardware, OS and accounts |
 | Development | TypeScript, JavaScript, Bash, Git, GitHub Actions, REST APIs, WebSockets, Astro, WordPress |
-| Languages | English (native), Japanese (business level, JLPT N2) |
+| Languages | English (native), Japanese (business level, JLPT N2), Spanish (conversational) |
 
 ## Certifications
 
