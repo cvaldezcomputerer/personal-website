@@ -94,8 +94,10 @@ Duties:
 
 ## Self-PR
 
-**I find the cause before I fix the problem.** In university IT, in the AJET website and in my own platform, my work has been finding why something broke and making sure it stays fixed. When the class game stopped working at a school, I traced it to the school's web filter and changed how the servers are reached, not just the one classroom.
+**I fix the root cause, not just the symptom.** In university IT, in the AJET website and in my own platform, I make quick fixes when needed, but I always find and fix the main cause. When the AJET site was hacked, deleting the malicious plugin was the quick fix, but it kept coming back. I traced it to a hidden scheduled job that reinstalled it every hour, removed that, and then closed the holes that let it in. On takkotaco.com, when my users complained about inconsistent images and vocabulary, I didn't just fix those games. I unified all my vocabulary and images into an easy-to-update library that affects every game and tool at once.
 
-**I build and run real systems, not only practice projects.** takkotaco.com has real users every school day, so I handle deploys, outages, costs and user feedback myself.
+**I build and run real systems, not only practice projects.** takkotaco.com has real users every school day. I handle deployments, outages, costs and user feedback myself, and I enjoy that work because these are projects I care about.
 
 **I can work in Japanese.** I have spent nearly four years in a Japanese-language workplace and can explain technical problems to non-technical staff in Japanese or English.
+
+I want to bring this habit of finding root causes, and running systems end to end, to an infrastructure or support team.
