@@ -138,8 +138,9 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: jetLogo,
         orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
-          'Teach English at public schools in rural Aomori while working daily in a fully Japanese-language environment.',
+          'Team-teach English at 3 public schools in rural Aomori, working daily in a fully Japanese-language environment.',
           'Adapt technical and educational material for non-native speakers across a wide range of proficiency levels, which takes clear communication, both written and spoken.',
+          'Built takkotaco.com, an English guide to Takko plus classroom games and tools, now used by teachers across Japan.',
         ],
       },
       {
@@ -172,8 +173,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: csusbLogo,
         orgUrl: 'https://www.csusb.edu/',
         bullets: [
-          'Managed and deployed macOS endpoints across department computer labs with JAMF: imaging, configuration, software distribution, and lifecycle replacement.',
-          'Resolved a wide range of incidents across OS issues, account and permission troubleshooting, peripheral failures, and software installs.',
+          'Managed and deployed macOS endpoints across several computer labs with JAMF: imaging, configuration, software distribution, and lifecycle replacement.',
+          'Resolved incidents from walk-ups and tickets across OS issues, account permissions, peripheral failures, and software installs.',
         ],
       },
     ],
@@ -279,8 +280,9 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: jetLogo,
         orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
-          '青森県の公立学校で英語を教えながら、日々すべて日本語の環境で勤務しています。',
+          '青森県の公立学校3校で英語のティームティーチングを担当し、日々すべて日本語の環境で勤務しています。',
           '幅広いレベルの非ネイティブ話者向けに技術的・教育的な教材をかみ砕いて伝えており、明確な文章・口頭でのコミュニケーション力が求められます。',
+          '田子町の英語ガイドと授業用のゲーム・ツールをまとめたサイト「takkotaco.com」を開発し、全国の教員にも利用されています。',
         ],
       },
       {
@@ -313,8 +315,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: csusbLogo,
         orgUrl: 'https://www.csusb.edu/',
         bullets: [
-          'JAMFを用いて学内コンピューターラボのmacOS端末を管理・展開しました。イメージング、設定、ソフトウェア配布、機器の更新までを担当しました。',
-          'OSの不具合、アカウントや権限のトラブル、周辺機器の故障、ソフトウェアのインストールまで、幅広いインシデントに対応しました。',
+          'JAMFを用いて複数のコンピューターラボのmacOS端末を管理・展開しました。イメージング、設定、ソフトウェア配布、機器の更新までを担当しました。',
+          '窓口やチケットで受け付けた、OSの不具合、アカウントや権限のトラブル、周辺機器の故障、ソフトウェアのインストールなどの障害に対応しました。',
         ],
       },
     ],
