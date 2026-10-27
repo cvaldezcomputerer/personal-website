@@ -138,9 +138,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: jetLogo,
         orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
-          'Team-teach English at 3 public schools in rural Aomori, working daily in a fully Japanese-language environment.',
-          'Plan lessons and make teaching materials with Japanese teachers, and help run school events.',
-          'Built takkotaco.com, an English guide to Takko plus classroom games and tools, now used by teachers across Japan.',
+          'Teach English at public schools in rural Aomori while working daily in a fully Japanese-language environment.',
+          'Adapt technical and educational material for non-native speakers across a wide range of proficiency levels, which takes clear communication, both written and spoken.',
         ],
       },
       {
@@ -151,9 +150,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: ajetLogo,
         orgUrl: 'https://ajet.net/',
         bullets: [
-          'Maintain the WordPress site and backend for a 5,000+ member organization, and coordinate technical changes with the AJET board.',
-          'Plugins had stopped being updated because updates broke the site. Removed over 60% of them, brought the rest up to date, and set up proper backups so the site can be updated safely.',
-          'Cut the site from 13 GB to 2 GB and page load time from about 4 seconds to about 1, stopped intermittent 500 errors, and fixed outgoing email for the newsletter.',
+          'Maintain and administer the National AJET WordPress site for a 5,000+ member organization.',
+          'Troubleshoot hosting and reliability issues and coordinate technical changes with the AJET board.',
         ],
       },
       {
@@ -163,7 +161,7 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: oroLogo,
         orgUrl: 'https://www.oro-miyazaki.com/',
         bullets: [
-          'Selected through the JET Programme internship placement and assigned to oRo Miyazaki, where I wrote a requirements spec, built to it in Python and TypeScript, and presented the result to the team.',
+          'Selected through the JET Programme internship placement and assigned to oRo Miyazaki, where I wrote a requirements spec, implemented against it, and presented the result to the team.',
         ],
       },
       {
@@ -174,8 +172,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: csusbLogo,
         orgUrl: 'https://www.csusb.edu/',
         bullets: [
-          'Managed and deployed macOS endpoints across several computer labs with JAMF: imaging, configuration, software distribution, and lifecycle replacement.',
-          'Resolved incidents from walk-ups and tickets across OS issues, account permissions, peripheral failures, and software installs.',
+          'Managed and deployed macOS endpoints across department computer labs with JAMF: imaging, configuration, software distribution, and lifecycle replacement.',
+          'Resolved a wide range of incidents across OS issues, account and permission troubleshooting, peripheral failures, and software installs.',
         ],
       },
     ],
@@ -281,9 +279,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: jetLogo,
         orgUrl: 'https://jetprogramme.org/en/',
         bullets: [
-          '青森県の公立学校3校で英語のティームティーチングを担当し、日々すべて日本語の環境で勤務しています。',
-          '日本人教員と協力して授業計画や教材作成を行い、学校行事の運営も補助しています。',
-          '田子町の英語ガイドと授業用のゲーム・ツールをまとめたサイト「takkotaco.com」を開発し、全国の教員にも利用されています。',
+          '青森県の公立学校で英語を教えながら、日々すべて日本語の環境で勤務しています。',
+          '幅広いレベルの非ネイティブ話者向けに技術的・教育的な教材をかみ砕いて伝えており、明確な文章・口頭でのコミュニケーション力が求められます。',
         ],
       },
       {
@@ -294,9 +291,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: ajetLogo,
         orgUrl: 'https://ajet.net/',
         bullets: [
-          '会員5,000名以上の組織であるNational AJETのWordPressサイトとバックエンドを管理し、技術的な変更をAJET理事会と調整しています。',
-          '更新するとサイトが壊れるため、プラグインの更新が止まっていました。プラグインの6割以上を削除して残りを最新にし、バックアップ体制を整えて、安全に更新できる状態にしました。',
-          'サイト容量を13GBから2GBに、ページの表示時間を約4秒から約1秒に短縮し、断続的な500エラーの解消とメール送信の復旧も行いました。',
+          '会員5,000名以上の組織であるNational AJETのWordPressサイトを保守・運用しています。',
+          'ホスティングや安定性の問題に対応し、技術的な変更をAJET理事会と調整しています。',
         ],
       },
       {
@@ -306,7 +302,7 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: oroLogo,
         orgUrl: 'https://www.oro-miyazaki.com/',
         bullets: [
-          'JETプログラムのインターンシップ制度で選ばれ、株式会社オロ宮崎に配属されました。要件定義書を作成し、それに沿ってPythonとTypeScriptで実装し、成果をチームの皆さんに発表しました。',
+          'JETプログラムのインターンシップ制度で選ばれ、株式会社オロ宮崎に配属されました。要件定義書を作成し、それに沿って実装し、成果をチームの皆さんに発表しました。',
         ],
       },
       {
@@ -317,8 +313,8 @@ export const resume: Record<Lang, ResumeContent> = {
         logo: csusbLogo,
         orgUrl: 'https://www.csusb.edu/',
         bullets: [
-          'JAMFを用いて複数のコンピューターラボのmacOS端末を管理・展開しました。イメージング、設定、ソフトウェア配布、機器の更新までを担当しました。',
-          '窓口やチケットで受け付けた、OSの不具合、アカウントや権限のトラブル、周辺機器の故障、ソフトウェアのインストールなどの障害に対応しました。',
+          'JAMFを用いて学内コンピューターラボのmacOS端末を管理・展開しました。イメージング、設定、ソフトウェア配布、機器の更新までを担当しました。',
+          'OSの不具合、アカウントや権限のトラブル、周辺機器の故障、ソフトウェアのインストールまで、幅広いインシデントに対応しました。',
         ],
       },
     ],
