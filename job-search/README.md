@@ -48,14 +48,12 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
 3. 履歴書: done. 自己PR now uses the AJET plugin cleanup story and the takkotaco
    usage figure. Employer stays CLAIR JETプログラム.
 4. Translate the 職務経歴書 into Japanese: done (Noto Sans JP so bold shows).
-5. PDFs in `public/files/`: English resume (exported from the Google Doc with
-   the phone taken out, then put back) and the Japanese 職務経歴書 are done.
-   Still to do: the reduced 履歴書 (`rirekisho-public.docx`: address 青森県
-   only, no phone, birthday or photo). Export it from Word on the Mac (it
-   needs MS Mincho), save as `public/files/cristian-valdez-rirekisho.pdf`,
-   then uncomment its line in `downloads` in `src/data/resume.ts`.
+5. PDFs in `public/files/`: done. English resume (exported from the Google
+   Doc with the phone taken out, then put back), the Japanese 職務経歴書, and
+   the public 履歴書 (from `rirekisho-public.docx`, exported from Word on the
+   Mac: address 青森県 only, no phone, birthday or photo; 2 pages).
 6. Download links in the sidebar: done. EN page: Resume (PDF). JA page:
-   職務経歴書（PDF） and 英文レジュメ（PDF）, 履歴書 once its PDF exists.
+   履歴書（PDF）, 職務経歴書（PDF） and 英文レジュメ（PDF）.
    Re-export the PDFs whenever the Google Docs change (AWS result, leaving JET).
 
 ## Notes

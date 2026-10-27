@@ -392,9 +392,8 @@ export const resume: Record<Lang, ResumeContent> = {
         stack: ['ZMK', 'Zephyr', 'Devicetree'],
       },
     ],
-    // The 履歴書 goes first once its reduced PDF is exported:
-    // { label: '履歴書（PDF）', href: '/files/cristian-valdez-rirekisho.pdf' },
     downloads: [
+      { label: '履歴書（PDF）', href: '/files/cristian-valdez-rirekisho.pdf' },
       { label: '職務経歴書（PDF）', href: '/files/cristian-valdez-shokumu-keirekisho.pdf' },
       { label: '英文レジュメ（PDF）', href: '/files/cristian-valdez-resume.pdf' },
     ],
