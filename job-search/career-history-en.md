@@ -38,7 +38,7 @@ National AJET is the national support organization for JET participants, with 5,
 
 Results:
 
-- Security: took leaked files off the public web, changed the leaked passwords and keys, and locked down server and admin access on ajet.net and connect.ajet.net
+- Security: locked down server and admin access on ajet.net and connect.ajet.net
 - Cleanup and speed: removed over 60% of the plugins and over 10 unused domains and databases, cut the site from 13 GB to 2 GB, and cut page load time from about 4 seconds to about 1
 - Reliability: set up backups, stopped intermittent 500 errors, and fixed outgoing email so the newsletter works again
 - Design and content: built a shared design system in the block editor, moved all custom CSS into one stylesheet, and rebuilt the homepage and mobile menu
