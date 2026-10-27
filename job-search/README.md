@@ -8,6 +8,8 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
 
 - `Resume-reworked` (Google Doc): English resume
 - `Career History (職務経歴書) – Cristian Valdez – Draft EN` (Google Doc)
+- `職務経歴書 – クリスチャン・バルデス (JA)` (Google Doc): Japanese translation of
+  the career history; change the English first, then this
 - `rirekisho.docx`: full 履歴書 on the 厚労省 form
 - `Where my resume lives (update checklist)` (Google Doc): every place to
   update after a change
@@ -23,7 +25,8 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
 | File | What it is |
 | --- | --- |
 | `resume-en.md` | English resume, phone removed |
-| `career-history-en.md` | 職務経歴書, English draft (translate to Japanese last) |
+| `career-history-en.md` | 職務経歴書, English version |
+| `career-history-ja.md` | 職務経歴書, Japanese version |
 | `rirekisho-public.md` | 履歴書 text with private fields removed |
 
 ## To do
@@ -44,7 +47,7 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
    履歴書: not under 職歴 (it was not employment); one line in 自己PR at most.
 3. 履歴書: done. 自己PR now uses the AJET plugin cleanup story and the takkotaco
    usage figure. Employer stays CLAIR JETプログラム.
-4. Translate the 職務経歴書 into Japanese.
+4. Translate the 職務経歴書 into Japanese: done (Noto Sans JP so bold shows).
 5. Export three PDFs: English resume (no phone), 職務経歴書, and a reduced
    履歴書 (address 青森県 only, no phone, birthday or photo).
 6. Add download buttons to the site: English resume on the EN page, 履歴書 and
