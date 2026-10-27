@@ -32,8 +32,10 @@ live in the Google Drive folder "Job Applications 2026 (Resumes)":
    - employer name on the JET contract (draft says Takko Town Board of
      Education; the 履歴書 says CLAIR, so make them match)
    - CSUSB college name and "about 10 labs"
-   - takkotaco.com students per school day (draft says 100+; check with
-     `node tools/scripts/analytics/pageviews.mjs 7` in the takkotaco repo)
+   - takkotaco.com usage: done. Cloudflare, Oct 13-27 2026: 29.4k pageviews,
+     14.5k visits, about 1,300 visits per school day, 90% Japan, ChromeOS top
+     OS. Peak period (ABC unit, +88% visits on the two weeks before), so the
+     doc says "over 1,000 visits on a typical school day (October 2026)".
    - the full AJET webmaster list, to pick the strongest items with specifics
 2. Add the oRo Miyazaki internship (Sep 2026, 1 week: wrote a requirements
    spec, built to it, presented to the team) and Spanish (conversational):

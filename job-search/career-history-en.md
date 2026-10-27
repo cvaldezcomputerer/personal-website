@@ -64,7 +64,7 @@ Duties:
 2024 to present. Built and run alone.
 
 - Real-time multiplayer classroom games built on Cloudflare Workers and Durable Objects with WebSocket game rooms
-- Used in class by about 100 or more students on a typical school day
+- Over 1,000 visits on a typical school day (October 2026), about 90% from Japan and mostly from school Chromebooks
 - Stack: TypeScript, Astro, Cloudflare Workers, D1, KV, Durable Objects, automatic deploys on push to main
 - Diagnosed a school web filter that blocked the game server's workers.dev address and broke a class mid-lesson. Fixed it by routing the game servers through the site's own domain.
 - Found that open game rooms kept their servers awake all night and used up the free plan's daily limit. Traced it with Cloudflare usage data and moved the rooms to the WebSocket hibernation API, with room state in storage and timers as alarms.
