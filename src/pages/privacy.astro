@@ -1,0 +1,43 @@
+---
+/**
+ * /privacy - privacy policy for the personal "rclone" Google OAuth app
+ * (Google requires a policy URL before the app can be published). Not
+ * indexed (in NOINDEX_ROUTES).
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Privacy - Cristian Valdez" description="Privacy policy for my personal backup tool." noindex>
+  <section class="container--page wrap">
+    <h1>Privacy policy</h1>
+    <div class="prose">
+      <p>
+        This policy covers "rclone", a Google OAuth app I use for one purpose:
+        backing up my own computer to my own Google Drive. It is not a public
+        service, and I am its only user.
+      </p>
+      <h2>What it accesses</h2>
+      <p>
+        The app reads and writes files in my Google Drive so it can store and
+        restore encrypted backups. It runs only on my own computer.
+      </p>
+      <h2>What it does with data</h2>
+      <p>
+        Nothing beyond that. No data is collected, sold, shared with third
+        parties, or used for advertising or analytics. Backups are encrypted
+        on my computer before they are uploaded.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Questions: <a href="mailto:babyorangesrgud@gmail.com">babyorangesrgud@gmail.com</a>
+      </p>
+      <p class="updated">Last updated October 31, 2026.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap { padding-block: var(--space-9); }
+  .wrap h1 { font-size: var(--text-3xl); margin-bottom: var(--space-5); }
+  .updated { color: var(--color-text-muted); }
+</style>

@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // Pages that stay reachable by URL but must NOT appear in the sitemap (they
 // also carry a noindex meta via the layout). Keep in sync with public/robots.txt.
-const NOINDEX_ROUTES = ['/specimen'];
+const NOINDEX_ROUTES = ['/specimen', '/privacy'];
 
 // https://astro.build/config
 export default defineConfig({
