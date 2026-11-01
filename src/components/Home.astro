@@ -306,6 +306,7 @@ const personLd = {
 <style>
   /* --- Split layout --- */
   .layout {
+    position: relative;
     padding-block: var(--space-6);
   }
   @media (min-width: 64rem) {
@@ -748,6 +749,48 @@ const personLd = {
     padding: 0.1rem 0.5rem;
     font-family: var(--font-body);
     font-weight: 600;
+  }
+
+  /* The desktop sidebar becomes a compact header on phones and tablets. */
+  @media (max-width: 63.999rem) {
+    .sidebar { padding-block: 0; }
+    .intro { padding-top: var(--space-1); }
+    .intro .role { margin-top: var(--space-5); }
+    .topbar {
+      position: absolute;
+      top: var(--space-6);
+      right: var(--gutter);
+      margin: 0;
+    }
+    .sidebar-foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-3) var(--space-4);
+      margin-top: var(--space-5);
+    }
+    .downloads { margin-bottom: 0; }
+    .content {
+      gap: var(--space-7);
+      padding-top: var(--space-7);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .entry-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    .cred {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .cred-date {
+      margin-left: 0;
+      flex-wrap: wrap;
+      white-space: normal;
+    }
   }
 
   /* --- Content footer --- */
