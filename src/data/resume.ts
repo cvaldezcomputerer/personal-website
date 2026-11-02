@@ -116,13 +116,13 @@ export const resume: Record<Lang, ResumeContent> = {
   en: {
     about: {
       role: 'Cloud & Network Support',
-      tagline: 'I troubleshoot systems, from the network up to the cloud, and build things to understand them better.',
+      tagline: 'I built classroom tools that teachers across Japan use, and I run the website for a 5,000-member organization, all from Japan\'s garlic town.',
       town: 'Takko',
       location: 'Aomori, Japan',
       relocation: 'Open to relocating anywhere in Japan',
       imageAlt: 'Cristian planting rice with local students at a community rice-planting class in Aomori',
       summary:
-        'Cristian Valdez troubleshoots systems from the network up to the cloud. American IT professional based in Aomori, Japan, CCNA certified, with business-level Japanese (JLPT N2). Open to relocating anywhere in Japan.',
+        'Cristian Valdez builds classroom tools used by teachers across Japan and runs the website for a 5,000-member organization. American IT professional based in Takko, Aomori, CCNA certified, with business-level Japanese (JLPT N2). Open to relocating anywhere in Japan.',
       paragraphs: [
         "I'm an American living in Aomori, Japan. I came over in 2023 to teach on the <a href=\"https://jetprogramme.org\">JET Programme</a>, but I never stopped making things and messing with tech on the side. Personal projects have been a constant the whole time, and I keep learning whatever a project needs or whatever I happen to be curious about. As my time on JET comes to a close, I'm looking to move back into tech here in Japan, in IT support, networking, or cloud infrastructure, and I'm open to relocating anywhere in the country.",
         "Mostly I just build things for myself: whatever would actually be useful, or whatever I want to understand better. That might be <a href=\"https://takkotaco.com/game/\">tools for the classroom</a>, a place to <a href=\"https://bloggydoggy.com\">express myself</a>, or a quick fix for something annoying, like a Chrome extension or a custom keyboard. I like being able to customize and tinker, and I'm not satisfied until I get something exactly how I want it.",
@@ -258,13 +258,13 @@ export const resume: Record<Lang, ResumeContent> = {
   ja: {
     about: {
       role: 'クラウド・ネットワークサポート',
-      tagline: 'ネットワークからクラウドまで、システムのトラブルを解決しています。仕組みを理解するために、自分でもいろいろ作っています。',
+      tagline: '全国の先生が使う授業用ツールを作り、会員5,000人以上の団体のウェブサイトを運営しています。すべて、にんにくの町・田子町から。',
       town: '田子町',
       location: '青森県、日本',
       relocation: '日本国内どこでも転居可能',
       imageAlt: '青森の地域の田植え教室で、地元の生徒たちと田植えをするクリスチャン',
       summary:
-        'Cristian Valdez（クリスチャン・バルデス）は、ネットワークからクラウドまで、システムのトラブル解決に取り組むアメリカ出身のITエンジニアです。青森県在住、CCNA取得、ビジネスレベルの日本語（JLPT N2）。日本国内であればどこへでも転居可能です。',
+        'Cristian Valdez（クリスチャン・バルデス）は、全国の先生が使う授業用ツールを開発し、会員5,000人以上の団体のウェブサイトを運営する、アメリカ出身のITエンジニアです。青森県田子町在住、CCNA取得、ビジネスレベルの日本語（JLPT N2）。日本国内であればどこへでも転居可能です。',
       paragraphs: [
         '青森県に住んでいる、アメリカ出身です。2023年に<a href="https://jetprogramme.org">JETプログラム</a>の外国語指導助手として来日しましたが、その後もものづくりや技術いじりの手を止めることはありませんでした。個人プロジェクトはずっと続けてきていて、プロジェクトに必要なことや、その時々で気になったことを学び続けています。JETでの任期が終わりに近づいた今、日本でITの世界へ戻ろうと考えていて、ITサポート、ネットワーク、クラウドインフラの分野を目指しています。日本国内であれば、どこへでも転居できます。',
         '基本的には、自分のために物を作っています。実際に役立つものだったり、もっと深く理解したいと思ったものだったりです。たとえば<a href="https://takkotaco.com/game/">授業で使えるツール</a>だったり、<a href="https://bloggydoggy.com">自分を表現する場所</a>だったり、Chrome拡張機能や自作キーボードのように、ちょっとした面倒を解決するものだったりします。自分好みにカスタマイズしたり、いじったりするのが好きで、思い通りになるまで納得できない性格です。',
